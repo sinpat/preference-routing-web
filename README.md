@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/sinpat/preference-routing-web.svg?branch=master)](https://travis-ci.org/sinpat/preference-routing-web)
+
 # preference-routing-web
 
 Web Client for the preference-routing project
