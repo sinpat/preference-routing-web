@@ -1,5 +1,7 @@
 # preference-routing-web
 
+Web Client for the preference-routing project
+
 ## Project setup
 ```
 npm install
