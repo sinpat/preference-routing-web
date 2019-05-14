@@ -1,3 +1,10 @@
 language: node_js
 node_js:
   - "8"
+
+addons:
+  sonarcloud:
+    organization: "sinpat-github"
+
+script:
+  - sonar-scanner
