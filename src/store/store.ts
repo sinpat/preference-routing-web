@@ -7,7 +7,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    token: sessionStorage.getItem('user') || '',
+    token: sessionStorage.getItem('token') || '',
   },
   getters: {
     loggedIn: (state) => !!state.token,
@@ -24,9 +24,12 @@ export default new Vuex.Store({
   },
   actions: {
     login({ commit }, credentials) {
+      /*
       axios.post('http://localhost:8000/user/login', credentials)
         .then((response) => commit('setToken', response.data))
         .catch((error) => console.log(error));
+      */
+      commit('setToken', JSON.stringify(credentials));
     },
     logout({ commit }) {
       commit('removeToken');

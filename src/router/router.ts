@@ -25,8 +25,12 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
+  const loggedIn = sessionStorage.getItem('token');
+  if (to.name === 'login' && loggedIn) {
+    next({ name: 'home' });
+  }
+
   if (to.meta.requiresAuth) {
-    const loggedIn = sessionStorage.getItem('token');
     if (loggedIn) {
       next();
     } else {

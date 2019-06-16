@@ -18,12 +18,8 @@ import { Component, Vue } from 'vue-property-decorator';
 
 @Component
 export default class Login extends Vue {
-  private username: string = '';
-  private password: string = '';
-
-  private created() {
-    this.$store.dispatch('logout');
-  }
+  private username = '';
+  private password = '';
 
   private login() {
     this.$store.dispatch('login', { username: this.username, password: this.password });
