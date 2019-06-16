@@ -1,15 +1,20 @@
 <template>
   <div class="home">
     <h1>Home</h1>
+    <Map/>
     <button @click="logout">Logout</button>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import HelloWorld from '@/components/HelloWorld.vue';
+import Map from '@/components/Map.vue';
 
-@Component
+@Component({
+  components: {
+    Map,
+  },
+})
 export default class Home extends Vue {
   private logout() {
     this.$store.dispatch('logout');
