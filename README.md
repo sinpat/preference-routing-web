@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/sinpat/preference-routing-web.svg?branch=master)](https://travis-ci.org/sinpat/preference-routing-web)
+[![Build Status](https://travis-ci.com/sinpat/preference-routing-web.svg?branch=master)](https://travis-ci.com/sinpat/preference-routing-web)
 
 # preference-routing-web
 
