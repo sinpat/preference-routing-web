@@ -1,38 +1,10 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
-import axios from 'axios';
+import user from './user/user';
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-  state: {
-    token: sessionStorage.getItem('token') || '',
-  },
-  getters: {
-    loggedIn: (state) => !!state.token,
-  },
-  mutations: {
-    setToken(state, token: string) {
-      state.token = token;
-      sessionStorage.setItem('token', token);
-    },
-    removeToken(state) {
-      state.token = '';
-      sessionStorage.removeItem('token');
-    },
-  },
-  actions: {
-    login({ commit }, credentials) {
-      /*
-      axios.post('http://localhost:8000/user/login', credentials)
-        .then((response) => commit('setToken', response.data))
-        .catch((error) => console.log(error));
-      */
-      commit('setToken', JSON.stringify(credentials));
-    },
-    logout({ commit }) {
-      commit('removeToken');
-    },
-  },
+  modules: { user },
 });
