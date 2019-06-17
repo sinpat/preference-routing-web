@@ -1,6 +1,7 @@
 <template>
     <div class="map">
         <div id="mapid"></div>
+        <button @click="fetchRoute">Calculate Route</button>
     </div>
 </template>
 
@@ -45,6 +46,15 @@ export default class Map extends Vue {
             draggable: true,
             autoPan: true,
         }).addTo(this.map);
+    }
+
+    private fetchRoute() {
+        this.$store.dispatch('routing/fetchShortestPath', {
+            source: this.source,
+            target: this.target
+        })
+            .then((path) => console.log(path))
+            .catch((error) => console.log(error));
     }
 }
 </script>

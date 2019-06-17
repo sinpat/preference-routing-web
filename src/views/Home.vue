@@ -1,8 +1,8 @@
 <template>
   <div class="home">
     <h1>Home</h1>
-    <Map/>
     <button @click="logout">Logout</button>
+    <Map/>
   </div>
 </template>
 
