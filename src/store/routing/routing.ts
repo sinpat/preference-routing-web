@@ -1,18 +1,39 @@
+import endpoints from '../endpoints';
 import axios from 'axios';
 
 export default {
   namespaced: true,
-  state: {},
-  getters: {},
-  mutations: {},
+
+  state: {
+    source: null,
+    target: null,
+    path: null,
+  },
+
+  getters: {
+    source: (state: any) => state.source,
+    target: (state: any) => state.target,
+  },
+
   actions: {
-    fetchShortestPath(state: any, data: any) {
-      return new Promise((resolve, reject) => {
-        axios
-          .post('http://localhost:8000/routing/fsp', data)
-          .then(response => resolve(response.data))
-          .catch(error => reject(error));
+    setSource({ state }: any, latlng: object) {
+      state.source = latlng;
+      axios.post(endpoints.setSource, latlng).then(response => {
+        state.source = response.data;
       });
+    },
+    setTarget({ state }: any, latlng: object) {
+      state.target = latlng;
+      axios.post(endpoints.setTarget, latlng).then(response => {
+        state.target = response.data;
+      });
+    },
+    fetchShortestPath({ state }: any) {
+      axios
+        .post(endpoints.fsp, { source: state.source, target: state.target })
+        .then(response => {
+          state.path = response.data;
+        });
     },
   },
 };

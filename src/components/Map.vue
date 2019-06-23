@@ -8,7 +8,7 @@
       @update:zoom="updateZoom"
       @update:center="updateCenter"
     >
-      <l-tile-layer :url="layerUrl"></l-tile-layer>
+      <l-tile-layer url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"></l-tile-layer>
       <l-marker v-if="source" :lat-lng="source">
         <l-tooltip>Source</l-tooltip>
       </l-marker>
@@ -33,10 +33,16 @@ export default Vue.extend({
     return {
       zoom: 14,
       center: [48.66, 8.598],
-      layerUrl: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
-      source: null,
-      target: null,
     };
+  },
+
+  computed: {
+    source(): object {
+      return this.$store.getters['routing/source'];
+    },
+    target(): object {
+      return this.$store.getters['routing/target'];
+    },
   },
 
   methods: {
@@ -49,18 +55,15 @@ export default Vue.extend({
     },
 
     fetchRoute() {
-      this.$store.dispatch('routing/fetchShortestPath', {
-        source: this.source,
-        target: this.target,
-      });
+      this.$store.dispatch('routing/fetchShortestPath');
     },
 
-    handleLeftClick(event: any) {
-      this.source = event.latlng;
+    handleLeftClick({ latlng }: any) {
+      this.$store.dispatch('routing/setSource', latlng);
     },
 
-    handleRightClick(event: any) {
-      this.target = event.latlng;
+    handleRightClick({ latlng }: any) {
+      this.$store.dispatch('routing/setTarget', latlng);
     },
   },
 });
