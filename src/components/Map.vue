@@ -1,67 +1,74 @@
 <template>
-    <div class="map">
-        <div id="mapid"></div>
-        <button @click="fetchRoute">Calculate Route</button>
-    </div>
+  <div class="map">
+    <l-map
+      :zoom="zoom"
+      :center="center"
+      @click="handleLeftClick"
+      @contextmenu="handleRightClick"
+      @update:zoom="updateZoom"
+      @update:center="updateCenter"
+    >
+      <l-tile-layer :url="layerUrl"></l-tile-layer>
+      <l-marker v-if="source" :lat-lng="source">
+        <l-tooltip>Source</l-tooltip>
+      </l-marker>
+      <l-marker v-if="target" :lat-lng="target">
+        <l-tooltip>Target</l-tooltip>
+      </l-marker>
+    </l-map>
+    <button @click="fetchRoute">Calculate Route</button>
+  </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import L from 'leaflet';
+import Vue from 'vue';
+import L, { latLng } from 'leaflet';
+import { LMap, LTileLayer, LMarker, LTooltip } from 'vue2-leaflet';
 
-@Component
-export default class Map extends Vue {
-    private map: any = null;
-    private source: any = null;
-    private target: any = null;
+export default Vue.extend({
+  name: 'Map',
+  components: { LMap, LTileLayer, LMarker, LTooltip },
 
-    private mounted() {
-        this.map = L.map('mapid').setView([48.66, 8.598], 14);
-        L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-        }).addTo(this.map);
-        this.initListeners();
-    }
+  data() {
+    return {
+      zoom: 14,
+      center: [48.66, 8.598],
+      layerUrl: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
+      source: null,
+      target: null,
+    };
+  },
 
-    private initListeners() {
-        this.map.on('click', this.handleLeftClick);
-        this.map.on('contextmenu', this.handleRightClick);
-    }
+  methods: {
+    updateZoom(zoomValue: number) {
+      this.zoom = zoomValue;
+    },
 
-    private handleLeftClick(event: any) {
-        const latlng = event.latlng;
-        this.source = latlng;
-        L.marker(latlng, {
-            title: 'Source',
-            draggable: true,
-            autoPan: true,
-        }).addTo(this.map);
-    }
+    updateCenter(centerValue: any) {
+      this.center = centerValue;
+    },
 
-    private handleRightClick(event: any) {
-        const latlng = event.latlng;
-        this.target = latlng;
-        L.marker(latlng, {
-            title: 'Target',
-            draggable: true,
-            autoPan: true,
-        }).addTo(this.map);
-    }
+    fetchRoute() {
+      this.$store.dispatch('routing/fetchShortestPath', {
+        source: this.source,
+        target: this.target,
+      });
+    },
 
-    private fetchRoute() {
-        this.$store.dispatch('routing/fetchShortestPath', {
-            source: this.source,
-            target: this.target
-        })
-            .then((path) => console.log(path))
-            .catch((error) => console.log(error));
-    }
-}
+    handleLeftClick(event: any) {
+      this.source = event.latlng;
+    },
+
+    handleRightClick(event: any) {
+      this.target = event.latlng;
+    },
+  },
+});
 </script>
 
 <style lang="scss">
-#mapid {
-    height: 500px;
+.map {
+  height: 400px;
 }
 </style>
 

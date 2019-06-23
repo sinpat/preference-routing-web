@@ -16,23 +16,38 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import Vue from 'vue';
 
-@Component
-export default class Login extends Vue {
-  private username = '';
-  private password = '';
+export default Vue.extend({
+  name: 'Login',
 
-  private login() {
-    this.$store.dispatch('user/login', { username: this.username, password: this.password })
-      .then(() => this.$router.push({ name: 'home' }))
-      .catch(error => console.log(error));
-  }
+  data() {
+    return {
+      username: '',
+      password: '',
+    };
+  },
 
-  private register() {
-    this.$router.push({ name: 'register' });
-  }
-}
+  methods: {
+    login() {
+      this.$store
+        .dispatch('user/login', {
+          username: this.username,
+          password: this.password,
+        })
+        .then(() => this.$router.push({ name: 'home' }))
+        .catch(() => {
+          alert('Login unsuccessful');
+          this.username = '';
+          this.password = '';
+        });
+    },
+
+    register() {
+      this.$router.push({ name: 'register' });
+    },
+  },
+});
 </script>
 
 <style lang="scss" scoped>
@@ -40,7 +55,6 @@ export default class Login extends Vue {
   margin-top: 2rem;
 }
 .login-form input {
-  margin-top: .5rem;
+  margin-top: 0.5rem;
 }
 </style>
-

@@ -7,16 +7,18 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator';
+import Vue from 'vue';
 import Map from '@/components/Map.vue';
 
-@Component({
+export default Vue.extend({
+  name: 'Home',
   components: { Map },
-})
-export default class Home extends Vue {
-  private logout() {
-    this.$store.dispatch('user/logout');
-    this.$router.push({ name: 'login' });
-  }
-}
+
+  methods: {
+    logout() {
+      this.$store.dispatch('user/logout');
+      this.$router.push({ name: 'login' });
+    },
+  },
+});
 </script>
