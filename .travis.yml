@@ -8,5 +8,5 @@ addons:
 
 script:
   - npm run test
-  - npm run serve
+  - npm run build
   - sonar-scanner
