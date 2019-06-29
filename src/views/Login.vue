@@ -17,37 +17,32 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import Component from 'vue-class-component';
 
-export default Vue.extend({
-  name: 'Login',
+@Component
+export default class Login extends Vue {
+  private name: string = 'Login';
+  private username: string = '';
+  private password: string = '';
 
-  data() {
-    return {
-      username: '',
-      password: '',
-    };
-  },
+  private login() {
+    this.$store
+      .dispatch('user/login', {
+        username: this.username,
+        password: this.password,
+      })
+      .then(() => this.$router.push({ name: 'home' }))
+      .catch(() => {
+        alert('Login unsuccessful');
+        this.username = '';
+        this.password = '';
+      });
+  }
 
-  methods: {
-    login() {
-      this.$store
-        .dispatch('user/login', {
-          username: this.username,
-          password: this.password,
-        })
-        .then(() => this.$router.push({ name: 'home' }))
-        .catch(() => {
-          alert('Login unsuccessful');
-          this.username = '';
-          this.password = '';
-        });
-    },
-
-    register() {
-      this.$router.push({ name: 'register' });
-    },
-  },
-});
+  private register() {
+    this.$router.push({ name: 'register' });
+  }
+}
 </script>
 
 <style lang="scss" scoped>

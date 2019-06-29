@@ -8,17 +8,19 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import Component from 'vue-class-component';
+
 import Map from '@/components/Map.vue';
 
-export default Vue.extend({
-  name: 'Home',
+@Component({
   components: { Map },
+})
+export default class Home extends Vue {
+  private name: string = 'Home';
 
-  methods: {
-    logout() {
-      this.$store.dispatch('user/logout');
-      this.$router.push({ name: 'login' });
-    },
-  },
-});
+  private logout() {
+    this.$store.dispatch('user/logout');
+    this.$router.push({ name: 'login' });
+  }
+}
 </script>

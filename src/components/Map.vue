@@ -15,58 +15,56 @@
       <l-marker v-if="target" :lat-lng="target">
         <l-tooltip>Target</l-tooltip>
       </l-marker>
+      <l-polyline v-if="path" :lat-lngs="path" color="green"></l-polyline>
     </l-map>
-    <button @click="fetchRoute">Calculate Route</button>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import L, { latLng } from 'leaflet';
-import { LMap, LTileLayer, LMarker, LTooltip } from 'vue2-leaflet';
+import Component from 'vue-class-component';
 
-export default Vue.extend({
-  name: 'Map',
-  components: { LMap, LTileLayer, LMarker, LTooltip },
+import L from 'leaflet';
+import { LMap, LTileLayer, LMarker, LTooltip, LPolyline } from 'vue2-leaflet';
 
-  data() {
-    return {
-      zoom: 14,
-      center: [48.66, 8.598],
-    };
-  },
+@Component({
+  components: { LMap, LTileLayer, LMarker, LTooltip, LPolyline },
+})
+export default class Map extends Vue {
+  private name: string = 'Map';
+  private zoom: number = 14;
+  private center: [number, number] = [48.66, 8.598];
 
-  computed: {
-    source(): object {
-      return this.$store.getters['routing/source'];
-    },
-    target(): object {
-      return this.$store.getters['routing/target'];
-    },
-  },
+  get source(): object {
+    return this.$store.getters['routing/source'];
+  }
+  get target(): object {
+    return this.$store.getters['routing/target'];
+  }
+  get path(): [] {
+    return this.$store.getters['routing/path'];
+  }
 
-  methods: {
-    updateZoom(zoomValue: number) {
-      this.zoom = zoomValue;
-    },
+  private updateZoom(zoomValue: number) {
+    this.zoom = zoomValue;
+  }
 
-    updateCenter(centerValue: any) {
-      this.center = centerValue;
-    },
+  private updateCenter(centerValue: any) {
+    this.center = centerValue;
+  }
 
-    fetchRoute() {
-      this.$store.dispatch('routing/fetchShortestPath');
-    },
+  private fetchRoute() {
+    this.$store.dispatch('routing/fetchShortestPath');
+  }
 
-    handleLeftClick({ latlng }: any) {
-      this.$store.dispatch('routing/setSource', latlng);
-    },
+  private handleLeftClick({ latlng }: any) {
+    this.$store.dispatch('routing/setSource', latlng);
+  }
 
-    handleRightClick({ latlng }: any) {
-      this.$store.dispatch('routing/setTarget', latlng);
-    },
-  },
-});
+  private handleRightClick({ latlng }: any) {
+    this.$store.dispatch('routing/setTarget', latlng);
+  }
+}
 </script>
 
 <style lang="scss">
