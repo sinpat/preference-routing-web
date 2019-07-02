@@ -38,20 +38,14 @@ export default class Map extends Vue {
   private zoom: number = 14;
   private center: Coordinate = { lat: 48.66, lng: 8.598 };
 
-  get source(): Coordinate | null {
-    const source = routingState.source;
-    if (source.lat && source.lng) {
-      return source;
-    }
-    return null;
+  get source() {
+    return routingState.Source;
   }
-  get target(): Coordinate | null {
-    const target = routingState.target;
-    if (target.lat && target.lng) {
-      return target;
-    }
-    return null;
+
+  get target() {
+    return routingState.Target;
   }
+
   get path(): Coordinate[] {
     return routingState.path;
   }
@@ -62,10 +56,6 @@ export default class Map extends Vue {
 
   private updateCenter(centerValue: any) {
     this.center = centerValue;
-  }
-
-  private fetchRoute() {
-    routingState.fetchShortestPath();
   }
 
   private handleLeftClick({ latlng }: any) {
