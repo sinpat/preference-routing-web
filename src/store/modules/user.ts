@@ -11,7 +11,6 @@ import store from '../store';
 
 @Module({
   dynamic: true,
-  namespaced: true,
   name: 'userState',
   store,
 })

@@ -15,7 +15,7 @@
       <l-marker v-if="target" :lat-lng="target">
         <l-tooltip>Target</l-tooltip>
       </l-marker>
-      <l-polyline v-if="path" :lat-lngs="path" color="green"></l-polyline>
+      <l-polyline :lat-lngs="path" color="green"></l-polyline>
     </l-map>
   </div>
 </template>
@@ -36,13 +36,21 @@ import routingState from '@/store/modules/routing';
 export default class Map extends Vue {
   private name: string = 'Map';
   private zoom: number = 14;
-  private center: [number, number] = [48.66, 8.598];
+  private center: Coordinate = { lat: 48.66, lng: 8.598 };
 
-  get source(): Coordinate {
-    return routingState.source;
+  get source(): Coordinate | null {
+    const source = routingState.source;
+    if (source.lat && source.lng) {
+      return source;
+    }
+    return null;
   }
-  get target(): Coordinate {
-    return routingState.target;
+  get target(): Coordinate | null {
+    const target = routingState.target;
+    if (target.lat && target.lng) {
+      return target;
+    }
+    return null;
   }
   get path(): Coordinate[] {
     return routingState.path;
@@ -61,11 +69,11 @@ export default class Map extends Vue {
   }
 
   private handleLeftClick({ latlng }: any) {
-    routingState.setSource(latlng);
+    routingState.sourceInput(latlng);
   }
 
   private handleRightClick({ latlng }: any) {
-    routingState.setTarget(latlng);
+    routingState.targetInput(latlng);
   }
 }
 </script>

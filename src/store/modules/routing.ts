@@ -1,5 +1,11 @@
 import axios from 'axios';
-import { Module, VuexModule, Action, getModule } from 'vuex-module-decorators';
+import {
+  Module,
+  VuexModule,
+  Mutation,
+  Action,
+  getModule,
+} from 'vuex-module-decorators';
 
 import store from '../store';
 import endpoints from '../endpoints';
@@ -7,34 +13,37 @@ import { Coordinate } from '@/types/types';
 
 @Module({
   dynamic: true,
-  namespaced: true,
   name: 'routingState',
   store,
 })
 class Routing extends VuexModule {
-  public source!: Coordinate;
-  public target!: Coordinate;
+  public source: Coordinate = {} as Coordinate;
+  public target: Coordinate = {} as Coordinate;
   public path: Coordinate[] = [];
 
   @Action
-  public setSource(latlng: Coordinate) {
-    this.source = latlng;
+  public sourceInput(latlng: Coordinate) {
+    this.setSource(latlng);
     axios.post(endpoints.setSource, latlng).then(response => {
-      this.source = response.data;
+      this.setSource(response.data);
+      /*
       if (this.target) {
         this.fetchShortestPath();
       }
+      */
     });
   }
 
   @Action
-  public setTarget(latlng: Coordinate) {
-    this.target = latlng;
+  public targetInput(latlng: Coordinate) {
+    this.setTarget(latlng);
     axios.post(endpoints.setTarget, latlng).then(response => {
-      this.target = response.data;
+      this.setTarget(response.data);
+      /*
       if (this.source) {
         this.fetchShortestPath();
       }
+      */
     });
   }
 
@@ -45,6 +54,16 @@ class Routing extends VuexModule {
       .then(response => {
         this.path = response.data;
       });
+  }
+
+  @Mutation
+  private setSource(source: Coordinate) {
+    this.source = source;
+  }
+
+  @Mutation
+  private setTarget(target: Coordinate) {
+    this.target = target;
   }
 }
 
