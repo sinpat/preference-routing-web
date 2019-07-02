@@ -27,6 +27,9 @@ import Component from 'vue-class-component';
 import L from 'leaflet';
 import { LMap, LTileLayer, LMarker, LTooltip, LPolyline } from 'vue2-leaflet';
 
+import { Coordinate } from '@/types/types';
+import routingState from '@/store/modules/routing';
+
 @Component({
   components: { LMap, LTileLayer, LMarker, LTooltip, LPolyline },
 })
@@ -35,14 +38,14 @@ export default class Map extends Vue {
   private zoom: number = 14;
   private center: [number, number] = [48.66, 8.598];
 
-  get source(): object {
-    return this.$store.getters['routing/source'];
+  get source(): Coordinate {
+    return routingState.source;
   }
-  get target(): object {
-    return this.$store.getters['routing/target'];
+  get target(): Coordinate {
+    return routingState.target;
   }
-  get path(): [] {
-    return this.$store.getters['routing/path'];
+  get path(): Coordinate[] {
+    return routingState.path;
   }
 
   private updateZoom(zoomValue: number) {
@@ -54,15 +57,15 @@ export default class Map extends Vue {
   }
 
   private fetchRoute() {
-    this.$store.dispatch('routing/fetchShortestPath');
+    routingState.fetchShortestPath();
   }
 
   private handleLeftClick({ latlng }: any) {
-    this.$store.dispatch('routing/setSource', latlng);
+    routingState.setSource(latlng);
   }
 
   private handleRightClick({ latlng }: any) {
-    this.$store.dispatch('routing/setTarget', latlng);
+    routingState.setTarget(latlng);
   }
 }
 </script>

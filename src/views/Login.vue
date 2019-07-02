@@ -3,12 +3,12 @@
     <h1>Login</h1>
     <form @submit.prevent="login" class="login-form">
       <label>Username:&nbsp;</label>
-      <input v-model="username" type="text">
-      <br>
+      <input v-model="username" type="text" />
+      <br />
       <label>Password:&nbsp;</label>
-      <input v-model="password" type="password">
-      <br>
-      <input type="submit" value="Login">
+      <input v-model="password" type="password" />
+      <br />
+      <input type="submit" value="Login" />
     </form>
     <p>&nbsp;OR&nbsp;</p>
     <button @click="register">Register</button>
@@ -19,6 +19,8 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 
+import userState from '@/store/modules/user';
+
 @Component
 export default class Login extends Vue {
   private name: string = 'Login';
@@ -26,8 +28,8 @@ export default class Login extends Vue {
   private password: string = '';
 
   private login() {
-    this.$store
-      .dispatch('user/login', {
+    userState
+      .login({
         username: this.username,
         password: this.password,
       })

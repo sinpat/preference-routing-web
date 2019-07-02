@@ -2,7 +2,7 @@
   <div class="home">
     <h1>Home</h1>
     <button @click="logout">Logout</button>
-    <Map/>
+    <Map />
   </div>
 </template>
 
@@ -11,6 +11,7 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 
 import Map from '@/components/Map.vue';
+import userState from '@/store/modules/user';
 
 @Component({
   components: { Map },
@@ -19,7 +20,7 @@ export default class Home extends Vue {
   private name: string = 'Home';
 
   private logout() {
-    this.$store.dispatch('user/logout');
+    userState.logout();
     this.$router.push({ name: 'login' });
   }
 }
