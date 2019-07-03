@@ -8,6 +8,7 @@ import {
 } from 'vuex-module-decorators';
 
 import store from '../store';
+import endpoints from '../endpoints';
 
 @Module({
   dynamic: true,
@@ -25,7 +26,7 @@ class User extends VuexModule {
   public login(credentials: any) {
     return new Promise((resolve, reject) => {
       axios
-        .post('http://localhost:8000/user/login', credentials)
+        .post(endpoints.login, credentials)
         .then(response => {
           this.setToken(response.headers.Authorization);
           resolve();
@@ -37,6 +38,15 @@ class User extends VuexModule {
   @Action
   public logout() {
     this.removeToken();
+  }
+
+  @Action
+  public verifyToken() {
+    const token: string = sessionStorage.getItem('token') || '';
+    axios
+      .post(endpoints.verifyToken, token)
+      .then(() => this.setToken(token))
+      .catch(this.removeToken);
   }
 
   @Mutation

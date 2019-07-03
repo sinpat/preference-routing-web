@@ -10,4 +10,5 @@ export default {
   // user
   login: user + 'login',
   register: user + 'register',
+  verifyToken: user + 'verify',
 };
