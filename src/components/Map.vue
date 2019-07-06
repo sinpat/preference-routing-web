@@ -15,7 +15,9 @@
       <l-marker v-if="target" :lat-lng="target">
         <l-tooltip>Target</l-tooltip>
       </l-marker>
-      <l-polyline :lat-lngs="path" color="green"></l-polyline>
+      <l-polyline :lat-lngs="path" color="green">
+        <l-tooltip>{{ pathCost }}</l-tooltip>
+      </l-polyline>
     </l-map>
   </div>
 </template>
@@ -36,7 +38,7 @@ import routingState from '@/store/modules/routing';
 export default class Map extends Vue {
   private name: string = 'Map';
   private zoom: number = 14;
-  private center: Coordinate = { lat: 48.66, lng: 8.598 };
+  private center: Coordinate = { lat: 48.7447, lng: 9.1022 };
 
   get source() {
     return routingState.Source;
@@ -50,11 +52,15 @@ export default class Map extends Vue {
     return routingState.path;
   }
 
+  get pathCost(): number {
+    return routingState.pathCost;
+  }
+
   private updateZoom(zoomValue: number) {
     this.zoom = zoomValue;
   }
 
-  private updateCenter(centerValue: any) {
+  private updateCenter(centerValue: Coordinate) {
     this.center = centerValue;
   }
 

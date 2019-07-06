@@ -18,8 +18,11 @@ import { Coordinate } from '@/types/types';
 })
 class Routing extends VuexModule {
   public path: Coordinate[] = [];
+  public pathCost: number = -1;
   private source: Coordinate = {} as Coordinate;
+  private sourceId: number = -1;
   private target: Coordinate = {} as Coordinate;
+  private targetId: number = -1;
 
   get Source() {
     if (isSome(this.source)) {
@@ -36,9 +39,9 @@ class Routing extends VuexModule {
 
   @Action
   public sourceInput(latlng: Coordinate) {
-    this.setSource(latlng);
-    axios.post(endpoints.setSource, latlng).then(response => {
-      this.setSource(response.data);
+    this.setSource({ source: latlng, nodeId: -1 });
+    axios.post(endpoints.setSource, latlng).then(({ data }: any) => {
+      this.setSource({ source: data.location, nodeId: data.node_id });
       if (isSome(this.target)) {
         this.fetchShortestPath();
       }
@@ -47,9 +50,9 @@ class Routing extends VuexModule {
 
   @Action
   public targetInput(latlng: Coordinate) {
-    this.setTarget(latlng);
-    axios.post(endpoints.setTarget, latlng).then(response => {
-      this.setTarget(response.data);
+    this.setTarget({ target: latlng, nodeId: -1 });
+    axios.post(endpoints.setTarget, latlng).then(({ data }: any) => {
+      this.setTarget({ target: data.location, nodeId: data.node_id });
       if (isSome(this.source)) {
         this.fetchShortestPath();
       }
@@ -59,25 +62,33 @@ class Routing extends VuexModule {
   @Action
   public fetchShortestPath() {
     axios
-      .post(endpoints.fsp, { source: this.source, target: this.target })
+      .post(endpoints.fsp, { source: this.sourceId, target: this.targetId })
       .then(response => {
-        this.setPath(response.data);
+        this.setPath(response.data.path);
+        this.setPathCost(response.data.cost);
       });
   }
 
   @Mutation
-  private setSource(source: Coordinate) {
+  private setSource({ source, nodeId }: any) {
     this.source = source;
+    this.sourceId = nodeId;
   }
 
   @Mutation
-  private setTarget(target: Coordinate) {
+  private setTarget({ target, nodeId }: any) {
     this.target = target;
+    this.targetId = nodeId;
   }
 
   @Mutation
   private setPath(path: Coordinate[]) {
     this.path = path;
+  }
+
+  @Mutation
+  private setPathCost(cost: number) {
+    this.pathCost = cost;
   }
 }
 
