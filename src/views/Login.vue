@@ -21,9 +21,10 @@ import Component from 'vue-class-component';
 
 import userState from '@/store/modules/user';
 
-@Component
+@Component({
+  name: 'LoginScreen',
+})
 export default class Login extends Vue {
-  private name: string = 'Login';
   private username: string = '';
   private password: string = '';
 

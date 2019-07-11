@@ -8,6 +8,8 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 
-@Component
+@Component({
+  name: 'RegisterScreen',
+})
 export default class Register extends Vue {}
 </script>

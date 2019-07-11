@@ -34,9 +34,9 @@ import routingState from '@/store/modules/routing';
 
 @Component({
   components: { LMap, LTileLayer, LMarker, LTooltip, LPolyline },
+  name: 'MapView',
 })
 export default class Map extends Vue {
-  private name: string = 'Map';
   private zoom: number = 14;
   private center: Coordinate = { lat: 48.7447, lng: 9.1022 };
 
@@ -74,7 +74,7 @@ export default class Map extends Vue {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .map {
   height: 400px;
 }

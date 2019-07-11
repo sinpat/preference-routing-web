@@ -15,10 +15,9 @@ import userState from '@/store/modules/user';
 
 @Component({
   components: { Map },
+  name: 'HomeScreen',
 })
 export default class Home extends Vue {
-  private name: string = 'Home';
-
   private logout() {
     userState.logout();
     this.$router.push({ name: 'login' });
