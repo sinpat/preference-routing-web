@@ -1,8 +1,20 @@
 <template>
   <div class="home">
-    <h1>Home</h1>
+    <v-tabs slider-color="blue" icons-and-text dark fixed-tabs>
+      <v-tab>
+        Routing
+        <v-icon>navigation</v-icon>
+      </v-tab>
+      <v-tab>
+        GPS Tracker
+        <v-icon>my_location</v-icon>
+      </v-tab>
+      <v-tab-item>
+        <Map />
+      </v-tab-item>
+      <v-tab-item>GPS Tracker</v-tab-item>
+    </v-tabs>
     <v-btn @click="logout">Logout</v-btn>
-    <Map />
   </div>
 </template>
 
