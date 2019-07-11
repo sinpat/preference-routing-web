@@ -12,8 +12,12 @@
       <v-tab-item>
         <Map />
       </v-tab-item>
-      <v-tab-item>GPS Tracker</v-tab-item>
+      <v-tab-item>
+        <GPSTracker />
+      </v-tab-item>
     </v-tabs>
+    <br />
+    <hr />
     <v-btn @click="logout">Logout</v-btn>
   </div>
 </template>
@@ -23,10 +27,11 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 
 import Map from '@/components/Map.vue';
+import GPSTracker from '@/components/GPSTracker.vue';
 import userState from '@/store/modules/user';
 
 @Component({
-  components: { Map },
+  components: { GPSTracker, Map },
   name: 'HomeScreen',
 })
 export default class Home extends Vue {

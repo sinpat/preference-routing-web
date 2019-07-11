@@ -2,7 +2,12 @@
   <div class="login">
     <form class="login-form">
       <v-text-field v-model="username" label="Username" required></v-text-field>
-      <v-text-field v-model="password" label="Password" type="password" required></v-text-field>
+      <v-text-field
+        v-model="password"
+        label="Password"
+        type="password"
+        required
+      ></v-text-field>
       <v-btn @click="login">Login</v-btn>
       <v-btn @click="register">Register</v-btn>
     </form>

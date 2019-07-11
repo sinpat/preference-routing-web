@@ -8,7 +8,9 @@
       @update:zoom="updateZoom"
       @update:center="updateCenter"
     >
-      <l-tile-layer url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"></l-tile-layer>
+      <l-tile-layer
+        url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
+      ></l-tile-layer>
       <l-marker v-if="source" :lat-lng="source">
         <l-tooltip>Source</l-tooltip>
       </l-marker>
