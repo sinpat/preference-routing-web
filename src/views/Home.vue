@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <h1>Home</h1>
-    <button @click="logout">Logout</button>
+    <v-btn @click="logout">Logout</v-btn>
     <Map />
   </div>
 </template>

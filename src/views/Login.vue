@@ -1,17 +1,12 @@
 <template>
   <div class="login">
     <h1>Login</h1>
-    <form @submit.prevent="login" class="login-form">
-      <label>Username:&nbsp;</label>
-      <input v-model="username" type="text" />
-      <br />
-      <label>Password:&nbsp;</label>
-      <input v-model="password" type="password" />
-      <br />
-      <input type="submit" value="Login" />
+    <form class="login-form">
+      <v-text-field v-model="username" label="Username" required></v-text-field>
+      <v-text-field v-model="password" label="Password" type="password" required></v-text-field>
+      <v-btn @click="login">Login</v-btn>
+      <v-btn @click="register">Register</v-btn>
     </form>
-    <p>&nbsp;OR&nbsp;</p>
-    <button @click="register">Register</button>
   </div>
 </template>
 
