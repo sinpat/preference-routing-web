@@ -9,7 +9,7 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 
 @Component({
-  name: 'RegisterScreen',
+  name: 'RegisterView',
 })
 export default class Register extends Vue {}
 </script>

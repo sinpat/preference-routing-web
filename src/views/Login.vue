@@ -19,9 +19,10 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 
 import userState from '@/store/modules/user';
+import errorState from '@/store/modules/error';
 
 @Component({
-  name: 'LoginScreen',
+  name: 'LoginView',
 })
 export default class Login extends Vue {
   private username: string = '';
@@ -35,7 +36,7 @@ export default class Login extends Vue {
       })
       .then(() => this.$router.push({ name: 'home' }))
       .catch(() => {
-        alert('Login unsuccessful');
+        errorState.set({ message: 'Login unsuccessful' });
         this.username = '';
         this.password = '';
       });

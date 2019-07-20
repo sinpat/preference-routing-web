@@ -20,8 +20,10 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 
+import errorState from '@/store/modules/error';
+
 @Component({
-  name: 'GPSTracker',
+  name: 'GPSTrackerComponent',
 })
 export default class GPSTracker extends Vue {
   private watchId: number = 0;
@@ -43,7 +45,9 @@ export default class GPSTracker extends Vue {
     if (navigator.geolocation) {
       this.track();
     } else {
-      alert('Geolocation is not supported by this browser');
+      errorState.set({
+        message: 'Geolocation is not supported by this browser!',
+      });
     }
   }
 
@@ -55,8 +59,13 @@ export default class GPSTracker extends Vue {
   private track() {
     this.watchId = navigator.geolocation.watchPosition(
       position => this.gatheredData.push(position),
-      error =>
-        alert('code:' + error.code + '\n' + 'message' + error.message + '\n'),
+      error => {
+        this.watchId = 0;
+        errorState.set({
+          message:
+            'code:' + error.code + '\n' + 'message:' + error.message + '\n',
+        });
+      },
       { enableHighAccuracy: true }
     );
   }

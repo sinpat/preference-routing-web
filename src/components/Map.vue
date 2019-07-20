@@ -7,6 +7,7 @@
       @contextmenu="handleRightClick"
       @update:zoom="updateZoom"
       @update:center="updateCenter"
+      style="z-index: 0"
     >
       <l-tile-layer
         url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
@@ -36,7 +37,7 @@ import routingState from '@/store/modules/routing';
 
 @Component({
   components: { LMap, LTileLayer, LMarker, LTooltip, LPolyline },
-  name: 'MapView',
+  name: 'MapComponent',
 })
 export default class Map extends Vue {
   private zoom: number = 14;

@@ -32,7 +32,7 @@ import userState from '@/store/modules/user';
 
 @Component({
   components: { GPSTracker, Map },
-  name: 'HomeScreen',
+  name: 'HomeView',
 })
 export default class Home extends Vue {
   private logout() {

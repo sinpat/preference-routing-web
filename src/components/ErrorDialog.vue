@@ -1,0 +1,41 @@
+<template>
+  <v-dialog :value="errorMessage" max-width="300" persistent>
+    <v-alert :value="errorMessage" type="error">{{ errorMessage }}</v-alert>
+    <v-btn v-if="isRetryFunction" @click="tryAgain">
+      <v-icon left>replay</v-icon>
+      Wiederholen
+    </v-btn>
+    <v-btn @click="dismiss">
+      <v-icon left>clear</v-icon>
+      Schließen
+    </v-btn>
+  </v-dialog>
+</template>
+
+<script lang="ts">
+import Vue from 'vue';
+import Component from 'vue-class-component';
+
+import ErrorState from '@/store/modules/error';
+
+@Component({
+  name: 'ErrorDialogComponent',
+})
+export default class ErrorDialog extends Vue {
+  get errorMessage() {
+    return ErrorState.message;
+  }
+
+  get isRetryFunction() {
+    return ErrorState.isRetryFunction;
+  }
+
+  private tryAgain() {
+    ErrorState.tryAgain();
+  }
+
+  private dismiss() {
+    ErrorState.reset();
+  }
+}
+</script>
