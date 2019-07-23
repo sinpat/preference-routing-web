@@ -9,7 +9,7 @@ import {
 
 import store from '../store';
 import endpoints from '../endpoints';
-import { Coordinate } from '@/types/types';
+import { Coordinate, Path } from '@/types/types';
 
 import ErrorState from '@/store/modules/error';
 
@@ -19,8 +19,7 @@ import ErrorState from '@/store/modules/error';
   store,
 })
 class Routing extends VuexModule {
-  public path: Coordinate[] = [];
-  public pathCost: number = -1;
+  public path: Path = {} as Path;
   private source: Coordinate = {} as Coordinate;
   private sourceId: number = -1;
   private target: Coordinate = {} as Coordinate;
@@ -75,9 +74,14 @@ class Routing extends VuexModule {
   public fetchShortestPath() {
     axios
       .post(endpoints.fsp, { source: this.sourceId, target: this.targetId })
-      .then(response => {
-        this.setPath(response.data.path);
-        this.setPathCost(response.data.cost);
+      .then(({ data }) => {
+        this.setPath({
+          coordinates: data.path,
+          costs: data.costs,
+          totalCost: data.total_cost,
+          alpha: data.alpha,
+          costTags: data.cost_tags,
+        });
       })
       .catch(error => {
         ErrorState.set({ message: error, fun: this.fetchShortestPath });
@@ -97,13 +101,8 @@ class Routing extends VuexModule {
   }
 
   @Mutation
-  private setPath(path: Coordinate[]) {
+  private setPath(path: Path) {
     this.path = path;
-  }
-
-  @Mutation
-  private setPathCost(cost: number) {
-    this.pathCost = cost;
   }
 }
 

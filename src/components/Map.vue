@@ -18,8 +18,17 @@
       <l-marker v-if="target" :lat-lng="target">
         <l-tooltip>Target</l-tooltip>
       </l-marker>
-      <l-polyline :lat-lngs="path" color="green">
-        <l-tooltip>{{ pathCost }}</l-tooltip>
+      <l-polyline :lat-lngs="path.coordinates" color="green">
+        <l-tooltip>
+          <p>
+            <strong>Total Cost: {{ path.totalCost }}</strong>
+          </p>
+          <p v-for="(tag, index) in path.costTags" :key="index">
+            {{ tag }}:
+            {{ path.costs[index] }}
+            ({{ path.alpha[index] }})
+          </p>
+        </l-tooltip>
       </l-polyline>
     </l-map>
   </div>
@@ -32,7 +41,7 @@ import Component from 'vue-class-component';
 import L from 'leaflet';
 import { LMap, LTileLayer, LMarker, LTooltip, LPolyline } from 'vue2-leaflet';
 
-import { Coordinate } from '@/types/types';
+import { Coordinate, Path } from '@/types/types';
 import routingState from '@/store/modules/routing';
 
 @Component({
@@ -41,7 +50,7 @@ import routingState from '@/store/modules/routing';
 })
 export default class Map extends Vue {
   private zoom: number = 14;
-  private center: Coordinate = { lat: 48.7447, lng: 9.1022 };
+  private center: Coordinate = { lat: 48.6599, lng: 8.599 };
 
   get source() {
     return routingState.Source;
@@ -51,12 +60,8 @@ export default class Map extends Vue {
     return routingState.Target;
   }
 
-  get path(): Coordinate[] {
+  get path(): Path {
     return routingState.path;
-  }
-
-  get pathCost(): number {
-    return routingState.pathCost;
   }
 
   private updateZoom(zoomValue: number) {
