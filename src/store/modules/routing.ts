@@ -19,54 +19,38 @@ import ErrorState from '@/store/modules/error';
   store,
 })
 class Routing extends VuexModule {
-  public path: Path = {} as Path;
-  private source: Coordinate = {} as Coordinate;
-  private target: Coordinate = {} as Coordinate;
-  private include: Coordinate[] = [];
-  private avoid: Coordinate[] = [];
-
-  get Source() {
-    if (isSome(this.source)) {
-      return this.source;
-    }
-    return null;
-  }
-  get Target() {
-    if (isSome(this.target)) {
-      return this.target;
-    }
-    return null;
-  }
+  public paths: Path[] = [];
+  public waypoints: Coordinate[] = [];
+  public avoid: Coordinate[] = [];
 
   @Action
-  public sourceInput(latlng: Coordinate) {
-    this.setSource(latlng);
-    axios
-      .post(endpoints.setSource, latlng)
-      .then(({ data }: any) => {
-        this.setSource(data);
-        if (isSome(this.target)) {
+  public avoidPoint(latlng: Coordinate) {
+    this.fetchClosest(latlng)
+      .then((closest: any) => {
+        this.avoid.push(closest);
+        if (this.waypoints.length >= 2) {
           this.fetchShortestPath();
         }
       })
       .catch(error => {
-        ErrorState.set({ message: error, fun: () => this.sourceInput(latlng) });
+        ErrorState.set({ message: error, fun: () => this.avoidPoint(latlng) });
       });
   }
 
   @Action
-  public targetInput(latlng: Coordinate) {
-    this.setTarget(latlng);
-    axios
-      .post(endpoints.setTarget, latlng)
-      .then(({ data }: any) => {
-        this.setTarget(data);
-        if (isSome(this.source)) {
+  public addWaypoint(latlng: Coordinate) {
+    this.fetchClosest(latlng)
+      .then((closest: any) => {
+        this.waypoints.push(closest);
+        if (this.waypoints.length >= 2) {
           this.fetchShortestPath();
         }
       })
       .catch(error => {
-        ErrorState.set({ message: error, fun: () => this.targetInput(latlng) });
+        ErrorState.set({
+          message: error,
+          fun: () => this.addWaypoint(latlng),
+        });
       });
   }
 
@@ -74,19 +58,22 @@ class Routing extends VuexModule {
   public fetchShortestPath() {
     axios
       .post(endpoints.fsp, {
-        source: this.source,
-        target: this.target,
-        include: this.include,
+        way_points: this.waypoints,
         avoid: this.avoid,
       })
       .then(({ data }) => {
-        this.setPath({
-          coordinates: data.waypoints,
-          costs: data.costs,
-          totalCost: data.total_cost,
-          alpha: data.alpha,
-          costTags: data.cost_tags,
+        const paths: Path[] = data.dijkstra_results.map((result: any) => {
+          return {
+            coordinates: result.path.map((el: any) => {
+              return el.location;
+            }),
+            costs: result.costs,
+            totalCost: result.total_cost,
+            alpha: data.alpha,
+            costTags: data.costTags,
+          };
         });
+        this.setPaths(paths);
       })
       .catch(error => {
         ErrorState.set({ message: error, fun: this.fetchShortestPath });
@@ -94,23 +81,19 @@ class Routing extends VuexModule {
   }
 
   @Mutation
-  private setSource(source: Coordinate) {
-    this.source = source;
+  private setPaths(paths: Path[]) {
+    this.paths = paths;
   }
 
-  @Mutation
-  private setTarget(target: Coordinate) {
-    this.target = target;
+  @Action
+  private fetchClosest(latlng: Coordinate) {
+    return new Promise((resolve, reject) => {
+      axios
+        .post(endpoints.closest, latlng)
+        .then(response => resolve(response.data))
+        .catch(error => reject(error));
+    });
   }
-
-  @Mutation
-  private setPath(path: Path) {
-    this.path = path;
-  }
-}
-
-function isSome(coord: Coordinate) {
-  return coord.lat && coord.lng;
 }
 
 export default getModule(Routing);

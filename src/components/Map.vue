@@ -12,13 +12,26 @@
       <l-tile-layer
         url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
       ></l-tile-layer>
-      <l-marker v-if="source" :lat-lng="source">
-        <l-tooltip>Source</l-tooltip>
+      <l-marker
+        v-for="(point, index) in avoid"
+        :key="'avoid' + index"
+        :lat-lng="point"
+      >
+        <l-tooltip>Avoid</l-tooltip>
       </l-marker>
-      <l-marker v-if="target" :lat-lng="target">
-        <l-tooltip>Target</l-tooltip>
+      <l-marker
+        v-for="(point, index) in waypoints"
+        :key="'include' + index"
+        :lat-lng="point"
+      >
+        <l-tooltip>Include</l-tooltip>
       </l-marker>
-      <l-polyline :lat-lngs="path.coordinates" color="green">
+      <l-polyline
+        v-for="(path, index) in paths"
+        :key="index"
+        :lat-lngs="path.coordinates"
+        color="green"
+      >
         <l-tooltip>
           <p>
             <strong>Total Cost: {{ path.totalCost }}</strong>
@@ -52,16 +65,16 @@ export default class Map extends Vue {
   private zoom: number = 14;
   private center: Coordinate = { lat: 48.6599, lng: 8.599 };
 
-  get source() {
-    return routingState.Source;
+  get waypoints() {
+    return routingState.waypoints;
   }
 
-  get target() {
-    return routingState.Target;
+  get avoid() {
+    return routingState.avoid;
   }
 
-  get path(): Path {
-    return routingState.path;
+  get paths(): Path[] {
+    return routingState.paths;
   }
 
   private updateZoom(zoomValue: number) {
@@ -73,11 +86,11 @@ export default class Map extends Vue {
   }
 
   private handleLeftClick({ latlng }: any) {
-    routingState.sourceInput(latlng);
+    routingState.addWaypoint(latlng);
   }
 
   private handleRightClick({ latlng }: any) {
-    routingState.targetInput(latlng);
+    routingState.avoidPoint(latlng);
   }
 }
 </script>

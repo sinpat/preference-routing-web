@@ -3,8 +3,7 @@ const user = 'http://localhost:8000/user/';
 
 export default {
   // routing
-  setSource: routing + 'source',
-  setTarget: routing + 'target',
+  closest: routing + 'closest',
   fsp: routing + 'fsp',
 
   // user
