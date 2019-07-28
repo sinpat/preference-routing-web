@@ -19,70 +19,58 @@ import ErrorState from '@/store/modules/error';
   store,
 })
 class Routing extends VuexModule {
-  public paths: Path[] = [];
+  public path: Path = {} as Path;
   public waypoints: Coordinate[] = [];
   public avoid: Coordinate[] = [];
 
+  @Mutation
+  public clear() {
+    this.path = {} as Path;
+    this.waypoints = [];
+    this.avoid = [];
+  }
+
   @Action
   public avoidPoint(latlng: Coordinate) {
-    this.fetchClosest(latlng)
-      .then((closest: any) => {
-        this.avoid.push(closest);
-        if (this.waypoints.length >= 2) {
-          this.fetchShortestPath();
-        }
-      })
-      .catch(error => {
-        ErrorState.set({ message: error, fun: () => this.avoidPoint(latlng) });
-      });
+    this.avoid.push(latlng);
   }
 
   @Action
   public addWaypoint(latlng: Coordinate) {
-    this.fetchClosest(latlng)
-      .then((closest: any) => {
-        this.waypoints.push(closest);
-        if (this.waypoints.length >= 2) {
-          this.fetchShortestPath();
-        }
+    if (this.waypoints.length < 2) {
+      this.waypoints.push(latlng);
+    } else {
+      this.waypoints.splice(this.waypoints.length - 1, 0, latlng);
+    }
+    if (this.waypoints.length >= 2) {
+      this.fetchShortestPath();
+    }
+  }
+
+  @Mutation
+  private setPath(path: Path) {
+    this.path = path;
+  }
+
+  @Action
+  private fetchShortestPath() {
+    axios
+      .post(endpoints.fsp, { include: this.waypoints, avoid: this.avoid })
+      .then(({ data }) => {
+        this.setPath({
+          coordinates: data.path.coordinates,
+          costs: data.path.costs,
+          totalCost: data.path.total_cost,
+          alpha: data.alpha,
+          costTags: data.cost_tags,
+        });
       })
       .catch(error => {
         ErrorState.set({
           message: error,
-          fun: () => this.addWaypoint(latlng),
+          fun: () => this.fetchShortestPath(),
         });
       });
-  }
-
-  @Action
-  public fetchShortestPath() {
-    axios
-      .post(endpoints.fsp, {
-        way_points: this.waypoints,
-        avoid: this.avoid,
-      })
-      .then(({ data }) => {
-        const paths: Path[] = data.dijkstra_results.map((result: any) => {
-          return {
-            coordinates: result.path.map((el: any) => {
-              return el.location;
-            }),
-            costs: result.costs,
-            totalCost: result.total_cost,
-            alpha: data.alpha,
-            costTags: data.costTags,
-          };
-        });
-        this.setPaths(paths);
-      })
-      .catch(error => {
-        ErrorState.set({ message: error, fun: this.fetchShortestPath });
-      });
-  }
-
-  @Mutation
-  private setPaths(paths: Path[]) {
-    this.paths = paths;
   }
 
   @Action

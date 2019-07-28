@@ -1,49 +1,49 @@
 <template>
-  <div class="map">
-    <l-map
-      :zoom="zoom"
-      :center="center"
-      @click="handleLeftClick"
-      @contextmenu="handleRightClick"
-      @update:zoom="updateZoom"
-      @update:center="updateCenter"
-      style="z-index: 0"
-    >
-      <l-tile-layer
-        url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
-      ></l-tile-layer>
-      <l-marker
-        v-for="(point, index) in avoid"
-        :key="'avoid' + index"
-        :lat-lng="point"
+  <div>
+    <div class="map-container">
+      <l-map
+        :zoom="zoom"
+        :center="center"
+        @click="handleLeftClick"
+        @contextmenu="handleRightClick"
+        @update:zoom="updateZoom"
+        @update:center="updateCenter"
       >
-        <l-tooltip>Avoid</l-tooltip>
-      </l-marker>
-      <l-marker
-        v-for="(point, index) in waypoints"
-        :key="'include' + index"
-        :lat-lng="point"
-      >
-        <l-tooltip>Include</l-tooltip>
-      </l-marker>
-      <l-polyline
-        v-for="(path, index) in paths"
-        :key="index"
-        :lat-lngs="path.coordinates"
-        color="green"
-      >
-        <l-tooltip>
-          <p>
-            <strong>Total Cost: {{ path.totalCost }}</strong>
-          </p>
-          <p v-for="(tag, index) in path.costTags" :key="index">
-            {{ tag }}:
-            {{ path.costs[index] }}
-            ({{ path.alpha[index] }})
-          </p>
-        </l-tooltip>
-      </l-polyline>
-    </l-map>
+        <l-tile-layer
+          url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
+        ></l-tile-layer>
+        <l-marker
+          v-for="(point, index) in avoid"
+          :key="'avoid' + index"
+          :lat-lng="point"
+        >
+          <l-tooltip
+            >Avoid <br />
+            {{ point }}</l-tooltip
+          >
+        </l-marker>
+        <l-marker
+          v-for="(point, index) in waypoints"
+          :key="'include' + index"
+          :lat-lng="point"
+        >
+          <l-tooltip>Include <br />{{ point }}</l-tooltip>
+        </l-marker>
+        <l-polyline :lat-lngs="path.coordinates" color="green">
+          <l-tooltip>
+            <p>
+              <strong>Total Cost: {{ path.totalCost }}</strong>
+            </p>
+            <p v-for="(tag, index) in path.costTags" :key="index">
+              {{ tag }}:
+              {{ path.costs[index] }}
+              ({{ path.alpha[index] }})
+            </p>
+          </l-tooltip>
+        </l-polyline>
+      </l-map>
+    </div>
+    <v-btn @click="clear">Clear</v-btn>
   </div>
 </template>
 
@@ -73,8 +73,8 @@ export default class Map extends Vue {
     return routingState.avoid;
   }
 
-  get paths(): Path[] {
-    return routingState.paths;
+  get path(): Path {
+    return routingState.path;
   }
 
   private updateZoom(zoomValue: number) {
@@ -92,11 +92,15 @@ export default class Map extends Vue {
   private handleRightClick({ latlng }: any) {
     routingState.avoidPoint(latlng);
   }
+
+  private clear() {
+    routingState.clear();
+  }
 }
 </script>
 
 <style lang="scss" scoped>
-.map {
+.map-container {
   height: 400px;
 }
 </style>
