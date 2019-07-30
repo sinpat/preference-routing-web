@@ -21,18 +21,11 @@ import ErrorState from '@/store/modules/error';
 class Routing extends VuexModule {
   public path: Path = {} as Path;
   public waypoints: Coordinate[] = [];
-  public avoid: Coordinate[] = [];
 
   @Mutation
   public clear() {
     this.path = {} as Path;
     this.waypoints = [];
-    this.avoid = [];
-  }
-
-  @Action
-  public avoidPoint(latlng: Coordinate) {
-    this.avoid.push(latlng);
   }
 
   @Action
@@ -55,7 +48,7 @@ class Routing extends VuexModule {
   @Action
   private fetchShortestPath() {
     axios
-      .post(endpoints.fsp, { include: this.waypoints, avoid: this.avoid })
+      .post(endpoints.fsp, { include: this.waypoints })
       .then(({ data }) => {
         this.setPath({
           coordinates: data.path.coordinates,
