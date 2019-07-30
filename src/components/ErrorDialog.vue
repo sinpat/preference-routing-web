@@ -1,12 +1,14 @@
 <template>
   <v-dialog :value="errorMessage" max-width="300" persistent>
-    <v-alert :value="errorMessage" type="error">{{ errorMessage }}</v-alert>
+    <v-alert :value="!!errorMessage" type="error" border="bottom">{{
+      errorMessage
+    }}</v-alert>
     <v-btn v-if="isRetryFunction" @click="tryAgain">
-      <v-icon left>replay</v-icon>
+      <v-icon left>mdi-replay</v-icon>
       Wiederholen
     </v-btn>
     <v-btn @click="dismiss">
-      <v-icon left>clear</v-icon>
+      <v-icon left>mdi-close</v-icon>
       Schließen
     </v-btn>
   </v-dialog>

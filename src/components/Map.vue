@@ -8,6 +8,7 @@
         @contextmenu="handleRightClick"
         @update:zoom="updateZoom"
         @update:center="updateCenter"
+        style="z-index: 1"
       >
         <l-tile-layer
           url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"

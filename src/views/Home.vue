@@ -3,11 +3,11 @@
     <v-tabs slider-color="blue" icons-and-text dark fixed-tabs>
       <v-tab>
         Routing
-        <v-icon>navigation</v-icon>
+        <v-icon>mdi-navigation</v-icon>
       </v-tab>
       <v-tab>
         GPS Tracker
-        <v-icon>my_location</v-icon>
+        <v-icon>mdi-crosshairs-gps</v-icon>
       </v-tab>
       <v-tab-item>
         <Map />
