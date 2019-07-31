@@ -46,9 +46,9 @@ class Routing extends VuexModule {
           spliceIndex = index;
         }
       });
-      // We do not want the point to be the new source
-      spliceIndex = Math.max(1, spliceIndex);
-      this.waypoints.splice(spliceIndex, 0, latlng);
+      // We do not want the point to be the new target
+      spliceIndex = Math.min(spliceIndex, this.waypoints.length - 2);
+      this.waypoints.splice(spliceIndex + 1, 0, latlng);
     }
     if (this.waypoints.length >= 2) {
       this.fetchShortestPath();
@@ -75,6 +75,16 @@ class Routing extends VuexModule {
       this.waypoints[index]
     );
     this.fetchShortestPath();
+  }
+
+  @Action
+  public removeWaypoint(index: number) {
+    this.waypoints.splice(index, 1);
+    if (this.waypoints.length >= 2) {
+      this.fetchShortestPath();
+    } else if (this.waypoints.length === 1) {
+      this.setPath({} as Path);
+    }
   }
 
   @Mutation

@@ -40,6 +40,9 @@
               <v-btn v-if="index !== waypoints.length - 1" @click="waypointDown(index)" icon>
                 <v-icon>mdi-chevron-down</v-icon>
               </v-btn>
+              <v-btn @click="removeWaypoint(index)" icon>
+                <v-icon>mdi-delete</v-icon>
+              </v-btn>
             </v-card-text>
           </v-card>
         </v-flex>
@@ -97,6 +100,10 @@ export default class Map extends Vue {
 
   private waypointDown(index: number) {
     routingState.moveWaypointDown(index);
+  }
+
+  private removeWaypoint(index: number) {
+    routingState.removeWaypoint(index);
   }
 }
 </script>
