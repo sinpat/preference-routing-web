@@ -33,11 +33,48 @@ class Routing extends VuexModule {
     if (this.waypoints.length < 2) {
       this.waypoints.push(latlng);
     } else {
-      this.waypoints.splice(this.waypoints.length - 1, 0, latlng);
+      // Find waypoint with smallest distance to input Coordinate
+      let minDist = Number.MAX_VALUE;
+      let spliceIndex = -1;
+      this.waypoints.forEach((current, index) => {
+        const dist = Math.sqrt(
+          Math.pow(latlng.lat - current.lat, 2) +
+            Math.pow(latlng.lng - current.lng, 2)
+        );
+        if (dist < minDist) {
+          minDist = dist;
+          spliceIndex = index;
+        }
+      });
+      // We do not want the point to be the new source
+      spliceIndex = Math.max(1, spliceIndex);
+      this.waypoints.splice(spliceIndex, 0, latlng);
     }
     if (this.waypoints.length >= 2) {
       this.fetchShortestPath();
     }
+  }
+
+  @Action
+  public moveWaypointUp(index: number) {
+    this.waypoints.splice(
+      index - 1,
+      2,
+      this.waypoints[index],
+      this.waypoints[index - 1]
+    );
+    this.fetchShortestPath();
+  }
+
+  @Action
+  public moveWaypointDown(index: number) {
+    this.waypoints.splice(
+      index,
+      2,
+      this.waypoints[index + 1],
+      this.waypoints[index]
+    );
+    this.fetchShortestPath();
   }
 
   @Mutation

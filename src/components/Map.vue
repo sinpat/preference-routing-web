@@ -2,8 +2,8 @@
   <div>
     <v-container grid-list-md>
       <v-layout wrap>
-        <v-flex xs8 class="map-container"
-          ><l-map
+        <v-flex xs8 class="map-container">
+          <l-map
             :zoom="zoom"
             :center="center"
             @click="handleLeftClick"
@@ -11,14 +11,8 @@
             @update:center="updateCenter"
             style="z-index: 1"
           >
-            <l-tile-layer
-              url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
-            ></l-tile-layer>
-            <l-marker
-              v-for="(point, index) in waypoints"
-              :key="index"
-              :lat-lng="point"
-            >
+            <l-tile-layer url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"></l-tile-layer>
+            <l-marker v-for="(point, index) in waypoints" :key="index" :lat-lng="point">
               <l-tooltip>{{ index }}</l-tooltip>
             </l-marker>
             <l-polyline :lat-lngs="path.coordinates" color="green">
@@ -33,13 +27,21 @@
                 </p>
               </l-tooltip>
             </l-polyline>
-          </l-map></v-flex
-        >
-        <v-flex style="border: 1px solid black">
-          <!-- Maybe use some drag + drop cards here -->
-          <p v-for="(point, index) in waypoints" :key="index">
-            {{ index }}: {{ point }}
-          </p>
+          </l-map>
+        </v-flex>
+        <v-flex>
+          <v-card v-for="(point, index) in waypoints" :key="index" hover>
+            <v-card-text>
+              {{ index }}: {{ point }}
+              <v-spacer></v-spacer>
+              <v-btn v-if="index !== 0" @click="waypointUp(index)" icon>
+                <v-icon>mdi-chevron-up</v-icon>
+              </v-btn>
+              <v-btn v-if="index !== waypoints.length - 1" @click="waypointDown(index)" icon>
+                <v-icon>mdi-chevron-down</v-icon>
+              </v-btn>
+            </v-card-text>
+          </v-card>
         </v-flex>
       </v-layout>
     </v-container>
@@ -87,6 +89,14 @@ export default class Map extends Vue {
 
   private clear() {
     routingState.clear();
+  }
+
+  private waypointUp(index: number) {
+    routingState.moveWaypointUp(index);
+  }
+
+  private waypointDown(index: number) {
+    routingState.moveWaypointDown(index);
   }
 }
 </script>
