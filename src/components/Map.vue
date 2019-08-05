@@ -45,6 +45,7 @@
               </v-btn>
             </v-card-text>
           </v-card>
+          <v-btn v-if="waypoints.length >= 2" @click="routeFinished">Done!</v-btn>
         </v-flex>
       </v-layout>
     </v-container>
@@ -92,6 +93,10 @@ export default class Map extends Vue {
 
   private clear() {
     routingState.clear();
+  }
+
+  private routeFinished() {
+    routingState.getNewPreference();
   }
 
   private waypointUp(index: number) {

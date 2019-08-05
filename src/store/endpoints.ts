@@ -5,6 +5,7 @@ export default {
   // routing
   closest: routing + 'closest',
   fsp: routing + 'fsp',
+  newPref: routing + 'preference',
 
   // user
   login: user + 'login',

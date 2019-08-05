@@ -30,28 +30,49 @@ class Routing extends VuexModule {
 
   @Action
   public addWaypoint(latlng: Coordinate) {
-    if (this.waypoints.length < 2) {
-      this.waypoints.push(latlng);
-    } else {
-      // Find waypoint with smallest distance to input Coordinate
-      let minDist = Number.MAX_VALUE;
-      let spliceIndex = -1;
-      this.waypoints.forEach((current, index) => {
-        const dist = Math.sqrt(
-          Math.pow(latlng.lat - current.lat, 2) +
-            Math.pow(latlng.lng - current.lng, 2)
-        );
-        if (dist < minDist) {
-          minDist = dist;
-          spliceIndex = index;
+    this.fetchClosest(latlng)
+      .then((point: any) => {
+        if (this.waypoints.length < 2) {
+          this.waypoints.push(point);
+        } else {
+          // Find waypoint with smallest distance to input Coordinate
+          let minDist = Number.MAX_VALUE;
+          let spliceIndex = -1;
+          this.waypoints.forEach((current, index) => {
+            const dist = Math.sqrt(
+              Math.pow(point.lat - current.lat, 2) +
+                Math.pow(point.lng - current.lng, 2)
+            );
+            if (dist < minDist) {
+              minDist = dist;
+              spliceIndex = index;
+            }
+          });
+          if (spliceIndex === 0) {
+            // We do not want to change our source
+            spliceIndex++;
+          }
+          this.waypoints.splice(spliceIndex, 0, point);
         }
+        if (this.waypoints.length >= 2) {
+          this.fetchShortestPath();
+        }
+      })
+      .catch(error => {
+        ErrorState.set({
+          message: error,
+          fun: () => this.addWaypoint(latlng),
+        });
       });
-      // We do not want the point to be the new target
-      spliceIndex = Math.min(spliceIndex, this.waypoints.length - 2);
-      this.waypoints.splice(spliceIndex + 1, 0, latlng);
-    }
+  }
+
+  @Action
+  public removeWaypoint(index: number) {
+    this.waypoints.splice(index, 1);
     if (this.waypoints.length >= 2) {
       this.fetchShortestPath();
+    } else {
+      this.setPath({} as Path);
     }
   }
 
@@ -78,13 +99,18 @@ class Routing extends VuexModule {
   }
 
   @Action
-  public removeWaypoint(index: number) {
-    this.waypoints.splice(index, 1);
-    if (this.waypoints.length >= 2) {
-      this.fetchShortestPath();
-    } else if (this.waypoints.length === 1) {
-      this.setPath({} as Path);
-    }
+  public getNewPreference() {
+    axios
+      .post(endpoints.newPref)
+      .then(({ data }) => {
+        console.log('New Preference:', data);
+      })
+      .catch(error => {
+        ErrorState.set({
+          message: error,
+          fun: this.getNewPreference,
+        });
+      });
   }
 
   @Mutation
@@ -95,7 +121,7 @@ class Routing extends VuexModule {
   @Action
   private fetchShortestPath() {
     axios
-      .post(endpoints.fsp, { include: this.waypoints })
+      .post(endpoints.fsp, this.waypoints)
       .then(({ data }) => {
         this.setPath({
           coordinates: data.path.coordinates,
@@ -108,7 +134,7 @@ class Routing extends VuexModule {
       .catch(error => {
         ErrorState.set({
           message: error,
-          fun: () => this.fetchShortestPath(),
+          fun: this.fetchShortestPath,
         });
       });
   }
