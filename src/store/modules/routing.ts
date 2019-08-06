@@ -143,7 +143,9 @@ class Routing extends VuexModule {
   private fetchClosest(latlng: Coordinate) {
     return new Promise((resolve, reject) => {
       axios
-        .post(endpoints.closest, latlng)
+        .get(endpoints.closest, {
+          params: latlng,
+        })
         .then(response => resolve(response.data))
         .catch(error => reject(error));
     });
