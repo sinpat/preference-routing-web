@@ -3,7 +3,7 @@
     <v-alert :value="!!errorMessage" type="error" border="bottom">{{
       errorMessage
     }}</v-alert>
-    <v-btn v-if="isRetryFunction" @click="tryAgain">
+    <v-btn v-if="hasRetryFunction" @click="tryAgain">
       <v-icon left>mdi-replay</v-icon>
       Wiederholen
     </v-btn>
@@ -28,8 +28,8 @@ export default class ErrorDialog extends Vue {
     return ErrorState.message;
   }
 
-  get isRetryFunction() {
-    return ErrorState.isRetryFunction;
+  get hasRetryFunction() {
+    return ErrorState.hasRetryFunction;
   }
 
   private tryAgain() {

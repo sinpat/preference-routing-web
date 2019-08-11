@@ -28,7 +28,7 @@ import Component from 'vue-class-component';
 
 import Map from '@/components/Map.vue';
 import GPSTracker from '@/components/GPSTracker.vue';
-import userState from '@/store/modules/user';
+import UserState from '@/store/modules/user';
 
 @Component({
   components: { GPSTracker, Map },
@@ -36,7 +36,7 @@ import userState from '@/store/modules/user';
 })
 export default class Home extends Vue {
   private logout() {
-    userState.logout();
+    UserState.logout();
     this.$router.push({ name: 'login' });
   }
 }

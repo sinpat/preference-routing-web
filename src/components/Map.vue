@@ -62,7 +62,7 @@ import L from 'leaflet';
 import { LMap, LTileLayer, LMarker, LTooltip, LPolyline } from 'vue2-leaflet';
 
 import { Coordinate, Path } from '@/types/types';
-import routingState from '@/store/modules/routing';
+import RoutingState from '@/store/modules/routing';
 
 @Component({
   components: { LMap, LTileLayer, LMarker, LTooltip, LPolyline },
@@ -73,11 +73,11 @@ export default class Map extends Vue {
   private center: Coordinate = { lat: 48.9666, lng: 9.4005 };
 
   get waypoints() {
-    return routingState.waypoints;
+    return RoutingState.waypoints;
   }
 
   get path(): Path {
-    return routingState.path;
+    return RoutingState.path;
   }
 
   private updateZoom(zoomValue: number) {
@@ -89,31 +89,31 @@ export default class Map extends Vue {
   }
 
   private handleLeftClick({ latlng }: any) {
-    routingState.addWaypoint(latlng);
+    RoutingState.addWaypoint(latlng);
   }
 
   private clear() {
-    routingState.clear();
+    RoutingState.clear();
   }
 
   private reset() {
-    routingState.resetData();
+    RoutingState.resetData();
   }
 
   private routeFinished() {
-    routingState.getNewPreference();
+    RoutingState.getNewPreference();
   }
 
   private waypointUp(index: number) {
-    routingState.moveWaypointUp(index);
+    RoutingState.moveWaypointUp(index);
   }
 
   private waypointDown(index: number) {
-    routingState.moveWaypointDown(index);
+    RoutingState.moveWaypointDown(index);
   }
 
   private removeWaypoint(index: number) {
-    routingState.removeWaypoint(index);
+    RoutingState.removeWaypoint(index);
   }
 }
 </script>

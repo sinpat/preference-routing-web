@@ -13,30 +13,40 @@ import store from '../store';
   store,
 })
 class ErrorState extends VuexModule {
-  public message: string = '';
+  public text: string = '';
+  private error: any = null;
   private retryFunction: any = null;
 
-  get isRetryFunction(): boolean {
+  get hasRetryFunction(): boolean {
     return !!this.retryFunction;
   }
 
-  @Mutation
-  public set({ message, fun }: any) {
-    this.message = message;
-    if (fun) {
-      this.retryFunction = fun;
+  get message(): string {
+    if (!this.text) {
+      return '';
     }
+    return this.text + this.error;
+  }
+
+  @Mutation
+  public set({ text, error, callback }: any) {
+    this.text = text;
+    this.error = error;
+    this.retryFunction = callback;
   }
 
   @Mutation
   public reset() {
-    this.message = '';
+    this.text = '';
+    this.error = null;
     this.retryFunction = null;
   }
 
   @Mutation
   public tryAgain() {
-    this.message = '';
+    this.text = '';
+    this.error = null;
+    this.retryFunction = null;
     this.retryFunction();
   }
 }

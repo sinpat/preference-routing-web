@@ -60,7 +60,8 @@ class Routing extends VuexModule {
       })
       .catch(error => {
         ErrorState.set({
-          message: error,
+          text: 'Nearest point could not be fetched',
+          error,
           fun: () => this.addWaypoint(latlng),
         });
       });
@@ -107,7 +108,8 @@ class Routing extends VuexModule {
       })
       .catch(error => {
         ErrorState.set({
-          message: error,
+          text: 'There was an error calculating the new preference',
+          error,
           fun: this.getNewPreference,
         });
       });
@@ -120,7 +122,8 @@ class Routing extends VuexModule {
       .then(() => console.log('Reset data successfully'))
       .catch(error => {
         ErrorState.set({
-          message: error,
+          text: 'There was an error reseting the user data',
+          error,
           fun: this.resetData,
         });
       });
@@ -146,7 +149,8 @@ class Routing extends VuexModule {
       })
       .catch(error => {
         ErrorState.set({
-          message: error,
+          text: 'There was an error fetching the shortest path',
+          error,
           fun: this.fetchShortestPath,
         });
       });
