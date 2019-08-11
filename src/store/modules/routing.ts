@@ -113,6 +113,19 @@ class Routing extends VuexModule {
       });
   }
 
+  @Action
+  public resetData() {
+    axios
+      .post(endpoints.reset)
+      .then(() => console.log('Reset data successfully'))
+      .catch(error => {
+        ErrorState.set({
+          message: error,
+          fun: this.resetData,
+        });
+      });
+  }
+
   @Mutation
   private setPath(path: Path) {
     this.path = path;

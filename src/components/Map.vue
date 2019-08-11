@@ -45,11 +45,12 @@
               </v-btn>
             </v-card-text>
           </v-card>
-          <v-btn v-if="waypoints.length >= 2" @click="routeFinished">Done!</v-btn>
+          <v-btn v-if="waypoints.length > 2" @click="routeFinished">Done!</v-btn>
         </v-flex>
       </v-layout>
     </v-container>
-    <v-btn @click="clear">Clear</v-btn>
+    <v-btn @click="clear">Clear Waypoints</v-btn>
+    <v-btn @click="reset">Reset Data</v-btn>
   </div>
 </template>
 
@@ -68,8 +69,8 @@ import routingState from '@/store/modules/routing';
   name: 'MapComponent',
 })
 export default class Map extends Vue {
-  private zoom: number = 14;
-  private center: Coordinate = { lat: 48.6599, lng: 8.599 };
+  private zoom: number = 15;
+  private center: Coordinate = { lat: 48.9666, lng: 9.4005 };
 
   get waypoints() {
     return routingState.waypoints;
@@ -93,6 +94,10 @@ export default class Map extends Vue {
 
   private clear() {
     routingState.clear();
+  }
+
+  private reset() {
+    routingState.resetData();
   }
 
   private routeFinished() {
