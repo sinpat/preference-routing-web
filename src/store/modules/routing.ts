@@ -21,6 +21,7 @@ import ErrorState from '@/store/modules/error';
 class Routing extends VuexModule {
   public path: Path = {} as Path;
   public waypoints: Coordinate[] = [];
+  public preference: number[] = [];
 
   @Mutation
   public clear() {
@@ -31,7 +32,7 @@ class Routing extends VuexModule {
   @Action({ rawError: true })
   public addWaypoint(latlng: Coordinate) {
     fetchClosest(latlng)
-      .then((point: any) => {
+      .then(({ data: point }) => {
         if (this.waypoints.length < 2) {
           this.waypoints.push(point);
         } else {
@@ -104,7 +105,7 @@ class Routing extends VuexModule {
     axios
       .post(endpoints.newPref)
       .then(({ data }) => {
-        console.log('New Preference:', data);
+        this.setPreference(data);
       })
       .catch(error => {
         ErrorState.set({
@@ -116,10 +117,26 @@ class Routing extends VuexModule {
   }
 
   @Action({ rawError: true })
+  public fetchPreference() {
+    axios
+      .get(endpoints.preference)
+      .then(response => {
+        this.setPreference(response.data);
+      })
+      .catch(error => {
+        ErrorState.set({
+          text: 'Could not fetch preference',
+          error,
+          callback: this.fetchPreference,
+        });
+      });
+  }
+
+  @Action({ rawError: true })
   public resetData() {
     axios
       .post(endpoints.reset)
-      .then(() => console.log('Reset data successfully'))
+      .then(() => alert('Reset data successfully'))
       .catch(error => {
         ErrorState.set({
           text: 'There was an error reseting the user data',
@@ -127,6 +144,11 @@ class Routing extends VuexModule {
           callback: this.resetData,
         });
       });
+  }
+
+  @Mutation
+  private setPreference(pref: number[]) {
+    this.preference = pref;
   }
 
   @Mutation

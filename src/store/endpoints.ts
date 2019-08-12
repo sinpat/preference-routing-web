@@ -9,6 +9,7 @@ export default {
   closest: routing + 'closest',
   fsp: routing + 'fsp',
   newPref: routing + 'preference',
+  preference: routing + 'preference',
   reset: routing + 'reset',
 
   // user

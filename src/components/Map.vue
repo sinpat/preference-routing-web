@@ -49,6 +49,7 @@
         </v-flex>
       </v-layout>
     </v-container>
+    <p>Preference: {{ preference }}</p>
     <v-btn @click="clear">Clear Waypoints</v-btn>
     <v-btn @click="reset">Reset Data</v-btn>
   </div>
@@ -72,12 +73,20 @@ export default class Map extends Vue {
   private zoom: number = 15;
   private center: Coordinate = { lat: 48.9666, lng: 9.4005 };
 
+  private created() {
+    RoutingState.fetchPreference();
+  }
+
   get waypoints() {
     return RoutingState.waypoints;
   }
 
   get path(): Path {
     return RoutingState.path;
+  }
+
+  get preference(): number[] {
+    return RoutingState.preference;
   }
 
   private updateZoom(zoomValue: number) {
