@@ -2,6 +2,7 @@ import {
   Module,
   VuexModule,
   Mutation,
+  Action,
   getModule,
 } from 'vuex-module-decorators';
 
@@ -15,10 +16,10 @@ import store from '../store';
 class ErrorState extends VuexModule {
   public text: string = '';
   private error: any = null;
-  private retryFunction: any = null;
+  private callback: any = null;
 
   get hasRetryFunction(): boolean {
-    return !!this.retryFunction;
+    return !!this.callback;
   }
 
   get message(): string {
@@ -32,22 +33,21 @@ class ErrorState extends VuexModule {
   public set({ text, error, callback }: any) {
     this.text = text;
     this.error = error;
-    this.retryFunction = callback;
+    this.callback = callback;
   }
 
   @Mutation
   public reset() {
     this.text = '';
     this.error = null;
-    this.retryFunction = null;
+    this.callback = null;
   }
 
-  @Mutation
+  @Action
   public tryAgain() {
-    this.text = '';
-    this.error = null;
-    this.retryFunction = null;
-    this.retryFunction();
+    const callback = this.callback;
+    this.reset();
+    callback();
   }
 }
 
