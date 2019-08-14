@@ -105,7 +105,9 @@ class Routing extends VuexModule {
     axios
       .post(endpoints.newPref)
       .then(({ data }) => {
-        this.setPreference(data);
+        if (data.length !== 0) {
+          this.setPreference(data);
+        }
       })
       .catch(error => {
         ErrorState.set({

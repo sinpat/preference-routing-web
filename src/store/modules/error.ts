@@ -15,18 +15,11 @@ import store from '../store';
 })
 class ErrorState extends VuexModule {
   public text: string = '';
-  private error: any = null;
+  public error: any = null;
   private callback: any = null;
 
   get hasRetryFunction(): boolean {
     return !!this.callback;
-  }
-
-  get message(): string {
-    if (!this.text) {
-      return '';
-    }
-    return this.text + this.error;
   }
 
   @Mutation
