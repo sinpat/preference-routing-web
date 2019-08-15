@@ -45,7 +45,12 @@
               </v-btn>
             </v-card-text>
           </v-card>
-          <v-btn v-if="waypoints.length > 2" @click="routeFinished">Done!</v-btn>
+          <v-btn v-if="waypoints.length >= 2" @click="fetchRoute" text icon large color="blue">
+            <v-icon>mdi-replay</v-icon>
+          </v-btn>
+          <v-btn v-if="waypoints.length > 2" @click="routeFinished" text icon large color="green">
+            <v-icon>mdi-check</v-icon>
+          </v-btn>
         </v-flex>
       </v-layout>
     </v-container>
@@ -123,6 +128,10 @@ export default class Map extends Vue {
 
   private removeWaypoint(index: number) {
     RoutingState.removeWaypoint(index);
+  }
+
+  private fetchRoute() {
+    RoutingState.fetchShortestPath();
   }
 }
 </script>

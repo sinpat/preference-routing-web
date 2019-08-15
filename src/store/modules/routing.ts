@@ -148,18 +148,8 @@ class Routing extends VuexModule {
       });
   }
 
-  @Mutation
-  private setPreference(pref: number[]) {
-    this.preference = pref;
-  }
-
-  @Mutation
-  private setPath(path: Path) {
-    this.path = path;
-  }
-
   @Action({ rawError: true })
-  private fetchShortestPath() {
+  public fetchShortestPath() {
     axios
       .post(endpoints.fsp, this.waypoints)
       .then(({ data }) => {
@@ -178,6 +168,16 @@ class Routing extends VuexModule {
           callback: this.fetchShortestPath,
         });
       });
+  }
+
+  @Mutation
+  private setPreference(pref: number[]) {
+    this.preference = pref;
+  }
+
+  @Mutation
+  private setPath(path: Path) {
+    this.path = path;
   }
 }
 
