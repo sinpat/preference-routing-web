@@ -1,8 +1,8 @@
 <template>
   <div>
-    <v-container grid-list-md>
-      <v-layout wrap>
-        <v-flex xs8 class="map-container">
+    <v-container fluid>
+      <v-row>
+        <v-col cols="8" class="map-container">
           <l-map
             :zoom="zoom"
             :center="center"
@@ -28,31 +28,11 @@
               </l-tooltip>
             </l-polyline>
           </l-map>
-        </v-flex>
-        <v-flex>
-          <v-card v-for="(point, index) in waypoints" :key="index" hover>
-            <v-card-text>
-              {{ index }}: {{ point }}
-              <v-spacer></v-spacer>
-              <v-btn v-if="index !== 0" @click="waypointUp(index)" icon>
-                <v-icon>mdi-chevron-up</v-icon>
-              </v-btn>
-              <v-btn v-if="index !== waypoints.length - 1" @click="waypointDown(index)" icon>
-                <v-icon>mdi-chevron-down</v-icon>
-              </v-btn>
-              <v-btn @click="removeWaypoint(index)" icon>
-                <v-icon>mdi-delete</v-icon>
-              </v-btn>
-            </v-card-text>
-          </v-card>
-          <v-btn v-if="waypoints.length >= 2" @click="fetchRoute" text icon large color="blue">
-            <v-icon>mdi-replay</v-icon>
-          </v-btn>
-          <v-btn v-if="waypoints.length > 2" @click="routeFinished" text icon large color="green">
-            <v-icon>mdi-check</v-icon>
-          </v-btn>
-        </v-flex>
-      </v-layout>
+        </v-col>
+        <v-col cols="4">
+          <PathManager />
+        </v-col>
+      </v-row>
     </v-container>
     <p>Preference: {{ preference }}</p>
     <v-btn @click="clear">Clear Waypoints</v-btn>
@@ -69,9 +49,10 @@ import { LMap, LTileLayer, LMarker, LTooltip, LPolyline } from 'vue2-leaflet';
 
 import { Coordinate, Path } from '@/types/types';
 import RoutingState from '@/store/modules/routing';
+import PathManager from './PathManager.vue';
 
 @Component({
-  components: { LMap, LTileLayer, LMarker, LTooltip, LPolyline },
+  components: { LMap, LTileLayer, LMarker, LTooltip, LPolyline, PathManager },
   name: 'MapComponent',
 })
 export default class Map extends Vue {
@@ -112,26 +93,6 @@ export default class Map extends Vue {
 
   private reset() {
     RoutingState.resetData();
-  }
-
-  private routeFinished() {
-    RoutingState.getNewPreference();
-  }
-
-  private waypointUp(index: number) {
-    RoutingState.moveWaypointUp(index);
-  }
-
-  private waypointDown(index: number) {
-    RoutingState.moveWaypointDown(index);
-  }
-
-  private removeWaypoint(index: number) {
-    RoutingState.removeWaypoint(index);
-  }
-
-  private fetchRoute() {
-    RoutingState.fetchShortestPath();
   }
 }
 </script>

@@ -26,7 +26,7 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 
-import Map from '@/components/Map.vue';
+import Map from '@/components/routing/Map.vue';
 import GPSTracker from '@/components/GPSTracker.vue';
 import UserState from '@/store/modules/user';
 

@@ -138,7 +138,10 @@ class Routing extends VuexModule {
   public resetData() {
     axios
       .post(endpoints.reset)
-      .then(() => alert('Reset data successfully'))
+      .then(() => {
+        this.fetchPreference();
+        alert('Reset data successfully');
+      })
       .catch(error => {
         ErrorState.set({
           text: 'There was an error reseting the user data',
