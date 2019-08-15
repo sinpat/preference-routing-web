@@ -12,6 +12,7 @@ import endpoints from '../endpoints';
 import { Coordinate, Path } from '@/types/types';
 
 import ErrorState from '@/store/modules/error';
+import NotificationState from '@/store/modules/notification';
 
 @Module({
   dynamic: true,
@@ -140,7 +141,7 @@ class Routing extends VuexModule {
       .post(endpoints.reset)
       .then(() => {
         this.fetchPreference();
-        alert('Reset data successfully');
+        NotificationState.setMessage('Reset data successfully');
       })
       .catch(error => {
         ErrorState.set({

@@ -10,7 +10,7 @@ import store from '../store';
 
 @Module({
   dynamic: true,
-  name: 'applicationState',
+  name: 'errorState',
   store,
 })
 class ErrorState extends VuexModule {

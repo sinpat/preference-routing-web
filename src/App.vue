@@ -3,6 +3,7 @@
     <v-app>
       <router-view />
       <ErrorDialog />
+      <Snackbar />
     </v-app>
   </div>
 </template>
@@ -11,11 +12,12 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 
-import ErrorDialog from '@/components/ErrorDialog.vue';
+import ErrorDialog from '@/components/util/ErrorDialog.vue';
+import Snackbar from '@/components/util/Snackbar.vue';
 
 @Component({
   name: 'AppComponent',
-  components: { ErrorDialog },
+  components: { ErrorDialog, Snackbar },
 })
 export default class App extends Vue {}
 </script>
