@@ -9,16 +9,16 @@
         GPS Tracker
         <v-icon>mdi-crosshairs-gps</v-icon>
       </v-tab>
-      <v-tab-item>
-        <Map />
+      <v-tab-item class="mx-2">
+        <Routing />
       </v-tab-item>
-      <v-tab-item>
+      <v-tab-item class="mx-2">
         <GPSTracker />
       </v-tab-item>
     </v-tabs>
-    <br />
-    <hr />
-    <v-btn @click="logout">Logout</v-btn>
+    <div class="mx-4 mt-4 text-center">
+      <v-btn @click="logout">Logout</v-btn>
+    </div>
   </div>
 </template>
 
@@ -26,12 +26,13 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 
-import Map from '@/components/routing/Map.vue';
-import GPSTracker from '@/components/GPSTracker.vue';
 import UserState from '@/store/modules/user';
 
+import Routing from '@/components/routing/Routing.vue';
+import GPSTracker from '@/components/GPSTracker.vue';
+
 @Component({
-  components: { GPSTracker, Map },
+  components: { GPSTracker, Routing },
   name: 'HomeView',
 })
 export default class Home extends Vue {

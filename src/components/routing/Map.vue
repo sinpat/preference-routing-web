@@ -1,42 +1,30 @@
 <template>
-  <div>
-    <v-container fluid>
-      <v-row>
-        <v-col cols="8" class="map-container">
-          <l-map
-            :zoom="zoom"
-            :center="center"
-            @click="handleLeftClick"
-            @update:zoom="updateZoom"
-            @update:center="updateCenter"
-            style="z-index: 1"
-          >
-            <l-tile-layer url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"></l-tile-layer>
-            <l-marker v-for="(point, index) in waypoints" :key="index" :lat-lng="point">
-              <l-tooltip>{{ index }}</l-tooltip>
-            </l-marker>
-            <l-polyline :lat-lngs="path.coordinates" color="green">
-              <l-tooltip>
-                <p>
-                  <strong>Total Cost: {{ path.totalCost }}</strong>
-                </p>
-                <p v-for="(tag, index) in path.costTags" :key="index">
-                  {{ tag }}:
-                  {{ path.costs[index] }}
-                  ({{ path.alpha[index] }})
-                </p>
-              </l-tooltip>
-            </l-polyline>
-          </l-map>
-        </v-col>
-        <v-col cols="4">
-          <PathManager />
-        </v-col>
-      </v-row>
-    </v-container>
-    <p>Preference: {{ preference }}</p>
-    <v-btn @click="clear">Clear Waypoints</v-btn>
-    <v-btn @click="reset">Reset Data</v-btn>
+  <div class="map-container">
+    <l-map
+      :zoom="zoom"
+      :center="center"
+      @click="handleLeftClick"
+      @update:zoom="updateZoom"
+      @update:center="updateCenter"
+      style="z-index: 1"
+    >
+      <l-tile-layer url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"></l-tile-layer>
+      <l-marker v-for="(point, index) in waypoints" :key="index" :lat-lng="point">
+        <l-tooltip>{{ index }}</l-tooltip>
+      </l-marker>
+      <l-polyline :lat-lngs="path.coordinates" color="green">
+        <l-tooltip>
+          <p>
+            <strong>Total Cost: {{ path.totalCost }}</strong>
+          </p>
+          <p v-for="(tag, index) in path.costTags" :key="index">
+            {{ tag }}:
+            {{ path.costs[index] }}
+            ({{ path.alpha[index] }})
+          </p>
+        </l-tooltip>
+      </l-polyline>
+    </l-map>
   </div>
 </template>
 
@@ -49,19 +37,20 @@ import { LMap, LTileLayer, LMarker, LTooltip, LPolyline } from 'vue2-leaflet';
 
 import { Coordinate, Path } from '@/types/types';
 import RoutingState from '@/store/modules/routing';
-import PathManager from './PathManager.vue';
 
 @Component({
-  components: { LMap, LTileLayer, LMarker, LTooltip, LPolyline, PathManager },
   name: 'MapComponent',
+  components: {
+    LMap,
+    LTileLayer,
+    LMarker,
+    LTooltip,
+    LPolyline,
+  },
 })
 export default class Map extends Vue {
   private zoom: number = 15;
   private center: Coordinate = { lat: 48.9666, lng: 9.4005 };
-
-  private created() {
-    RoutingState.fetchPreference();
-  }
 
   get waypoints() {
     return RoutingState.waypoints;
@@ -69,10 +58,6 @@ export default class Map extends Vue {
 
   get path(): Path {
     return RoutingState.path;
-  }
-
-  get preference(): number[] {
-    return RoutingState.preference;
   }
 
   private updateZoom(zoomValue: number) {
@@ -86,14 +71,6 @@ export default class Map extends Vue {
   private handleLeftClick({ latlng }: any) {
     RoutingState.addWaypoint(latlng);
   }
-
-  private clear() {
-    RoutingState.clear();
-  }
-
-  private reset() {
-    RoutingState.resetData();
-  }
 }
 </script>
 
@@ -102,4 +79,3 @@ export default class Map extends Vue {
   height: 400px;
 }
 </style>
-

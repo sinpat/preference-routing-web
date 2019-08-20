@@ -15,12 +15,14 @@
         </v-btn>
       </v-card-text>
     </v-card>
-    <v-btn v-if="waypoints.length >= 2" @click="fetchRoute" text icon large color="blue">
-      <v-icon>mdi-replay</v-icon>
-    </v-btn>
-    <v-btn v-if="waypoints.length > 2" @click="routeFinished" text icon large color="green">
-      <v-icon>mdi-check</v-icon>
-    </v-btn>
+    <div class="text-center">
+      <v-btn v-if="waypoints.length >= 2" @click="fetchRoute" text icon large color="blue">
+        <v-icon>mdi-replay</v-icon>
+      </v-btn>
+      <v-btn v-if="waypoints.length > 2" @click="routeFinished" text icon large color="green">
+        <v-icon>mdi-check</v-icon>
+      </v-btn>
+    </div>
   </div>
 </template>
 
