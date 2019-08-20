@@ -7,8 +7,8 @@
         <v-btn v-if="!isEditing" @click="fetchPreference" icon small>
           <v-icon>mdi-replay</v-icon>
         </v-btn>
-        <v-btn icon small>
-          <v-icon @click="toggleEditing">{{ isEditing ? 'mdi-content-save' : 'mdi-pencil' }}</v-icon>
+        <v-btn @click="toggleEditing" :disabled="!prefValid" icon small>
+          <v-icon>{{ isEditing ? 'mdi-content-save' : 'mdi-pencil' }}</v-icon>
         </v-btn>
       </v-card-title>
       <v-card-text>
@@ -17,7 +17,12 @@
             <strong>{{ costTags[index] }}:</strong>
           </v-col>
           <v-col>
-            <strong>{{ value }}</strong>
+            <v-text-field
+              v-if="isEditing"
+              v-model.number="preference[index]"
+              :rules="[prefValueValid]"
+            ></v-text-field>
+            <strong v-else>{{ value }}</strong>
           </v-col>
         </v-row>
       </v-card-text>
@@ -38,12 +43,14 @@ export default class PreferenceManager extends Vue {
   private costTags = ['Unsuitability', 'Distance', 'Height'];
   private isEditing = false;
 
-  get preference(): number[] | string {
-    const preference = RoutingState.preference;
-    if (preference.length === 0) {
-      return 'None';
-    }
-    return preference;
+  get preference(): number[] {
+    return RoutingState.preference;
+  }
+
+  get prefValid(): boolean {
+    const sum = this.preference.reduce((acc, el) => acc + el, 0);
+    const allValid = this.preference.every(this.valueInRange);
+    return allValid && sum === 1;
   }
 
   private created() {
@@ -52,6 +59,14 @@ export default class PreferenceManager extends Vue {
 
   private fetchPreference() {
     RoutingState.fetchPreference();
+  }
+
+  private prefValueValid(value: number) {
+    return this.valueInRange(value) || 'Number has to be between 0 and 1';
+  }
+
+  private valueInRange(value: number) {
+    return 0 <= value && value <= 1;
   }
 
   private toggleEditing() {

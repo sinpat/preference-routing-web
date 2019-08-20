@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card elevation="4">
     <v-card-title>Actions</v-card-title>
     <v-card-actions>
       <v-btn @click="clear">Clear Waypoints</v-btn>
