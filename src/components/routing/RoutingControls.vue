@@ -1,8 +1,11 @@
 <template>
-  <div class="mt-4">
-    <v-btn @click="clear">Clear Waypoints</v-btn>
-    <v-btn @click="reset">Reset Data</v-btn>
-  </div>
+  <v-card>
+    <v-card-title>Actions</v-card-title>
+    <v-card-actions>
+      <v-btn @click="clear">Clear Waypoints</v-btn>
+      <v-btn @click="reset">Reset Data</v-btn>
+    </v-card-actions>
+  </v-card>
 </template>
 
 <script lang="ts">

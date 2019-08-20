@@ -1,11 +1,27 @@
 <template>
   <div>
-    <v-row dense>
-      <v-col cols="3">
-        <strong>Current Preference:</strong>
-      </v-col>
-      <v-col>{{ preference }}</v-col>
-    </v-row>
+    <v-card elevation="4">
+      <v-card-title>
+        Current Preference
+        <v-spacer></v-spacer>
+        <v-btn v-if="!isEditing" @click="fetchPreference" icon small>
+          <v-icon>mdi-replay</v-icon>
+        </v-btn>
+        <v-btn icon small>
+          <v-icon @click="toggleEditing">{{ isEditing ? 'mdi-content-save' : 'mdi-pencil' }}</v-icon>
+        </v-btn>
+      </v-card-title>
+      <v-card-text>
+        <v-row v-for="(value, index) in preference" :key="index" dense>
+          <v-col cols="4">
+            <strong>{{ costTags[index] }}:</strong>
+          </v-col>
+          <v-col>
+            <strong>{{ value }}</strong>
+          </v-col>
+        </v-row>
+      </v-card-text>
+    </v-card>
   </div>
 </template>
 
@@ -19,9 +35,8 @@ import RoutingState from '@/store/modules/routing';
   name: 'PreferenceManagerComponent',
 })
 export default class PreferenceManager extends Vue {
-  private created() {
-    RoutingState.fetchPreference();
-  }
+  private costTags = ['Unsuitability', 'Distance', 'Height'];
+  private isEditing = false;
 
   get preference(): number[] | string {
     const preference = RoutingState.preference;
@@ -29,6 +44,18 @@ export default class PreferenceManager extends Vue {
       return 'None';
     }
     return preference;
+  }
+
+  private created() {
+    this.fetchPreference();
+  }
+
+  private fetchPreference() {
+    RoutingState.fetchPreference();
+  }
+
+  private toggleEditing() {
+    this.isEditing = !this.isEditing;
   }
 }
 </script>

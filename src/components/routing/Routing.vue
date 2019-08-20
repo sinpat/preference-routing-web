@@ -8,8 +8,14 @@
         <PathManager />
       </v-col>
     </v-row>
-    <PreferenceManager />
-    <RoutingControls />
+    <v-row dense>
+      <v-col cols="6">
+        <PreferenceManager />
+      </v-col>
+      <v-col cols="6">
+        <RoutingControls />
+      </v-col>
+    </v-row>
   </div>
 </template>
 
