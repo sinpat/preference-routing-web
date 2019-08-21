@@ -1,10 +1,10 @@
-export interface Coordinate {
+export interface ICoordinate {
   lat: number;
   lng: number;
 }
 
-export interface Path {
-  coordinates: Coordinate[];
+export interface IPath {
+  coordinates: ICoordinate[];
   costs: number[];
   totalCost: number;
   alpha: number[];

@@ -40,7 +40,7 @@ import { LMap, LTileLayer, LPolyline, LTooltip } from 'vue2-leaflet';
 
 import WaypointMarker from './WaypointMarker.vue';
 
-import { Coordinate, Path } from '@/types/types';
+import { ICoordinate, IPath } from '@/types/types';
 import RoutingState from '@/store/modules/routing';
 
 @Component({
@@ -62,13 +62,13 @@ export default class Map extends Vue {
   private tileUrl: string =
     'https://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=bd08b205580548d18e6235e2da754318';
   private zoom: number = 15;
-  private center: Coordinate = { lat: 48.9666, lng: 9.4005 };
+  private center: ICoordinate = { lat: 48.9666, lng: 9.4005 };
 
   get waypoints() {
     return RoutingState.waypoints;
   }
 
-  get path(): Path {
+  get path(): IPath {
     return RoutingState.path;
   }
 
@@ -80,7 +80,7 @@ export default class Map extends Vue {
     this.zoom = zoomValue;
   }
 
-  private updateCenter(centerValue: Coordinate) {
+  private updateCenter(centerValue: ICoordinate) {
     this.center = centerValue;
   }
 

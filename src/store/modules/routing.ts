@@ -9,7 +9,7 @@ import {
 
 import store from '../store';
 import endpoints from '../endpoints';
-import { Coordinate, Path } from '@/types/types';
+import { ICoordinate, IPath } from '@/types/types';
 
 import ErrorState from '@/store/modules/error';
 import NotificationState from '@/store/modules/notification';
@@ -20,19 +20,19 @@ import NotificationState from '@/store/modules/notification';
   store,
 })
 class Routing extends VuexModule {
-  public path: Path = {} as Path;
-  public waypoints: Coordinate[] = [];
+  public path: IPath = {} as IPath;
+  public waypoints: ICoordinate[] = [];
   public preference: number[] = [];
   public costTags: string[] = ['Unsuitability', 'Distance', 'Height'];
 
   @Mutation
   public clear() {
-    this.path = {} as Path;
+    this.path = {} as IPath;
     this.waypoints = [];
   }
 
   @Action({ rawError: true })
-  public addWaypoint(latlng: Coordinate) {
+  public addWaypoint(latlng: ICoordinate) {
     fetchClosest(latlng)
       .then(({ data: point }) => {
         if (this.waypoints.length < 2) {
@@ -76,7 +76,7 @@ class Routing extends VuexModule {
     if (this.waypoints.length >= 2) {
       this.fetchShortestPath();
     } else {
-      this.setPath({} as Path);
+      this.setPath({} as IPath);
     }
   }
 
@@ -186,12 +186,12 @@ class Routing extends VuexModule {
   }
 
   @Mutation
-  private setPath(path: Path) {
+  private setPath(path: IPath) {
     this.path = path;
   }
 }
 
-function fetchClosest(latlng: Coordinate) {
+function fetchClosest(latlng: ICoordinate) {
   return axios.get(endpoints.closest, {
     params: latlng,
   });
