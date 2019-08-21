@@ -1,5 +1,5 @@
 <template>
-  <v-card elevation="4">
+  <v-card elevation="4" height="100%">
     <v-card-title class="mb-2">
       My Preference
       <v-spacer></v-spacer>
@@ -17,7 +17,7 @@
     </v-card-title>
     <v-card-text class="pb-0">
       <v-row dense>
-        <v-col v-for="(_, index) in preference" :key="index" cols="6" sm="4" md="3" lg="2">
+        <v-col v-for="(_, index) in preference" :key="index" cols="12" sm="6" md="4">
           <v-text-field
             v-model.number="preference[index]"
             :readonly="!isEditing"

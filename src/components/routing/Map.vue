@@ -1,5 +1,5 @@
 <template>
-  <div class="map-container">
+  <div class="map-container elevation-4">
     <l-map
       :zoom="zoom"
       :center="center"
@@ -85,6 +85,6 @@ export default class Map extends Vue {
 
 <style lang="scss" scoped>
 .map-container {
-  height: 400px;
+  height: 450px;
 }
 </style>

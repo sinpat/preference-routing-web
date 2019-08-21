@@ -1,16 +1,19 @@
 <template>
-  <div class="my-2">
+  <v-container>
     <v-row dense>
-      <v-col cols="9">
+      <v-col>
         <Map />
       </v-col>
-      <v-col cols="3">
+    </v-row>
+    <v-row dense>
+      <v-col cols="8">
+        <PreferenceManager />
+      </v-col>
+      <v-col cols="4">
         <RoutingControls />
-        <PathManager />
       </v-col>
     </v-row>
-    <PreferenceManager />
-  </div>
+  </v-container>
 </template>
 
 <script lang="ts">
@@ -18,7 +21,6 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 
 import Map from './Map.vue';
-import PathManager from './PathManager.vue';
 import PreferenceManager from './PreferenceManager.vue';
 import RoutingControls from './RoutingControls.vue';
 
@@ -26,7 +28,6 @@ import RoutingControls from './RoutingControls.vue';
   name: 'RoutingComponent',
   components: {
     Map,
-    PathManager,
     PreferenceManager,
     RoutingControls,
   },
