@@ -1,16 +1,11 @@
 <template>
-  <l-marker :lat-lng="point">
+  <l-marker @contextmenu="removeWaypoint(index)" :lat-lng="point">
     <l-tooltip>{{ index }}</l-tooltip>
     <l-popup>
-      <v-btn v-if="index !== 0" @click="waypointUp(index)" icon>
-        <v-icon>mdi-chevron-up</v-icon>
-      </v-btn>
-      <v-btn v-if="index !== waypoints.length - 1" @click="waypointDown(index)" icon>
-        <v-icon>mdi-chevron-down</v-icon>
-      </v-btn>
-      <v-btn @click="removeWaypoint(index)" icon>
-        <v-icon>mdi-delete</v-icon>
-      </v-btn>
+      <h3 class="mb-2">Position</h3>
+      <v-btn-toggle @change="changeOrder" :value="index" mandatory rounded>
+        <v-btn v-for="(point, index) in waypoints" :key="index">{{ index }}</v-btn>
+      </v-btn-toggle>
     </l-popup>
   </l-marker>
 </template>
@@ -18,6 +13,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
+import { Prop } from 'vue-property-decorator';
 
 import RoutingState from '@/store/modules/routing';
 
@@ -25,7 +21,6 @@ import { LMarker, LTooltip, LPopup } from 'vue2-leaflet';
 
 @Component({
   name: 'WaypointMarkerComponent',
-  props: { index: Number, point: Object },
   components: {
     LMarker,
     LTooltip,
@@ -33,16 +28,21 @@ import { LMarker, LTooltip, LPopup } from 'vue2-leaflet';
   },
 })
 export default class PathManager extends Vue {
+  @Prop({ type: Number, required: true })
+  private index: any;
+
+  @Prop({ type: Object, required: true })
+  private point: any;
+
   get waypoints() {
     return RoutingState.waypoints;
   }
 
-  private waypointUp(index: number) {
-    RoutingState.moveWaypointUp(index);
-  }
-
-  private waypointDown(index: number) {
-    RoutingState.moveWaypointDown(index);
+  private changeOrder(value: number) {
+    RoutingState.swapWaypoints({
+      from: this.index,
+      to: value,
+    });
   }
 
   private removeWaypoint(index: number) {

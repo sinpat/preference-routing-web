@@ -80,24 +80,10 @@ class Routing extends VuexModule {
   }
 
   @Action({ rawError: true })
-  public moveWaypointUp(index: number) {
-    this.waypoints.splice(
-      index - 1,
-      2,
-      this.waypoints[index],
-      this.waypoints[index - 1]
-    );
-    this.fetchShortestPath();
-  }
-
-  @Action({ rawError: true })
-  public moveWaypointDown(index: number) {
-    this.waypoints.splice(
-      index,
-      2,
-      this.waypoints[index + 1],
-      this.waypoints[index]
-    );
+  public swapWaypoints({ from, to }: any) {
+    const temp = this.waypoints[from];
+    this.waypoints.splice(from, 1, this.waypoints[to]);
+    this.waypoints.splice(to, 1, temp);
     this.fetchShortestPath();
   }
 
