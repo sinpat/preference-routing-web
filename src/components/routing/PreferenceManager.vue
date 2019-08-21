@@ -42,11 +42,14 @@ import RoutingState from '@/store/modules/routing';
   name: 'PreferenceManagerComponent',
 })
 export default class PreferenceManager extends Vue {
-  private costTags = ['Unsuitability', 'Distance', 'Height'];
   private isEditing = false;
 
   get preference(): number[] {
     return RoutingState.preference;
+  }
+
+  get costTags(): string[] {
+    return RoutingState.costTags;
   }
 
   get prefValid(): boolean {

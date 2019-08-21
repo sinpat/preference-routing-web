@@ -23,6 +23,7 @@ class Routing extends VuexModule {
   public path: Path = {} as Path;
   public waypoints: Coordinate[] = [];
   public preference: number[] = [];
+  public costTags: string[] = ['Unsuitability', 'Distance', 'Height'];
 
   @Mutation
   public clear() {
@@ -168,7 +169,6 @@ class Routing extends VuexModule {
           costs: data.path.costs,
           totalCost: data.path.total_cost,
           alpha: data.alpha,
-          costTags: data.cost_tags,
         });
       })
       .catch(error => {

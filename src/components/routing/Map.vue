@@ -20,9 +20,9 @@
           <p>
             <strong>Total Cost: {{ path.totalCost }}</strong>
           </p>
-          <p v-for="(tag, index) in path.costTags" :key="index">
-            {{ tag }}:
-            {{ path.costs[index] }}
+          <p v-for="(cost, index) in path.costs" :key="index">
+            {{ costTags[index] }}:
+            {{ cost }}
             ({{ path.alpha[index] }})
           </p>
         </l-tooltip>
@@ -67,6 +67,10 @@ export default class Map extends Vue {
 
   get path(): Path {
     return RoutingState.path;
+  }
+
+  get costTags(): string[] {
+    return RoutingState.costTags;
   }
 
   private updateZoom(zoomValue: number) {

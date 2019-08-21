@@ -8,5 +8,4 @@ export interface Path {
   costs: number[];
   totalCost: number;
   alpha: number[];
-  costTags: number[];
 }
