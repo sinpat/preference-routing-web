@@ -8,7 +8,7 @@
       @update:center="updateCenter"
       style="z-index: 1"
     >
-      <l-tile-layer url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"></l-tile-layer>
+      <l-tile-layer :url="tileUrl"></l-tile-layer>
       <WaypointMarker
         v-for="(point, index) in waypoints"
         :key="[index, point.lat, point.lng].join('-')"
@@ -57,7 +57,10 @@ export default class Map extends Vue {
   /* TODO
    * Make marker draggable?
    * Introduce own icon for markers
+   * Toggle map tile layout
    */
+  private tileUrl: string =
+    'https://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=bd08b205580548d18e6235e2da754318';
   private zoom: number = 15;
   private center: Coordinate = { lat: 48.9666, lng: 9.4005 };
 
