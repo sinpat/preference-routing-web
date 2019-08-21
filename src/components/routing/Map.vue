@@ -9,9 +9,12 @@
       style="z-index: 1"
     >
       <l-tile-layer url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"></l-tile-layer>
-      <l-marker v-for="(point, index) in waypoints" :key="index" :lat-lng="point">
-        <l-tooltip>{{ index }}</l-tooltip>
-      </l-marker>
+      <WaypointMarker
+        v-for="(point, index) in waypoints"
+        :key="[index, point.lat, point.lng].join('-')"
+        :point="point"
+        :index="index"
+      />
       <l-polyline :lat-lngs="path.coordinates" color="green">
         <l-tooltip>
           <p>
@@ -33,7 +36,9 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 
 import L from 'leaflet';
-import { LMap, LTileLayer, LMarker, LTooltip, LPolyline } from 'vue2-leaflet';
+import { LMap, LTileLayer, LPolyline, LTooltip } from 'vue2-leaflet';
+
+import WaypointMarker from './WaypointMarker.vue';
 
 import { Coordinate, Path } from '@/types/types';
 import RoutingState from '@/store/modules/routing';
@@ -43,12 +48,16 @@ import RoutingState from '@/store/modules/routing';
   components: {
     LMap,
     LTileLayer,
-    LMarker,
-    LTooltip,
     LPolyline,
+    LTooltip,
+    WaypointMarker,
   },
 })
 export default class Map extends Vue {
+  /* TODO
+   * Make marker draggable?
+   * Introduce own icon for markers
+   */
   private zoom: number = 15;
   private center: Coordinate = { lat: 48.9666, lng: 9.4005 };
 

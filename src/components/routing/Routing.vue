@@ -1,10 +1,10 @@
 <template>
   <div class="mx-2">
     <v-row>
-      <v-col cols="8">
+      <v-col cols="9">
         <Map />
       </v-col>
-      <v-col cols="4">
+      <v-col cols="3">
         <PathManager />
       </v-col>
     </v-row>
