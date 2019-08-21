@@ -90,7 +90,7 @@ class Routing extends VuexModule {
   @Action({ rawError: true })
   public getNewPreference() {
     axios
-      .post(endpoints.newPref)
+      .post(endpoints.calcPref)
       .then(({ data }) => {
         if (data.length !== 0) {
           this.setPreference(data);
@@ -103,6 +103,26 @@ class Routing extends VuexModule {
           callback: this.getNewPreference,
         });
       });
+  }
+
+  @Action({ rawError: true })
+  public savePreference(preference: number[]) {
+    return new Promise((resolve, reject) => {
+      axios
+        .post(endpoints.preference, preference)
+        .then(response => {
+          this.setPreference(response.data);
+          resolve();
+        })
+        .catch(error => {
+          ErrorState.set({
+            text: 'Could not save preference',
+            error,
+            callback: () => this.savePreference(preference),
+          });
+          reject();
+        });
+    });
   }
 
   @Action({ rawError: true })

@@ -1,21 +1,15 @@
 <template>
-  <div class="mx-2">
-    <v-row>
+  <div class="my-2">
+    <v-row dense>
       <v-col cols="9">
         <Map />
       </v-col>
       <v-col cols="3">
+        <RoutingControls />
         <PathManager />
       </v-col>
     </v-row>
-    <v-row dense>
-      <v-col cols="6">
-        <PreferenceManager />
-      </v-col>
-      <v-col cols="6">
-        <RoutingControls />
-      </v-col>
-    </v-row>
+    <PreferenceManager />
   </div>
 </template>
 

@@ -8,8 +8,8 @@ export default {
   // routing
   closest: routing + 'closest',
   fsp: routing + 'fsp',
-  newPref: routing + 'preference',
   preference: routing + 'preference',
+  calcPref: routing + 'calc_preference',
   reset: routing + 'reset',
 
   // user
