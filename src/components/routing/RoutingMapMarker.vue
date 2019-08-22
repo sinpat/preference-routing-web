@@ -27,7 +27,7 @@ import { LMarker, LTooltip, LPopup } from 'vue2-leaflet';
     LPopup,
   },
 })
-export default class PathManager extends Vue {
+export default class RoutingMapMarker extends Vue {
   @Prop({ type: Number, required: true })
   private index: any;
 

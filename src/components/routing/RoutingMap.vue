@@ -9,7 +9,7 @@
       style="z-index: 1"
     >
       <l-tile-layer :url="tileUrl"></l-tile-layer>
-      <WaypointMarker
+      <RoutingMapMarker
         v-for="(point, index) in waypoints"
         :key="[index, point.lat, point.lng].join('-')"
         :point="point"
@@ -38,7 +38,7 @@ import Component from 'vue-class-component';
 import L from 'leaflet';
 import { LMap, LTileLayer, LPolyline, LTooltip } from 'vue2-leaflet';
 
-import WaypointMarker from './WaypointMarker.vue';
+import RoutingMapMarker from './RoutingMapMarker.vue';
 
 import { ICoordinate, IPath } from '@/types/types';
 import RoutingState from '@/store/modules/routing';
@@ -50,10 +50,10 @@ import RoutingState from '@/store/modules/routing';
     LTileLayer,
     LPolyline,
     LTooltip,
-    WaypointMarker,
+    RoutingMapMarker,
   },
 })
-export default class Map extends Vue {
+export default class RoutingMap extends Vue {
   /* TODO
    * Make marker draggable?
    * Introduce own icon for markers

@@ -2,12 +2,12 @@
   <v-container>
     <v-row dense>
       <v-col>
-        <Map />
+        <RoutingMap />
       </v-col>
     </v-row>
     <v-row dense>
       <v-col cols="8">
-        <PreferenceManager />
+        <RoutingPreferenceManager />
       </v-col>
       <v-col cols="4">
         <RoutingControls />
@@ -20,15 +20,15 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 
-import Map from './Map.vue';
-import PreferenceManager from './PreferenceManager.vue';
+import RoutingMap from './RoutingMap.vue';
+import RoutingPreferenceManager from './RoutingPreferenceManager.vue';
 import RoutingControls from './RoutingControls.vue';
 
 @Component({
   name: 'RoutingComponent',
   components: {
-    Map,
-    PreferenceManager,
+    RoutingMap,
+    RoutingPreferenceManager,
     RoutingControls,
   },
 })

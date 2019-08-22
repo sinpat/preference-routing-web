@@ -16,7 +16,7 @@ import ErrorDialog from '@/components/util/ErrorDialog.vue';
 import Snackbar from '@/components/util/Snackbar.vue';
 
 @Component({
-  name: 'AppComponent',
+  name: 'App',
   components: { ErrorDialog, Snackbar },
 })
 export default class App extends Vue {}

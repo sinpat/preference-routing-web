@@ -25,7 +25,7 @@ import ErrorState from '@/store/modules/error';
 @Component({
   name: 'GPSTrackerComponent',
 })
-export default class GPSTracker extends Vue {
+export default class GpsTracker extends Vue {
   private watchId: number = 0;
   private showData: boolean = false;
   private gatheredData: any[] = [];
@@ -71,7 +71,3 @@ export default class GPSTracker extends Vue {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-</style>
-

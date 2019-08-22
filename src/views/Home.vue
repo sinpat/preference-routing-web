@@ -13,7 +13,7 @@
         <Routing />
       </v-tab-item>
       <v-tab-item class="mx-2">
-        <GPSTracker />
+        <GpsTracker />
       </v-tab-item>
     </v-tabs>
     <div class="mx-4 mt-4 text-center">
@@ -29,10 +29,10 @@ import Component from 'vue-class-component';
 import UserState from '@/store/modules/user';
 
 import Routing from '@/components/routing/Routing.vue';
-import GPSTracker from '@/components/GPSTracker.vue';
+import GpsTracker from '@/components/GpsTracker.vue';
 
 @Component({
-  components: { GPSTracker, Routing },
+  components: { GpsTracker, Routing },
   name: 'HomeView',
 })
 export default class Home extends Vue {

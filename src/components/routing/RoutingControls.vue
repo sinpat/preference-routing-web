@@ -7,7 +7,14 @@
         <br />
         <v-btn @click="reset" block>Reset Data</v-btn>
       </div>
-      <PathManager class="mt-4" />
+      <div class="text-center mt-4">
+        <v-btn v-if="waypoints.length >= 2" @click="fetchRoute" icon large color="blue">
+          <v-icon>mdi-replay</v-icon>
+        </v-btn>
+        <v-btn v-if="waypoints.length > 2" @click="routeFinished" icon large color="green">
+          <v-icon>mdi-check</v-icon>
+        </v-btn>
+      </div>
     </v-card-text>
   </v-card>
 </template>
@@ -18,13 +25,22 @@ import Component from 'vue-class-component';
 
 import RoutingState from '@/store/modules/routing';
 
-import PathManager from './PathManager.vue';
-
 @Component({
   name: 'RoutingControlsComponent',
-  components: { PathManager },
 })
 export default class RoutingControls extends Vue {
+  get waypoints() {
+    return RoutingState.waypoints;
+  }
+
+  private fetchRoute() {
+    RoutingState.fetchShortestPath();
+  }
+
+  private routeFinished() {
+    RoutingState.getNewPreference();
+  }
+
   private clear() {
     RoutingState.clear();
   }

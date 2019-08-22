@@ -41,7 +41,7 @@ import RoutingState from '@/store/modules/routing';
 @Component({
   name: 'PreferenceManagerComponent',
 })
-export default class PreferenceManager extends Vue {
+export default class RoutingPreferenceManager extends Vue {
   private isEditing = false;
 
   get preference(): number[] {
