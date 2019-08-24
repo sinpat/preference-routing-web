@@ -8,7 +8,7 @@ import {
 } from 'vuex-module-decorators';
 
 import store from '../store';
-import endpoints from '../endpoints';
+import endpoints from '@/endpoints';
 
 @Module({
   dynamic: true,

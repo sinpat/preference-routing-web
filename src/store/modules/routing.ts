@@ -7,8 +7,10 @@ import {
   getModule,
 } from 'vuex-module-decorators';
 
+import apiService from '@/api-service';
+
 import store from '../store';
-import endpoints from '../endpoints';
+import endpoints from '@/endpoints';
 import { ICoordinate, IPath } from '@/types/types';
 
 import ErrorState from '@/store/modules/error';
@@ -128,10 +130,10 @@ class Routing extends VuexModule {
 
   @Action({ rawError: true })
   public fetchPreference() {
-    axios
-      .get(endpoints.preference)
-      .then(response => {
-        this.setPreference(response.data);
+    apiService
+      .getPreference()
+      .then(preference => {
+        this.setPreference(preference);
       })
       .catch(error => {
         ErrorState.set({
@@ -165,9 +167,9 @@ class Routing extends VuexModule {
       .post(endpoints.fsp, this.waypoints)
       .then(({ data }) => {
         this.setPath({
-          coordinates: data.path.coordinates,
-          costs: data.path.costs,
-          totalCost: data.path.total_cost,
+          coordinates: data.coordinates,
+          costs: data.costs,
+          totalCost: data.total_cost,
           alpha: data.alpha,
         });
       })
