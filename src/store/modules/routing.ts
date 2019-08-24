@@ -129,19 +129,17 @@ class Routing extends VuexModule {
   }
 
   @Action({ rawError: true })
-  public fetchPreference() {
-    apiService
-      .getPreference()
-      .then(preference => {
-        this.setPreference(preference);
-      })
-      .catch(error => {
-        ErrorState.set({
-          text: 'Could not fetch preference',
-          error,
-          callback: this.fetchPreference,
-        });
+  public async fetchPreference() {
+    try {
+      const preference = await apiService.getPreference();
+      this.setPreference(preference);
+    } catch (error) {
+      ErrorState.set({
+        text: 'Could not fetch preference',
+        error,
+        callback: this.fetchPreference,
       });
+    }
   }
 
   @Action({ rawError: true })

@@ -7,20 +7,21 @@ class ApiService {
     return this.apiCall<number[]>(endpoints.preference);
   }
 
-  private apiCall<T = any>(
+  private async apiCall<T = any>(
     url: string,
     method: any = 'GET',
     data?: any
   ): Promise<T> {
-    return new Promise<T>((resolve, reject) => {
-      axios({
+    try {
+      const response = await axios({
         method,
         url,
         data,
-      })
-        .then(response => resolve(response.data))
-        .catch(error => reject(error));
-    });
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
   }
 }
 
