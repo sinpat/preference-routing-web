@@ -144,10 +144,10 @@ class Routing extends VuexModule {
 
   @Action({ rawError: true })
   public async fetchShortestPath() {
+    this.setPath({} as IPath);
     if (this.waypoints.length < 2) {
       return;
     }
-    this.setPath({} as IPath);
     try {
       const path = await apiService.shortestPath(this.waypoints);
       this.setPath(path);
