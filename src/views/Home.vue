@@ -16,7 +16,7 @@
         <GpsTracker />
       </v-tab-item>
     </v-tabs>
-    <div class="mx-4 mt-4 text-center">
+    <div class="mx-4 my-4 text-center">
       <v-btn @click="logout">Logout</v-btn>
     </div>
   </div>

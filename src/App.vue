@@ -1,7 +1,12 @@
 <template>
   <div id="app">
     <v-app>
-      <router-view />
+      <v-content>
+        <router-view />
+      </v-content>
+      <v-footer>
+        <span>&copy; Patrick Singer 2019</span>
+      </v-footer>
       <ErrorDialog />
       <Snackbar />
     </v-app>
