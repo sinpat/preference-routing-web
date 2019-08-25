@@ -23,17 +23,18 @@ export default class Login extends Vue {
   private username: string = '';
   private password: string = '';
 
-  private login() {
-    UserState.login({
-      username: this.username,
-      password: this.password,
-    })
-      .then(() => this.$router.push({ name: 'home' }))
-      .catch(error => {
-        ErrorState.set({ text: 'Login unsuccessful', error });
-        this.username = '';
-        this.password = '';
+  private async login() {
+    try {
+      await UserState.login({
+        username: this.username,
+        password: this.password,
       });
+      this.$router.push({ name: 'home' });
+    } catch (error) {
+      ErrorState.set({ text: 'Login unsuccessful', error });
+      this.username = '';
+      this.password = '';
+    }
   }
 
   private register() {

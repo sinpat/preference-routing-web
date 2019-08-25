@@ -6,6 +6,6 @@ export interface ICoordinate {
 export interface IPath {
   coordinates: ICoordinate[];
   costs: number[];
-  totalCost: number;
+  total_cost: number;
   alpha: number[];
 }

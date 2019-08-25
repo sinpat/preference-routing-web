@@ -1,4 +1,3 @@
-import axios from 'axios';
 import {
   Module,
   VuexModule,
@@ -10,7 +9,6 @@ import {
 import apiService from '@/api-service';
 
 import store from '../store';
-import endpoints from '@/endpoints';
 import { ICoordinate, IPath } from '@/types/types';
 
 import ErrorState from '@/store/modules/error';
@@ -34,52 +32,46 @@ class Routing extends VuexModule {
   }
 
   @Action({ rawError: true })
-  public addWaypoint(latlng: ICoordinate) {
-    fetchClosest(latlng)
-      .then(({ data: point }) => {
-        if (this.waypoints.length < 2) {
-          this.waypoints.push(point);
-        } else {
-          // Find waypoint with smallest distance to input Coordinate
-          let minDist = Number.MAX_VALUE;
-          let spliceIndex = -1;
-          this.waypoints.forEach((current, index) => {
-            const dist = Math.sqrt(
-              Math.pow(point.lat - current.lat, 2) +
-                Math.pow(point.lng - current.lng, 2)
-            );
-            if (dist < minDist) {
-              minDist = dist;
-              spliceIndex = index;
-            }
-          });
-          if (spliceIndex === 0) {
-            // We do not want to change our source
-            spliceIndex++;
-          }
-          this.waypoints.splice(spliceIndex, 0, point);
+  public async addWaypoint(latlng: ICoordinate) {
+    try {
+      const point = await apiService.fetchClosest(latlng);
+
+      // Find waypoint with smallest distance to input Coordinate
+      let minDist = Number.MAX_VALUE;
+      let spliceIndex = -1;
+      this.waypoints.forEach((current, index) => {
+        const dist = Math.sqrt(
+          Math.pow(point.lat - current.lat, 2) +
+            Math.pow(point.lng - current.lng, 2)
+        );
+        if (dist < minDist) {
+          minDist = dist;
+          spliceIndex = index;
         }
-        if (this.waypoints.length >= 2) {
-          this.fetchShortestPath();
-        }
-      })
-      .catch(error => {
-        ErrorState.set({
-          text: 'Nearest point could not be fetched',
-          error,
-          callback: () => this.addWaypoint(latlng),
-        });
       });
+      if (spliceIndex === 0) {
+        // We do not want to change our source
+        spliceIndex++;
+      } else if (spliceIndex === -1) {
+        // We have no waypoints yet
+        spliceIndex = 0;
+      }
+      this.waypoints.splice(spliceIndex, 0, point);
+      this.fetchShortestPath();
+    } catch (error) {
+      ErrorState.set({
+        text: 'Nearest point could not be fetched',
+        error,
+        callback: () => this.addWaypoint(latlng),
+      });
+    }
   }
 
   @Action({ rawError: true })
   public removeWaypoint(index: number) {
     this.waypoints.splice(index, 1);
-    if (this.waypoints.length >= 2) {
-      this.fetchShortestPath();
-    } else {
-      this.setPath({} as IPath);
-    }
+    this.setPath({} as IPath);
+    this.fetchShortestPath();
   }
 
   @Action({ rawError: true })
@@ -91,41 +83,33 @@ class Routing extends VuexModule {
   }
 
   @Action({ rawError: true })
-  public getNewPreference() {
-    axios
-      .post(endpoints.calcPref)
-      .then(({ data }) => {
-        if (data.length !== 0) {
-          this.setPreference(data);
-        }
-      })
-      .catch(error => {
-        ErrorState.set({
-          text: 'There was an error calculating the new preference',
-          error,
-          callback: this.getNewPreference,
-        });
+  public async findNewPreference() {
+    try {
+      const newPref = await apiService.findPreference();
+      if (newPref.length !== 0) {
+        this.setPreference(newPref);
+      }
+    } catch (error) {
+      ErrorState.set({
+        text: 'There was an error calculating the new preference',
+        error,
+        callback: this.findNewPreference,
       });
+    }
   }
 
   @Action({ rawError: true })
-  public savePreference(preference: number[]) {
-    return new Promise((resolve, reject) => {
-      axios
-        .post(endpoints.preference, preference)
-        .then(response => {
-          this.setPreference(response.data);
-          resolve();
-        })
-        .catch(error => {
-          ErrorState.set({
-            text: 'Could not save preference',
-            error,
-            callback: () => this.savePreference(preference),
-          });
-          reject();
-        });
-    });
+  public async savePreference(preference: number[]) {
+    try {
+      const newPref = await apiService.postPreference(preference);
+      this.setPreference(newPref);
+    } catch (error) {
+      ErrorState.set({
+        text: 'Could not save preference',
+        error,
+        callback: () => this.savePreference(preference),
+      });
+    }
   }
 
   @Action({ rawError: true })
@@ -143,41 +127,35 @@ class Routing extends VuexModule {
   }
 
   @Action({ rawError: true })
-  public resetData() {
-    axios
-      .post(endpoints.reset)
-      .then(() => {
-        this.fetchPreference();
-        NotificationState.setMessage('Reset data successfully');
-      })
-      .catch(error => {
-        ErrorState.set({
-          text: 'There was an error reseting the user data',
-          error,
-          callback: this.resetData,
-        });
+  public async resetData() {
+    try {
+      await apiService.resetData();
+      NotificationState.setMessage('Reset data successfully');
+      this.fetchPreference();
+    } catch (error) {
+      ErrorState.set({
+        text: 'There was an error reseting the user data',
+        error,
+        callback: this.resetData,
       });
+    }
   }
 
   @Action({ rawError: true })
-  public fetchShortestPath() {
-    axios
-      .post(endpoints.fsp, this.waypoints)
-      .then(({ data }) => {
-        this.setPath({
-          coordinates: data.coordinates,
-          costs: data.costs,
-          totalCost: data.total_cost,
-          alpha: data.alpha,
-        });
-      })
-      .catch(error => {
-        ErrorState.set({
-          text: 'There was an error fetching the shortest path',
-          error,
-          callback: this.fetchShortestPath,
-        });
+  public async fetchShortestPath() {
+    if (this.waypoints.length < 2) {
+      return;
+    }
+    try {
+      const path = await apiService.shortestPath(this.waypoints);
+      this.setPath(path);
+    } catch (error) {
+      ErrorState.set({
+        text: 'There was an error fetching the shortest path',
+        error,
+        callback: this.fetchShortestPath,
       });
+    }
   }
 
   @Mutation
@@ -189,12 +167,6 @@ class Routing extends VuexModule {
   private setPath(path: IPath) {
     this.path = path;
   }
-}
-
-function fetchClosest(latlng: ICoordinate) {
-  return axios.get(endpoints.closest, {
-    params: latlng,
-  });
 }
 
 export default getModule(Routing);

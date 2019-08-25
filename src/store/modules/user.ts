@@ -1,4 +1,3 @@
-import axios from 'axios';
 import {
   Module,
   VuexModule,
@@ -8,7 +7,8 @@ import {
 } from 'vuex-module-decorators';
 
 import store from '../store';
-import endpoints from '@/endpoints';
+
+import apiService from '@/api-service';
 
 @Module({
   dynamic: true,
@@ -23,16 +23,13 @@ class User extends VuexModule {
   }
 
   @Action
-  public login(credentials: any) {
-    return new Promise((resolve, reject) => {
-      axios
-        .post(endpoints.login, credentials)
-        .then(response => {
-          this.setToken(response.headers.Authorization);
-          resolve();
-        })
-        .catch(error => reject(error));
-    });
+  public async login(credentials: any) {
+    try {
+      const token = await apiService.login(credentials);
+      this.setToken(token);
+    } catch (error) {
+      throw error;
+    }
   }
 
   @Action
@@ -40,27 +37,16 @@ class User extends VuexModule {
     this.removeToken();
   }
 
-  @Action
-  public verifyToken() {
-    const token: string = sessionStorage.getItem('token') || '';
-    axios
-      .post(endpoints.verifyToken, token)
-      .then(() => this.setToken(token))
-      .catch(this.removeToken);
-  }
-
   @Mutation
   private setToken(token: string) {
     this.token = token;
     sessionStorage.setItem('token', token);
-    axios.defaults.headers.common.Authorization = token;
   }
 
   @Mutation
   private removeToken() {
     this.token = '';
     sessionStorage.removeItem('token');
-    delete axios.defaults.headers.common.Authorization;
   }
 }
 

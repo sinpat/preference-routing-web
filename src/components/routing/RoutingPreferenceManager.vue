@@ -74,10 +74,9 @@ export default class RoutingPreferenceManager extends Vue {
     return 0 <= value && value <= 1;
   }
 
-  private savePreference() {
-    RoutingState.savePreference(this.preference).then(() => {
-      this.isEditing = false;
-    });
+  private async savePreference() {
+    await RoutingState.savePreference(this.preference);
+    this.isEditing = false;
   }
 }
 </script>

@@ -18,7 +18,7 @@
       <l-polyline :lat-lngs="path.coordinates" color="green">
         <l-tooltip>
           <p>
-            <strong>Total Cost: {{ path.totalCost }}</strong>
+            <strong>Total Cost: {{ path.total_cost }}</strong>
           </p>
           <p v-for="(cost, index) in path.costs" :key="index">
             {{ costTags[index] }}:

@@ -38,7 +38,7 @@ export default class RoutingControls extends Vue {
   }
 
   private routeFinished() {
-    RoutingState.getNewPreference();
+    RoutingState.findNewPreference();
   }
 
   private clear() {
