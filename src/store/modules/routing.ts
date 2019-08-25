@@ -70,7 +70,6 @@ class Routing extends VuexModule {
   @Action({ rawError: true })
   public removeWaypoint(index: number) {
     this.waypoints.splice(index, 1);
-    this.setPath({} as IPath);
     this.fetchShortestPath();
   }
 
@@ -103,6 +102,7 @@ class Routing extends VuexModule {
     try {
       const newPref = await apiService.postPreference(preference);
       this.setPreference(newPref);
+      this.fetchShortestPath();
     } catch (error) {
       ErrorState.set({
         text: 'Could not save preference',
@@ -130,8 +130,9 @@ class Routing extends VuexModule {
   public async resetData() {
     try {
       await apiService.resetData();
+      await this.fetchPreference();
+      await this.fetchShortestPath();
       NotificationState.setMessage('Reset data successfully');
-      this.fetchPreference();
     } catch (error) {
       ErrorState.set({
         text: 'There was an error reseting the user data',
@@ -146,6 +147,7 @@ class Routing extends VuexModule {
     if (this.waypoints.length < 2) {
       return;
     }
+    this.setPath({} as IPath);
     try {
       const path = await apiService.shortestPath(this.waypoints);
       this.setPath(path);

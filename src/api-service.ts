@@ -32,7 +32,7 @@ class ApiService {
   }
 
   public findPreference() {
-    return this.post<number[]>(routing + 'calc_preference');
+    return this.post<number[]>(routing + 'find_preference');
   }
 
   public fetchClosest(latlng: ICoordinate) {
