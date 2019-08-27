@@ -1,3 +1,8 @@
+export interface ICredentials {
+  username: string;
+  password: string;
+}
+
 export interface ICoordinate {
   lat: number;
   lng: number;

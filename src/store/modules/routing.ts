@@ -84,9 +84,12 @@ class Routing extends VuexModule {
   @Action({ rawError: true })
   public async findNewPreference() {
     try {
-      const newPref = await apiService.findPreference();
-      if (newPref.length !== 0) {
-        this.setPreference(newPref);
+      const { message, preference } = await apiService.findPreference();
+      if (preference) {
+        NotificationState.setMessage('Found Preference');
+        this.setPreference(preference);
+      } else {
+        alert(message);
       }
     } catch (error) {
       ErrorState.set({

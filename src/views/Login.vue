@@ -1,8 +1,8 @@
 <template>
   <div class="login">
     <form class="login-form">
-      <v-text-field v-model="username" label="Username" required></v-text-field>
-      <v-text-field v-model="password" label="Password" type="password" required></v-text-field>
+      <v-text-field v-model="credentials.username" label="Username" required></v-text-field>
+      <v-text-field v-model="credentials.password" label="Password" type="password" required></v-text-field>
       <v-btn @click="login">Login</v-btn>
       <v-btn @click="register">Register</v-btn>
     </form>
@@ -15,25 +15,25 @@ import Component from 'vue-class-component';
 
 import UserState from '@/store/modules/user';
 import ErrorState from '@/store/modules/error';
+import { ICredentials } from '../types/types';
 
 @Component({
   name: 'LoginView',
 })
 export default class Login extends Vue {
-  private username: string = '';
-  private password: string = '';
+  private credentials: ICredentials = {
+    username: '',
+    password: '',
+  };
 
   private async login() {
     try {
-      await UserState.login({
-        username: this.username,
-        password: this.password,
-      });
+      await UserState.login(this.credentials);
       this.$router.push({ name: 'home' });
     } catch (error) {
       ErrorState.set({ text: 'Login unsuccessful', error });
-      this.username = '';
-      this.password = '';
+      this.credentials.username = '';
+      this.credentials.password = '';
     }
   }
 

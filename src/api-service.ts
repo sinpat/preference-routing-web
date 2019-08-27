@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ICoordinate, IPath } from './types/types';
+import { ICoordinate, IPath, ICredentials } from './types/types';
 
 const routing = 'http://localhost:8000/routing/';
 const user = 'http://localhost:8000/user/';
@@ -18,7 +18,7 @@ class ApiService {
   private token = sessionStorage.getItem('token');
 
   // User related
-  public login(credentials: any) {
+  public login(credentials: ICredentials) {
     return this.post(user + 'login', credentials);
   }
 
@@ -27,16 +27,16 @@ class ApiService {
     return this.get<number[]>(routing + 'preference');
   }
 
+  public fetchClosest(latlng: ICoordinate) {
+    return this.get<ICoordinate>(routing + 'closest', latlng);
+  }
+
   public postPreference(preference: number[]) {
     return this.post(routing + 'preference', preference);
   }
 
   public findPreference() {
-    return this.post<number[]>(routing + 'find_preference');
-  }
-
-  public fetchClosest(latlng: ICoordinate) {
-    return this.get<ICoordinate>(routing + 'closest', latlng);
+    return this.post(routing + 'find_preference');
   }
 
   public shortestPath(waypoints: ICoordinate[]) {

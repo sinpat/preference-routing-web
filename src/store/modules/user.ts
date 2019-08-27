@@ -9,6 +9,7 @@ import {
 import store from '../store';
 
 import apiService from '@/api-service';
+import { ICredentials } from '@/types/types';
 
 @Module({
   dynamic: true,
@@ -22,8 +23,8 @@ class User extends VuexModule {
     return !!this.token;
   }
 
-  @Action
-  public async login(credentials: any) {
+  @Action({ rawError: true })
+  public async login(credentials: ICredentials) {
     try {
       const token = await apiService.login(credentials);
       this.setToken(token);
