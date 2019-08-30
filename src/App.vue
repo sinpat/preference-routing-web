@@ -27,7 +27,6 @@ import Snackbar from '@/components/util/Snackbar.vue';
 export default class App extends Vue {}
 </script>
 
-
 <style lang="scss">
 #app {
   font-family: 'Roboto';

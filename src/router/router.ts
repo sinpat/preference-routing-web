@@ -33,23 +33,17 @@ const router = new Router({
   ],
 });
 
-/*
 router.beforeEach((to, from, next) => {
-  const loggedIn = sessionStorage.getItem('token');
+  const loggedIn = localStorage.getItem('token');
   if (to.name === 'login' && loggedIn) {
     next({ name: 'home' });
   }
 
-  if (to.meta.requiresAuth) {
-    if (loggedIn) {
-      next();
-    } else {
-      next({ name: 'login' });
-    }
+  if (to.meta.requiresAuth && !loggedIn) {
+    next({ name: 'login' });
   } else {
     next();
   }
 });
-*/
 
 export default router;

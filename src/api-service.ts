@@ -15,11 +15,15 @@ interface IRequestConfig {
 }
 
 class ApiService {
-  private token = sessionStorage.getItem('token');
+  private token = localStorage.getItem('token');
 
   // User related
   public login(credentials: ICredentials) {
     return this.post(user + 'login', credentials);
+  }
+
+  public register(credentials: ICredentials) {
+    return this.post(user + 'register', credentials);
   }
 
   // Routing related

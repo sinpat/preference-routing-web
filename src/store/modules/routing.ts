@@ -134,7 +134,7 @@ class Routing extends VuexModule {
     try {
       await apiService.resetData();
       await this.fetchPreference();
-      await this.fetchShortestPath();
+      this.clear();
       NotificationState.setMessage('Reset data successfully');
     } catch (error) {
       ErrorState.set({

@@ -26,8 +26,6 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 
-import UserState from '@/store/modules/user';
-
 import Routing from '@/components/routing/Routing.vue';
 import GpsTracker from '@/components/GpsTracker.vue';
 
@@ -37,7 +35,7 @@ import GpsTracker from '@/components/GpsTracker.vue';
 })
 export default class Home extends Vue {
   private logout() {
-    UserState.logout();
+    localStorage.removeItem('token');
     this.$router.push({ name: 'login' });
   }
 }

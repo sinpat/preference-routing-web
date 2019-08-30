@@ -1,0 +1,51 @@
+<template>
+  <v-form v-model="credentialsValid">
+    <v-text-field
+      v-model="credentials.username"
+      :rules="nameRules"
+      label="Username"
+      rounded
+      outlined
+    ></v-text-field>
+    <v-text-field
+      v-model="credentials.password"
+      :rules="passwordRules"
+      label="Password"
+      type="password"
+      rounded
+      outlined
+    ></v-text-field>
+    <v-btn @click="submit" :disabled="!credentialsValid" color="success">Submit</v-btn>
+  </v-form>
+</template>
+
+<script lang="ts">
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import { Prop } from 'vue-property-decorator';
+
+import { ICredentials } from '../types/types';
+
+@Component({
+  name: 'AuthInputComponent',
+})
+export default class Register extends Vue {
+  @Prop({ required: true, type: Function }) private callback: any;
+
+  private credentials: ICredentials = {
+    username: '',
+    password: '',
+  };
+  private credentialsValid: boolean = false;
+  private nameRules = [(x: string) => !!x || 'Name is required'];
+  private passwordRules = [(x: string) => !!x || 'Password is required'];
+
+  private async submit() {
+    await this.callback(this.credentials);
+    this.credentials = {
+      username: '',
+      password: '',
+    };
+  }
+}
+</script>
