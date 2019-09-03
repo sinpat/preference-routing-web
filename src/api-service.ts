@@ -15,8 +15,6 @@ interface IRequestConfig {
 }
 
 class ApiService {
-  private token = localStorage.getItem('token');
-
   // User related
   public login(credentials: ICredentials) {
     return this.post(user + 'login', credentials);
@@ -70,7 +68,7 @@ class ApiService {
         url,
         method,
         headers: {
-          Authorization: this.token,
+          Authorization: localStorage.getItem('token'),
         },
         params,
         data,

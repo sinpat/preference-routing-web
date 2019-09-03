@@ -23,8 +23,12 @@ export default class Register extends Vue {
   private async register(credentials: ICredentials) {
     try {
       const token = await apiService.register(credentials);
-      localStorage.setItem('token', token);
-      this.$router.push({ name: 'home' });
+      if (token) {
+        localStorage.setItem('token', token);
+        this.$router.push({ name: 'home' });
+      } else {
+        ErrorState.set({ text: 'Username already taken' });
+      }
     } catch (error) {
       ErrorState.set({ text: 'Register unsuccessful', error });
     }
