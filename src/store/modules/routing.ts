@@ -23,7 +23,7 @@ class Routing extends VuexModule {
   public path: IPath = {} as IPath;
   public waypoints: ICoordinate[] = [];
   public preference: number[] = [];
-  public costTags: string[] = ['Unsuitability', 'Distance', 'Height'];
+  public costTags: string[] = ['Distance', 'Height', 'UnsuitDist'];
 
   @Mutation
   public clear() {

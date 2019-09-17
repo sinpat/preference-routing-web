@@ -29,6 +29,8 @@ import Component from 'vue-class-component';
 import Routing from '@/components/routing/Routing.vue';
 import GpsTracker from '@/components/GpsTracker.vue';
 
+import RoutingState from '@/store/modules/routing';
+
 @Component({
   components: { GpsTracker, Routing },
   name: 'HomeView',
@@ -36,6 +38,7 @@ import GpsTracker from '@/components/GpsTracker.vue';
 export default class Home extends Vue {
   private logout() {
     localStorage.removeItem('token');
+    RoutingState.clear();
     this.$router.push({ name: 'login' });
   }
 }
