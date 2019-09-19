@@ -15,7 +15,9 @@
       rounded
       outlined
     ></v-text-field>
-    <v-btn @click="submit" :disabled="!credentialsValid" color="success">Submit</v-btn>
+    <v-btn @click="submit" :disabled="!credentialsValid" color="success"
+      >Submit</v-btn
+    >
   </v-form>
 </template>
 
@@ -38,7 +40,10 @@ export default class Register extends Vue {
   };
   private credentialsValid: boolean = false;
   private nameRules = [(x: string) => !!x || 'Name is required'];
-  private passwordRules = [(x: string) => !!x || 'Password is required'];
+  private passwordRules = [
+    (x: string) => !!x || 'Password is required',
+    (x: string) => x.length >= 8 || 'Password has to be 8 characters or more',
+  ];
 
   private async submit() {
     await this.callback(this.credentials);

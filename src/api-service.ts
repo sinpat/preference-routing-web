@@ -50,11 +50,11 @@ class ApiService {
   }
 
   private get<T>(url: string, params?: any) {
-    return this.apiCall<T>({ url, method: 'get', params } as IRequestConfig);
+    return this.apiCall<T>({ url, method: 'get', params });
   }
 
   private post<T = any>(url: string, data?: any) {
-    return this.apiCall<T>({ url, method: 'post', data } as IRequestConfig);
+    return this.apiCall<T>({ url, method: 'post', data });
   }
 
   private async apiCall<T>({

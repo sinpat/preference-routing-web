@@ -1,10 +1,12 @@
 <template>
   <l-marker @contextmenu="removeWaypoint(index)" :lat-lng="point">
-    <l-tooltip>{{ index }}</l-tooltip>
+    <l-tooltip>{{ index + 1 }}</l-tooltip>
     <l-popup>
       <h3 class="mb-2">Position</h3>
       <v-btn-toggle @change="changeOrder" :value="index" mandatory rounded>
-        <v-btn v-for="(point, index) in waypoints" :key="index">{{ index }}</v-btn>
+        <v-btn v-for="(point, index) in waypoints" :key="index">{{
+          index + 1
+        }}</v-btn>
       </v-btn-toggle>
     </l-popup>
   </l-marker>

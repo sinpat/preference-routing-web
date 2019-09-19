@@ -20,14 +20,14 @@ import NotificationState from '@/store/modules/notification';
   store,
 })
 class Routing extends VuexModule {
-  public path: IPath = {} as IPath;
+  public path: IPath | null = null;
   public waypoints: ICoordinate[] = [];
   public preference: number[] = [];
   public costTags: string[] = ['Distance', 'Height', 'UnsuitDist'];
 
   @Mutation
   public clear() {
-    this.path = {} as IPath;
+    this.path = null;
     this.waypoints = [];
   }
 
@@ -147,7 +147,7 @@ class Routing extends VuexModule {
 
   @Action({ rawError: true })
   public async fetchShortestPath() {
-    this.setPath({} as IPath);
+    this.clearPath();
     if (this.waypoints.length < 2) {
       return;
     }
@@ -171,6 +171,11 @@ class Routing extends VuexModule {
   @Mutation
   private setPath(path: IPath) {
     this.path = path;
+  }
+
+  @Mutation
+  private clearPath() {
+    this.path = null;
   }
 }
 

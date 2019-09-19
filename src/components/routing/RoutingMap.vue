@@ -11,22 +11,11 @@
       <l-tile-layer :url="tileUrl"></l-tile-layer>
       <RoutingMapMarker
         v-for="(point, index) in waypoints"
-        :key="[index, point.lat, point.lng].join('-')"
+        :key="index"
         :point="point"
         :index="index"
       />
-      <l-polyline :lat-lngs="path.coordinates" color="green">
-        <l-tooltip>
-          <p>
-            <strong>Total Cost: {{ path.total_cost }}</strong>
-          </p>
-          <p v-for="(cost, index) in path.costs" :key="index">
-            {{ costTags[index] }}:
-            {{ cost }}
-            ({{ path.alpha[index] }})
-          </p>
-        </l-tooltip>
-      </l-polyline>
+      <RoutingMapPath />
     </l-map>
   </div>
 </template>
@@ -36,11 +25,12 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 
 import L from 'leaflet';
-import { LMap, LTileLayer, LPolyline, LTooltip } from 'vue2-leaflet';
+import { LMap, LTileLayer } from 'vue2-leaflet';
 
 import RoutingMapMarker from './RoutingMapMarker.vue';
+import RoutingMapPath from './RoutingMapPath.vue';
 
-import { ICoordinate, IPath } from '@/types/types';
+import { ICoordinate } from '@/types/types';
 import RoutingState from '@/store/modules/routing';
 
 @Component({
@@ -48,9 +38,8 @@ import RoutingState from '@/store/modules/routing';
   components: {
     LMap,
     LTileLayer,
-    LPolyline,
-    LTooltip,
     RoutingMapMarker,
+    RoutingMapPath,
   },
 })
 export default class RoutingMap extends Vue {
@@ -66,14 +55,6 @@ export default class RoutingMap extends Vue {
 
   get waypoints() {
     return RoutingState.waypoints;
-  }
-
-  get path(): IPath {
-    return RoutingState.path;
-  }
-
-  get costTags(): string[] {
-    return RoutingState.costTags;
   }
 
   private updateZoom(zoomValue: number) {

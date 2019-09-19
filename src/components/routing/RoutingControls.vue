@@ -5,15 +5,7 @@
       <div>
         <v-btn @click="clear" block>Clear Path</v-btn>
         <br />
-        <v-btn @click="reset" block>Reset Data</v-btn>
-      </div>
-      <div class="text-center mt-4">
-        <v-btn v-if="waypoints.length >= 2" @click="fetchRoute" icon large color="blue">
-          <v-icon>mdi-replay</v-icon>
-        </v-btn>
-        <v-btn v-if="waypoints.length > 2" @click="routeFinished" icon large color="green">
-          <v-icon>mdi-check</v-icon>
-        </v-btn>
+        <v-btn @click="reset" style="color: red" block>Reset Data</v-btn>
       </div>
     </v-card-text>
   </v-card>
@@ -31,14 +23,6 @@ import RoutingState from '@/store/modules/routing';
 export default class RoutingControls extends Vue {
   get waypoints() {
     return RoutingState.waypoints;
-  }
-
-  private fetchRoute() {
-    RoutingState.fetchShortestPath();
-  }
-
-  private routeFinished() {
-    RoutingState.findNewPreference();
   }
 
   private clear() {
