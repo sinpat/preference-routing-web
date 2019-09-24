@@ -11,6 +11,9 @@
       </p>
     </l-tooltip>
     <l-popup>
+      <v-btn @click="clearRoute" icon large>
+        <v-icon>mdi-delete</v-icon>
+      </v-btn>
       <v-btn @click="fetchRoute" icon large color="blue">
         <v-icon>mdi-replay</v-icon>
       </v-btn>
@@ -48,6 +51,10 @@ export default class RoutingMapPath extends Vue {
 
   get costTags(): string[] {
     return RoutingState.costTags;
+  }
+
+  private clearRoute() {
+    RoutingState.clear();
   }
 
   private fetchRoute() {

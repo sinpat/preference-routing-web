@@ -1,16 +1,25 @@
 <template>
   <v-container>
+    <v-row>
+      <v-col>
+        <RoutingControls />
+      </v-col>
+      <v-col>
+        <div class="text-end">
+          <v-btn @click="logout" small icon>
+            <v-icon>mdi-logout</v-icon>
+          </v-btn>
+        </div>
+      </v-col>
+    </v-row>
     <v-row dense>
       <v-col>
         <RoutingMap />
       </v-col>
     </v-row>
     <v-row dense>
-      <v-col cols="8">
+      <v-col>
         <RoutingPreferenceManager />
-      </v-col>
-      <v-col cols="4">
-        <RoutingControls />
       </v-col>
     </v-row>
   </v-container>
@@ -24,6 +33,8 @@ import RoutingMap from './RoutingMap.vue';
 import RoutingPreferenceManager from './RoutingPreferenceManager.vue';
 import RoutingControls from './RoutingControls.vue';
 
+import RoutingState from '@/store/modules/routing';
+
 @Component({
   name: 'RoutingComponent',
   components: {
@@ -32,5 +43,11 @@ import RoutingControls from './RoutingControls.vue';
     RoutingControls,
   },
 })
-export default class Routing extends Vue {}
+export default class Routing extends Vue {
+  private logout() {
+    localStorage.removeItem('token');
+    RoutingState.clear();
+    this.$router.push({ name: 'login' });
+  }
+}
 </script>

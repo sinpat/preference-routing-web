@@ -1,14 +1,29 @@
 <template>
-  <v-card elevation="4" height="100%">
-    <v-card-title class="mb-2">Actions</v-card-title>
-    <v-card-text>
-      <div>
-        <v-btn @click="clear" block>Clear Path</v-btn>
-        <br />
-        <v-btn @click="reset" style="color: red" block>Reset Data</v-btn>
-      </div>
-    </v-card-text>
-  </v-card>
+  <div>
+    <v-btn @click="showDialog = true" style="color: red">Reset Data</v-btn>
+
+    <v-dialog :value="showDialog" width="400" persistent>
+      <v-card>
+        <v-card-title class="warning" primary-title>
+          <v-icon class="mr-2">mdi-alert</v-icon>Warning
+        </v-card-title>
+        <v-card-text class="mt-6 mb-2">
+          <h2 class="mb-2">Reset Data?</h2>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn @click="reset" class="warning">
+            <v-icon left>mdi-delete</v-icon>
+            Reset</v-btn
+          >
+          <v-btn @click="showDialog = false">
+            <v-icon left>mdi-close</v-icon>Close
+          </v-btn>
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </div>
 </template>
 
 <script lang="ts">
@@ -21,15 +36,10 @@ import RoutingState from '@/store/modules/routing';
   name: 'RoutingControlsComponent',
 })
 export default class RoutingControls extends Vue {
-  get waypoints() {
-    return RoutingState.waypoints;
-  }
-
-  private clear() {
-    RoutingState.clear();
-  }
+  private showDialog = false;
 
   private reset() {
+    this.showDialog = false;
     RoutingState.resetData();
   }
 }

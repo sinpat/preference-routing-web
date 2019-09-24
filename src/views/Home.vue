@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <v-tabs slider-color="blue" icons-and-text dark fixed-tabs>
+    <!-- <v-tabs slider-color="blue" icons-and-text dark fixed-tabs>
       <v-tab>
         Routing
         <v-icon>mdi-navigation</v-icon>
@@ -9,16 +9,13 @@
         GPS Tracker
         <v-icon>mdi-crosshairs-gps</v-icon>
       </v-tab>
-      <v-tab-item class="mx-2">
-        <Routing />
-      </v-tab-item>
+      <v-tab-item class="mx-2"> -->
+    <Routing />
+    <!-- </v-tab-item>
       <v-tab-item class="mx-2">
         <GpsTracker />
       </v-tab-item>
-    </v-tabs>
-    <div class="mx-4 my-4 text-center">
-      <v-btn @click="logout">Logout</v-btn>
-    </div>
+    </v-tabs> -->
   </div>
 </template>
 
@@ -29,17 +26,9 @@ import Component from 'vue-class-component';
 import Routing from '@/components/routing/Routing.vue';
 import GpsTracker from '@/components/GpsTracker.vue';
 
-import RoutingState from '@/store/modules/routing';
-
 @Component({
   components: { GpsTracker, Routing },
   name: 'HomeView',
 })
-export default class Home extends Vue {
-  private logout() {
-    localStorage.removeItem('token');
-    RoutingState.clear();
-    this.$router.push({ name: 'login' });
-  }
-}
+export default class Home extends Vue {}
 </script>
