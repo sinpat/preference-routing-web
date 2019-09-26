@@ -22,8 +22,13 @@ import NotificationState from '@/store/modules/notification';
 class Routing extends VuexModule {
   public path: IPath | null = null;
   public waypoints: ICoordinate[] = [];
-  public preference: number[] = [];
+  public preference: number[][] = [];
+  public prefIndex: number = 0;
   public costTags: string[] = ['Distance', 'Height', 'UnsuitDist'];
+
+  get currentPref() {
+    return this.preference[this.prefIndex];
+  }
 
   @Mutation
   public clear() {
@@ -101,10 +106,10 @@ class Routing extends VuexModule {
   }
 
   @Action({ rawError: true })
-  public async savePreference(preference: number[]) {
+  public async savePreference(preference: number[][]) {
     try {
-      const newPref = await apiService.postPreference(preference);
-      this.setPreference(newPref);
+      await apiService.postPreference(preference);
+      this.setPreference(preference);
       this.fetchShortestPath();
     } catch (error) {
       ErrorState.set({
@@ -152,7 +157,10 @@ class Routing extends VuexModule {
       return;
     }
     try {
-      const path = await apiService.shortestPath(this.waypoints);
+      const path = await apiService.shortestPath(
+        this.waypoints,
+        this.currentPref
+      );
       this.setPath(path);
     } catch (error) {
       ErrorState.set({
@@ -163,9 +171,26 @@ class Routing extends VuexModule {
     }
   }
 
+  @Action({ rawError: true })
+  public selectPref(index: number) {
+    this.setPrefIndex(index);
+    this.fetchShortestPath();
+  }
+
+  @Action({ rawError: true })
+  public addPreference() {
+    this.preference.push([0.0, 0.0, 0.0]);
+    this.setPrefIndex(this.preference.length - 1);
+  }
+
   @Mutation
-  private setPreference(pref: number[]) {
+  private setPreference(pref: number[][]) {
     this.preference = pref;
+  }
+
+  @Mutation
+  private setPrefIndex(index: number) {
+    this.prefIndex = index;
   }
 
   @Mutation

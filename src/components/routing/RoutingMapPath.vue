@@ -11,12 +11,12 @@
       </p>
     </l-tooltip>
     <l-popup>
-      <v-btn @click="clearRoute" icon large>
+      <v-btn @click="clearRoute" icon large light>
         <v-icon>mdi-delete</v-icon>
       </v-btn>
-      <v-btn @click="fetchRoute" icon large color="blue">
+      <!-- <v-btn @click="fetchRoute" icon large color="blue">
         <v-icon>mdi-replay</v-icon>
-      </v-btn>
+      </v-btn> -->
       <v-btn @click="routeFinished" icon large color="green">
         <v-icon>mdi-check</v-icon>
       </v-btn>

@@ -1,11 +1,14 @@
 <template>
   <v-card elevation="4" height="100%">
     <v-card-title class="mb-2">
-      My Preference
+      My Preferences
       <v-spacer></v-spacer>
       <div v-if="!isEditing">
         <v-btn @click="fetchPreference" icon small>
           <v-icon>mdi-replay</v-icon>
+        </v-btn>
+        <v-btn text icon small>
+          <v-icon @click="addPreference">mdi-plus</v-icon>
         </v-btn>
         <v-btn @click="isEditing = true" icon small>
           <v-icon>mdi-pencil</v-icon>
@@ -16,10 +19,21 @@
       </v-btn>
     </v-card-title>
     <v-card-text class="pb-0">
-      <v-row dense>
-        <v-col v-for="(_, index) in preference" :key="index" cols="12" sm="6" md="4">
+      <v-btn-toggle @change="switchPref" :value="prefIndex" rounded>
+        <v-btn v-for="(alpha, index) in preferences" :key="index">
+          {{ index }}
+        </v-btn>
+      </v-btn-toggle>
+      <v-row class="mt-4" dense>
+        <v-col
+          v-for="(_, index) in selectedPref"
+          :key="index"
+          cols="12"
+          sm="6"
+          md="4"
+        >
           <v-text-field
-            v-model.number="preference[index]"
+            v-model.number="selectedPref[index]"
             :readonly="!isEditing"
             :rules="[prefValueValid]"
             :label="costTags[index]"
@@ -44,8 +58,16 @@ import RoutingState from '@/store/modules/routing';
 export default class RoutingPreferenceManager extends Vue {
   private isEditing = false;
 
-  get preference(): number[] {
+  get preferences(): number[][] {
     return RoutingState.preference;
+  }
+
+  get prefIndex(): number {
+    return RoutingState.prefIndex;
+  }
+
+  get selectedPref(): number[] {
+    return RoutingState.currentPref;
   }
 
   get costTags(): string[] {
@@ -53,8 +75,8 @@ export default class RoutingPreferenceManager extends Vue {
   }
 
   get prefValid(): boolean {
-    const sum = this.preference.reduce((acc, el) => acc + el, 0);
-    const allValid = this.preference.every(this.valueInRange);
+    const sum = this.selectedPref.reduce((acc, el) => acc + el, 0);
+    const allValid = this.selectedPref.every(this.valueInRange);
     return allValid && sum === 1;
   }
 
@@ -75,8 +97,17 @@ export default class RoutingPreferenceManager extends Vue {
   }
 
   private async savePreference() {
-    await RoutingState.savePreference(this.preference);
+    await RoutingState.savePreference(this.preferences);
     this.isEditing = false;
+  }
+
+  private switchPref(index: number) {
+    RoutingState.selectPref(index);
+  }
+
+  private addPreference() {
+    RoutingState.addPreference();
+    this.isEditing = true;
   }
 }
 </script>

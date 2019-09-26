@@ -1,8 +1,7 @@
 import axios from 'axios';
 import { ICoordinate, IPath, ICredentials } from './types/types';
 
-const routing = 'http://localhost:8000/routing/';
-const user = 'http://localhost:8000/user/';
+const endpoint = 'http://localhost:8000/';
 
 // const routing = 'http://algohol03.informatik.uni-stuttgart.de:8000/routing/';
 // const user = 'http://algohol03.informatik.uni-stuttgart.de:8000/user/';
@@ -17,36 +16,39 @@ interface IRequestConfig {
 class ApiService {
   // User related
   public login(credentials: ICredentials) {
-    return this.post(user + 'login', credentials);
+    return this.post(endpoint + 'login', credentials);
   }
 
   public register(credentials: ICredentials) {
-    return this.post(user + 'register', credentials);
+    return this.post(endpoint + 'register', credentials);
   }
 
   // Routing related
   public getPreference() {
-    return this.get<number[]>(routing + 'preference');
+    return this.get<number[][]>(endpoint + 'preference');
   }
 
   public fetchClosest(latlng: ICoordinate) {
-    return this.get<ICoordinate>(routing + 'closest', latlng);
+    return this.get<ICoordinate>(endpoint + 'closest', latlng);
   }
 
-  public postPreference(preference: number[]) {
-    return this.post(routing + 'preference', preference);
+  public postPreference(preference: number[][]) {
+    return this.post(endpoint + 'preference', preference);
   }
 
   public findPreference() {
-    return this.post(routing + 'find_preference');
+    return this.post(endpoint + 'find_preference');
   }
 
-  public shortestPath(waypoints: ICoordinate[]) {
-    return this.post<IPath>(routing + 'fsp', waypoints);
+  public shortestPath(waypoints: ICoordinate[], alpha: number[]) {
+    return this.post<IPath>(endpoint + 'fsp', {
+      waypoints,
+      alpha,
+    });
   }
 
   public resetData() {
-    return this.post(routing + 'reset');
+    return this.post(endpoint + 'reset');
   }
 
   private get<T>(url: string, params?: any) {
