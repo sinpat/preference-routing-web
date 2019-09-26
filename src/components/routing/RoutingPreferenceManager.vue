@@ -105,8 +105,8 @@ export default class RoutingPreferenceManager extends Vue {
     RoutingState.selectPref(index);
   }
 
-  private addPreference() {
-    RoutingState.addPreference();
+  private async addPreference() {
+    await RoutingState.addPreference();
     this.isEditing = true;
   }
 }

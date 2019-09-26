@@ -16,6 +16,13 @@
         :index="index"
       />
       <RoutingMapPath />
+      <div v-if="showAll">
+        <RoutingDrivenPath
+          v-for="(path, index) in drivenPaths"
+          :key="index"
+          :path="path"
+        />
+      </div>
     </l-map>
   </div>
 </template>
@@ -23,15 +30,18 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
+import { Watch } from 'vue-property-decorator';
 
 import L from 'leaflet';
 import { LMap, LTileLayer } from 'vue2-leaflet';
 
 import RoutingMapMarker from './RoutingMapMarker.vue';
 import RoutingMapPath from './RoutingMapPath.vue';
+import RoutingDrivenPath from './RoutingDrivenPath.vue';
 
-import { ICoordinate } from '@/types/types';
+import { ICoordinate, IPath } from '@/types/types';
 import RoutingState from '@/store/modules/routing';
+import apiService from '../../api-service';
 
 @Component({
   name: 'MapComponent',
@@ -40,6 +50,7 @@ import RoutingState from '@/store/modules/routing';
     LTileLayer,
     RoutingMapMarker,
     RoutingMapPath,
+    RoutingDrivenPath,
   },
 })
 export default class RoutingMap extends Vue {
@@ -52,9 +63,22 @@ export default class RoutingMap extends Vue {
     'https://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=bd08b205580548d18e6235e2da754318';
   private zoom: number = 15;
   private center: ICoordinate = { lat: 48.9666, lng: 9.4005 };
+  private drivenPaths: IPath[] = [];
 
   get waypoints() {
     return RoutingState.waypoints;
+  }
+
+  get showAll() {
+    return RoutingState.showAll;
+  }
+
+  @Watch('showAll')
+  private async fetchDrivenRoutes(value: boolean) {
+    if (value) {
+      const routes = await apiService.getDrivenRoutes();
+      this.drivenPaths = routes;
+    }
   }
 
   private updateZoom(zoomValue: number) {

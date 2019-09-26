@@ -1,6 +1,11 @@
 <template>
   <div>
     <v-btn @click="showDialog = true" style="color: red">Reset Data</v-btn>
+    <v-switch
+      @change="setShowAll"
+      :value="showAll"
+      label="Show all driven routes"
+    ></v-switch>
 
     <v-dialog :value="showDialog" width="400" persistent>
       <v-card>
@@ -37,6 +42,14 @@ import RoutingState from '@/store/modules/routing';
 })
 export default class RoutingControls extends Vue {
   private showDialog = false;
+
+  get showAll() {
+    return RoutingState.showAll;
+  }
+
+  private setShowAll(value: boolean) {
+    RoutingState.setShowAll(value);
+  }
 
   private reset() {
     this.showDialog = false;

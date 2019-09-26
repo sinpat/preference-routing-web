@@ -21,6 +21,7 @@ import NotificationState from '@/store/modules/notification';
 })
 class Routing extends VuexModule {
   public path: IPath | null = null;
+  public showAll = false;
   public waypoints: ICoordinate[] = [];
   public preference: number[][] = [];
   public prefIndex: number = 0;
@@ -28,6 +29,11 @@ class Routing extends VuexModule {
 
   get currentPref() {
     return this.preference[this.prefIndex];
+  }
+
+  @Mutation
+  public setShowAll(value: boolean) {
+    this.showAll = value;
   }
 
   @Mutation
@@ -89,7 +95,9 @@ class Routing extends VuexModule {
   @Action({ rawError: true })
   public async findNewPreference() {
     try {
-      const { message, preference } = await apiService.findPreference();
+      const { message, preference } = await apiService.findPreference(
+        this.prefIndex
+      );
       if (preference) {
         NotificationState.setMessage('Found Preference');
         this.setPreference(preference);
@@ -140,6 +148,7 @@ class Routing extends VuexModule {
       await apiService.resetData();
       await this.fetchPreference();
       this.clear();
+      this.setPrefIndex(0);
       NotificationState.setMessage('Reset data successfully');
     } catch (error) {
       ErrorState.set({
@@ -178,8 +187,9 @@ class Routing extends VuexModule {
   }
 
   @Action({ rawError: true })
-  public addPreference() {
-    this.preference.push([0.0, 0.0, 0.0]);
+  public async addPreference() {
+    const preference = await apiService.newPreference();
+    this.setPreference(preference);
     this.setPrefIndex(this.preference.length - 1);
   }
 

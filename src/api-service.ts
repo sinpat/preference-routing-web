@@ -2,6 +2,7 @@ import axios from 'axios';
 import { ICoordinate, IPath, ICredentials } from './types/types';
 
 const endpoint = 'http://localhost:8000/';
+const prefEndpoint = endpoint + 'preference';
 
 // const routing = 'http://algohol03.informatik.uni-stuttgart.de:8000/routing/';
 // const user = 'http://algohol03.informatik.uni-stuttgart.de:8000/user/';
@@ -25,7 +26,11 @@ class ApiService {
 
   // Routing related
   public getPreference() {
-    return this.get<number[][]>(endpoint + 'preference');
+    return this.get<number[][]>(prefEndpoint);
+  }
+
+  public getDrivenRoutes() {
+    return this.get<IPath[]>(endpoint + 'routes');
   }
 
   public fetchClosest(latlng: ICoordinate) {
@@ -33,11 +38,15 @@ class ApiService {
   }
 
   public postPreference(preference: number[][]) {
-    return this.post(endpoint + 'preference', preference);
+    return this.post(prefEndpoint, preference);
   }
 
-  public findPreference() {
-    return this.post(endpoint + 'find_preference');
+  public newPreference() {
+    return this.post(prefEndpoint + '/new');
+  }
+
+  public findPreference(index: number) {
+    return this.post(prefEndpoint + '/find/' + index);
   }
 
   public shortestPath(waypoints: ICoordinate[], alpha: number[]) {
@@ -70,7 +79,9 @@ class ApiService {
         url,
         method,
         headers: {
+          // tslint:disable-next-line
           Authorization: localStorage.getItem('token'),
+          'Content-Type': 'application/json',
         },
         params,
         data,
