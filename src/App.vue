@@ -2,7 +2,9 @@
   <div id="app">
     <v-app>
       <v-content>
-        <router-view />
+        <v-container>
+          <router-view />
+        </v-container>
       </v-content>
       <v-footer>
         <span>&copy; Patrick Singer 2019</span>

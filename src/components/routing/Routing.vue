@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <div>
     <v-row>
       <v-col>
         <RoutingControls />
@@ -22,7 +22,7 @@
         <RoutingPreferenceManager />
       </v-col>
     </v-row>
-  </v-container>
+  </div>
 </template>
 
 <script lang="ts">

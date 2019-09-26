@@ -1,7 +1,7 @@
 <template>
   <div class="login">
     <h1>Login</h1>
-    <AuthInput :callback="login" />
+    <AuthInput @submit="login" class="mt-4" />
     <v-btn @click="register">Register</v-btn>
   </div>
 </template>
@@ -21,12 +21,13 @@ import { ICredentials } from '../types/types';
   components: { AuthInput },
 })
 export default class Login extends Vue {
-  private async login(credentials: ICredentials) {
+  private async login(credentials: ICredentials, errorCallback: any) {
     try {
       const token = await apiService.login(credentials);
       localStorage.setItem('token', token);
       this.$router.push({ name: 'home' });
     } catch (error) {
+      errorCallback();
       ErrorState.set({ text: 'Login unsuccessful', error });
     }
   }

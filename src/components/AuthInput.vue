@@ -32,8 +32,6 @@ import { ICredentials } from '../types/types';
   name: 'AuthInputComponent',
 })
 export default class Register extends Vue {
-  @Prop({ required: true, type: Function }) private callback: any;
-
   private credentials: ICredentials = {
     username: '',
     password: '',
@@ -46,11 +44,10 @@ export default class Register extends Vue {
   ];
 
   private async submit() {
-    await this.callback(this.credentials);
-    this.credentials = {
-      username: '',
-      password: '',
-    };
+    this.$emit('submit', this.credentials, () => {
+      this.credentials.username = '';
+      this.credentials.password = '';
+    });
   }
 }
 </script>

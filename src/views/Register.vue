@@ -1,7 +1,7 @@
 <template>
   <div class="register">
     <h1>Create new account</h1>
-    <AuthInput :callback="register" />
+    <AuthInput @submit="register" class="mt-4" />
   </div>
 </template>
 
@@ -20,16 +20,18 @@ import { ICredentials } from '../types/types';
   components: { AuthInput },
 })
 export default class Register extends Vue {
-  private async register(credentials: ICredentials) {
+  private async register(credentials: ICredentials, errorCallback: any) {
     try {
       const token = await apiService.register(credentials);
       if (token) {
         localStorage.setItem('token', token);
         this.$router.push({ name: 'home' });
       } else {
+        errorCallback();
         ErrorState.set({ text: 'Username already taken' });
       }
     } catch (error) {
+      errorCallback();
       ErrorState.set({ text: 'Register unsuccessful', error });
     }
   }
