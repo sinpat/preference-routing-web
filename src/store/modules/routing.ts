@@ -170,6 +170,9 @@ class Routing extends VuexModule {
         this.waypoints,
         this.currentPref
       );
+      if (!path) {
+        NotificationState.setMessage('Could not find a path');
+      }
       this.setPath(path);
     } catch (error) {
       ErrorState.set({

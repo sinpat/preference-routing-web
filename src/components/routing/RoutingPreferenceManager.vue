@@ -4,9 +4,9 @@
       My Preferences
       <v-spacer></v-spacer>
       <div v-if="!isEditing">
-        <v-btn @click="fetchPreference" icon small>
+        <!-- <v-btn @click="fetchPreference" icon small>
           <v-icon>mdi-replay</v-icon>
-        </v-btn>
+        </v-btn> -->
         <v-btn text icon small>
           <v-icon @click="addPreference">mdi-plus</v-icon>
         </v-btn>
@@ -81,12 +81,12 @@ export default class RoutingPreferenceManager extends Vue {
   }
 
   private created() {
-    this.fetchPreference();
-  }
-
-  private fetchPreference() {
     RoutingState.fetchPreference();
   }
+
+  // private fetchPreference() {
+  //   RoutingState.fetchPreference();
+  // }
 
   private prefValueValid(value: number) {
     return this.valueInRange(value) || 'Input must be between 0 and 1';
