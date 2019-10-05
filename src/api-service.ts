@@ -45,8 +45,12 @@ class ApiService {
     return this.post(prefEndpoint + '/new');
   }
 
-  public findPreference(index: number) {
-    return this.post(prefEndpoint + '/find/' + index);
+  public findPreference(
+    index: number,
+    waypoints: ICoordinate[],
+    alpha: number[]
+  ) {
+    return this.post(prefEndpoint + '/find/' + index, { waypoints, alpha });
   }
 
   public shortestPath(waypoints: ICoordinate[], alpha: number[]) {

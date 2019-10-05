@@ -59,10 +59,11 @@ export default class RoutingMap extends Vue {
    * Introduce own icon for markers
    * Toggle map tile layout
    */
-  private tileUrl: string =
-    'https://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=bd08b205580548d18e6235e2da754318';
-  private zoom: number = 15;
-  private center: ICoordinate = { lat: 48.9666, lng: 9.4005 };
+  private tileUrl: string = 'http://{s}.tile.osm.org/{z}/{x}/{y}.png';
+  // private tileUrl: string =
+  //   'https://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=bd08b205580548d18e6235e2da754318';
+  private zoom: number = 18;
+  private center: ICoordinate = { lat: 48.9745, lng: 9.402 };
   private drivenPaths: IPath[] = [];
 
   get waypoints() {
