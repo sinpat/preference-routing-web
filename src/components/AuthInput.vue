@@ -2,6 +2,7 @@
   <v-form v-model="credentialsValid">
     <v-text-field
       v-model="credentials.username"
+      @keyup.enter="submit"
       :rules="nameRules"
       label="Username"
       rounded
@@ -9,6 +10,7 @@
     ></v-text-field>
     <v-text-field
       v-model="credentials.password"
+      @keyup.enter="submit"
       :rules="passwordRules"
       label="Password"
       type="password"
@@ -18,6 +20,7 @@
     <v-btn
       @click="submit"
       :disabled="!credentialsValid"
+      height="2.5rem"
       color="success"
       rounded
       >{{ btnName }}</v-btn
