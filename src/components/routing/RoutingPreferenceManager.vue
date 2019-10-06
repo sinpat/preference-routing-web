@@ -1,5 +1,5 @@
 <template>
-  <v-card elevation="4" height="100%">
+  <v-card v-if="costTags.length" elevation="4" height="100%">
     <v-card-title class="mb-2">
       My Preferences
       <v-spacer></v-spacer>

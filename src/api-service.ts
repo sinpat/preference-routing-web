@@ -25,6 +25,10 @@ class ApiService {
   }
 
   // Routing related
+  public getCostTags() {
+    return this.get<string[]>(endpoint + 'tags');
+  }
+
   public getPreference() {
     return this.get<number[][]>(prefEndpoint);
   }

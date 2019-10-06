@@ -44,6 +44,10 @@ import RoutingState from '@/store/modules/routing';
   },
 })
 export default class Routing extends Vue {
+  private async created() {
+    await RoutingState.init();
+  }
+
   private logout() {
     localStorage.removeItem('token');
     RoutingState.clear();

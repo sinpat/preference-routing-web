@@ -25,7 +25,7 @@ class Routing extends VuexModule {
   public waypoints: ICoordinate[] = [];
   public preference: number[][] = [];
   public prefIndex: number = 0;
-  public costTags: string[] = ['Distance', 'Height', 'UnsuitDist'];
+  public costTags: string[] = [];
 
   get currentPref() {
     return this.preference[this.prefIndex];
@@ -40,6 +40,12 @@ class Routing extends VuexModule {
   public clear() {
     this.path = null;
     this.waypoints = [];
+  }
+
+  @Action({ rawError: true })
+  public async init() {
+    await this.fetchPreference();
+    await this.fetchCostTags();
   }
 
   @Action({ rawError: true })
@@ -109,7 +115,7 @@ class Routing extends VuexModule {
       }
     } catch (error) {
       ErrorState.set({
-        text: 'There was an error calculating the new preference',
+        text: 'An error ocurred while calculating the new preference',
         error,
         callback: this.findNewPreference,
       });
@@ -197,6 +203,17 @@ class Routing extends VuexModule {
     const preference = await apiService.newPreference();
     this.setPreference(preference);
     this.setPrefIndex(this.preference.length - 1);
+  }
+
+  @Action({ rawError: true })
+  private async fetchCostTags() {
+    const tags = await apiService.getCostTags();
+    this.setCostTags(tags);
+  }
+
+  @Mutation
+  private setCostTags(tags: string[]) {
+    this.costTags = tags;
   }
 
   @Mutation
