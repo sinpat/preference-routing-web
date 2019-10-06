@@ -15,8 +15,12 @@
       rounded
       outlined
     ></v-text-field>
-    <v-btn @click="submit" :disabled="!credentialsValid" color="success"
-      >Submit</v-btn
+    <v-btn
+      @click="submit"
+      :disabled="!credentialsValid"
+      color="success"
+      rounded
+      >{{ btnName }}</v-btn
     >
   </v-form>
 </template>
@@ -32,6 +36,7 @@ import { ICredentials } from '../types/types';
   name: 'AuthInputComponent',
 })
 export default class Register extends Vue {
+  @Prop({ required: true }) private btnName!: string;
   private credentials: ICredentials = {
     username: '',
     password: '',

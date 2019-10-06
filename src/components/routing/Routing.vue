@@ -4,13 +4,6 @@
       <v-col>
         <RoutingControls />
       </v-col>
-      <v-col>
-        <div class="text-end">
-          <v-btn @click="logout" small icon>
-            <v-icon>mdi-logout</v-icon>
-          </v-btn>
-        </div>
-      </v-col>
     </v-row>
     <v-row dense>
       <v-col>
@@ -46,12 +39,6 @@ import RoutingState from '@/store/modules/routing';
 export default class Routing extends Vue {
   private async created() {
     await RoutingState.init();
-  }
-
-  private logout() {
-    localStorage.removeItem('token');
-    RoutingState.clear();
-    this.$router.push({ name: 'login' });
   }
 }
 </script>

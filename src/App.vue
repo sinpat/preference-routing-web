@@ -1,11 +1,39 @@
 <template>
   <div id="app">
     <v-app>
+      <!-- Toolbar -->
+      <v-app-bar app clipped-left>
+        <v-toolbar-title class="headline text-uppercase">
+          <span>Preference Routing</span>
+        </v-toolbar-title>
+        <v-spacer></v-spacer>
+        <v-btn v-if="$route.name === 'home'" @click="logout" text icon>
+          <v-icon>mdi-logout</v-icon>
+        </v-btn>
+        <v-btn
+          v-else-if="$route.name === 'login'"
+          @click="$router.push({ name: 'register' })"
+          text
+        >
+          Register
+        </v-btn>
+        <v-btn
+          v-else-if="$route.name === 'register'"
+          @click="$router.push({ name: 'login' })"
+          text
+        >
+          Log In
+        </v-btn>
+      </v-app-bar>
+
+      <!-- Main content -->
       <v-content>
         <v-container>
           <router-view />
         </v-container>
       </v-content>
+
+      <!-- Footer -->
       <v-footer>
         <span>&copy; Patrick Singer 2019</span>
       </v-footer>
@@ -21,12 +49,19 @@ import Component from 'vue-class-component';
 
 import ErrorDialog from '@/components/util/ErrorDialog.vue';
 import Snackbar from '@/components/util/Snackbar.vue';
+import RoutingState from '@/store/modules/routing';
+import UserState from '@/store/modules/user';
 
 @Component({
   name: 'App',
   components: { ErrorDialog, Snackbar },
 })
-export default class App extends Vue {}
+export default class App extends Vue {
+  private logout() {
+    UserState.logout();
+    this.$router.push({ name: 'login' });
+  }
+}
 </script>
 
 <style lang="scss">

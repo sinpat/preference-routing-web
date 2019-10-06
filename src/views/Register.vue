@@ -1,7 +1,7 @@
 <template>
   <div class="register">
     <h1>Create new account</h1>
-    <AuthInput @submit="register" class="mt-4" />
+    <AuthInput @submit="register" btnName="Register" class="mt-4" />
   </div>
 </template>
 
@@ -12,6 +12,8 @@ import Component from 'vue-class-component';
 import AuthInput from '@/components/AuthInput.vue';
 
 import ErrorState from '@/store/modules/error';
+import UserState from '@/store/modules/user';
+import NotificationState from '@/store/modules/notification';
 import apiService from '@/api-service';
 import { ICredentials } from '../types/types';
 
@@ -22,14 +24,9 @@ import { ICredentials } from '../types/types';
 export default class Register extends Vue {
   private async register(credentials: ICredentials, errorCallback: any) {
     try {
-      const token = await apiService.register(credentials);
-      if (token) {
-        localStorage.setItem('token', token);
-        this.$router.push({ name: 'home' });
-      } else {
-        errorCallback();
-        ErrorState.set({ text: 'Username already taken' });
-      }
+      await UserState.register(credentials);
+      NotificationState.setMessage('Register successful');
+      this.$router.push({ name: 'login' });
     } catch (error) {
       errorCallback();
       ErrorState.set({ text: 'Register unsuccessful', error });
