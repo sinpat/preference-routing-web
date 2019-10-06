@@ -15,6 +15,11 @@
         <RoutingControls class="elevation-4" />
       </v-col>
     </v-row>
+    <v-row dense>
+      <v-col>
+        <RoutingConfig class="elevation-4" />
+      </v-col>
+    </v-row>
   </div>
 </template>
 
@@ -25,6 +30,7 @@ import Component from 'vue-class-component';
 import RoutingMap from './RoutingMap.vue';
 import RoutingPreferenceManager from './RoutingPreferenceManager.vue';
 import RoutingControls from './RoutingControls.vue';
+import RoutingConfig from './RoutingConfiguration.vue';
 
 import RoutingState from '@/store/modules/routing';
 
@@ -34,6 +40,7 @@ import RoutingState from '@/store/modules/routing';
     RoutingMap,
     RoutingPreferenceManager,
     RoutingControls,
+    RoutingConfig,
   },
 })
 export default class Routing extends Vue {

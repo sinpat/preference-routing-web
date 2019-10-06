@@ -1,7 +1,7 @@
 <template>
   <v-card v-if="costTags.length">
     <v-card-title>
-      My Preferences
+      My Preference
       <v-spacer></v-spacer>
       <div v-if="!isEditing">
         <v-btn text icon small>
