@@ -29,7 +29,11 @@ export default class Register extends Vue {
       this.$router.push({ name: 'login' });
     } catch (error) {
       errorCallback();
-      ErrorState.set({ text: 'Register unsuccessful', error });
+      if (error.response.status === 401) {
+        ErrorState.set({ text: 'Username already taken' });
+      } else {
+        ErrorState.set({ text: 'Register unsuccessful', error });
+      }
     }
   }
 }

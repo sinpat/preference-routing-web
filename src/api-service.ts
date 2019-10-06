@@ -82,22 +82,18 @@ class ApiService {
     params,
     data,
   }: IRequestConfig): Promise<T> {
-    try {
-      const response = await axios({
-        url,
-        method,
-        headers: {
-          // tslint:disable-next-line
-          Authorization: localStorage.getItem('token'),
-          'Content-Type': 'application/json',
-        },
-        params,
-        data,
-      });
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+    const response = await axios({
+      url,
+      method,
+      headers: {
+        // tslint:disable-next-line
+        Authorization: localStorage.getItem('token'),
+        'Content-Type': 'application/json',
+      },
+      params,
+      data,
+    });
+    return response.data;
   }
 }
 
