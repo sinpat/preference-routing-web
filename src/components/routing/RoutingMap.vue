@@ -1,5 +1,5 @@
 <template>
-  <div class="map-container elevation-4">
+  <div class="map-container">
     <l-map
       :zoom="zoom"
       :center="center"
@@ -8,7 +8,16 @@
       @update:center="updateCenter"
       style="z-index: 1"
     >
-      <l-tile-layer :url="tileUrl"></l-tile-layer>
+      <l-control-layers position="topright"></l-control-layers>
+      <l-tile-layer
+        v-for="provider in tileProviders"
+        :key="provider.name"
+        :name="provider.name"
+        :visible="provider.visible"
+        :attribution="provider.attribution"
+        :url="provider.url"
+        layer-type="base"
+      />
       <RoutingMapMarker
         v-for="(point, index) in waypoints"
         :key="index"
@@ -18,7 +27,7 @@
       <RoutingMapPath />
       <div v-if="showAll">
         <RoutingDrivenPath
-          v-for="(path, index) in drivenPaths"
+          v-for="(path, index) in drivenPaths[prefIndex]"
           :key="index"
           :path="path"
         />
@@ -33,7 +42,7 @@ import Component from 'vue-class-component';
 import { Watch } from 'vue-property-decorator';
 
 import L from 'leaflet';
-import { LMap, LTileLayer } from 'vue2-leaflet';
+import { LMap, LControlLayers, LTileLayer } from 'vue2-leaflet';
 
 import RoutingMapMarker from './RoutingMapMarker.vue';
 import RoutingMapPath from './RoutingMapPath.vue';
@@ -47,6 +56,7 @@ import apiService from '../../api-service';
   name: 'MapComponent',
   components: {
     LMap,
+    LControlLayers,
     LTileLayer,
     RoutingMapMarker,
     RoutingMapPath,
@@ -57,11 +67,26 @@ export default class RoutingMap extends Vue {
   /* TODO
    * Make marker draggable?
    * Introduce own icon for markers
-   * Toggle map tile layout
    */
-  private tileUrl: string = 'http://{s}.tile.osm.org/{z}/{x}/{y}.png';
-  // private tileUrl: string =
-  //   'https://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=bd08b205580548d18e6235e2da754318';
+
+  // tslint:disable:max-line-length
+  private tileProviders = [
+    {
+      name: 'OpenStreetMap',
+      visible: true,
+      url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    },
+    {
+      name: 'Thunderforest',
+      visible: false,
+      url:
+        'https://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=bd08b205580548d18e6235e2da754318',
+      attribution:
+        '&copy; <a href="http://www.thunderforest.com/">Thunderforest</a>, &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    },
+  ];
   private zoom: number = 18;
   private center: ICoordinate = { lat: 48.9745, lng: 9.402 };
   private drivenPaths: IPath[] = [];
@@ -72,6 +97,10 @@ export default class RoutingMap extends Vue {
 
   get showAll() {
     return RoutingState.showAll;
+  }
+
+  get prefIndex() {
+    return RoutingState.prefIndex;
   }
 
   @Watch('showAll')

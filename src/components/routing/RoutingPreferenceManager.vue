@@ -1,6 +1,6 @@
 <template>
-  <v-card v-if="costTags.length" elevation="4" height="100%">
-    <v-card-title class="mb-2">
+  <v-card v-if="costTags.length">
+    <v-card-title>
       My Preferences
       <v-spacer></v-spacer>
       <div v-if="!isEditing">

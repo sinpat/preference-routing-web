@@ -1,18 +1,18 @@
 <template>
   <div>
-    <v-row>
+    <v-row dense>
       <v-col>
-        <RoutingControls />
+        <RoutingMap class="elevation-4" />
       </v-col>
     </v-row>
     <v-row dense>
       <v-col>
-        <RoutingMap />
+        <RoutingPreferenceManager class="elevation-4" />
       </v-col>
     </v-row>
     <v-row dense>
       <v-col>
-        <RoutingPreferenceManager />
+        <RoutingControls class="elevation-4" />
       </v-col>
     </v-row>
   </div>

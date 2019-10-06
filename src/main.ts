@@ -15,7 +15,7 @@ new Vue({
   store,
   vuetify: new Vuetify({
     theme: {
-      dark: new Date().getHours() >= 21 || new Date().getHours() <= 7,
+      // dark: new Date().getHours() >= 21 || new Date().getHours() <= 7,
     },
     icons: {
       iconfont: 'mdi', // Default - only for display purposes

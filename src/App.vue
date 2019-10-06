@@ -7,13 +7,14 @@
           <span>Preference Routing</span>
         </v-toolbar-title>
         <v-spacer></v-spacer>
-        <v-btn v-if="$route.name === 'home'" @click="logout" text icon>
+        <v-btn v-if="$route.name === 'home'" @click="logout" rounded text icon>
           <v-icon>mdi-logout</v-icon>
         </v-btn>
         <v-btn
           v-else-if="$route.name === 'login'"
           @click="$router.push({ name: 'register' })"
           text
+          rounded
         >
           Register
         </v-btn>
@@ -21,6 +22,7 @@
           v-else-if="$route.name === 'register'"
           @click="$router.push({ name: 'login' })"
           text
+          rounded
         >
           Log In
         </v-btn>
