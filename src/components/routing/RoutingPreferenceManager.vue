@@ -4,9 +4,6 @@
       My Preferences
       <v-spacer></v-spacer>
       <div v-if="!isEditing">
-        <!-- <v-btn @click="fetchPreference" icon small>
-          <v-icon>mdi-replay</v-icon>
-        </v-btn> -->
         <v-btn text icon small>
           <v-icon @click="addPreference">mdi-plus</v-icon>
         </v-btn>
@@ -21,12 +18,12 @@
     <v-card-text class="pb-0">
       <v-btn-toggle @change="switchPref" :value="prefIndex" rounded>
         <v-btn v-for="(alpha, index) in preferences" :key="index">
-          {{ index }}
+          {{ index + 1 }}
         </v-btn>
       </v-btn-toggle>
       <v-row class="mt-4" dense>
         <v-col
-          v-for="(_, index) in selectedPref"
+          v-for="(tag, index) in costTags"
           :key="index"
           cols="12"
           sm="6"
@@ -36,7 +33,7 @@
             v-model.number="selectedPref[index]"
             :readonly="!isEditing"
             :rules="[prefValueValid]"
-            :label="costTags[index]"
+            :label="tag"
             rounded
             outlined
           ></v-text-field>
@@ -83,10 +80,6 @@ export default class RoutingPreferenceManager extends Vue {
   private created() {
     RoutingState.fetchPreference();
   }
-
-  // private fetchPreference() {
-  //   RoutingState.fetchPreference();
-  // }
 
   private prefValueValid(value: number) {
     return this.valueInRange(value) || 'Input must be between 0 and 1';

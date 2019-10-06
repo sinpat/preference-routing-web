@@ -4,9 +4,9 @@
       <p>
         <strong>Total Cost: {{ path.total_cost | round }}</strong>
       </p>
-      <p v-for="(cost, index) in path.costs" :key="index">
-        {{ costTags[index] }}:
-        {{ cost | round }}
+      <p v-for="(tag, index) in costTags" :key="index">
+        {{ tag }}:
+        {{ path.costs[index] | round }}
         ({{ path.alpha[index] }})
       </p>
     </l-tooltip>
