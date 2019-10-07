@@ -1,8 +1,11 @@
 <template>
   <div>
     <v-row dense>
-      <v-col>
+      <v-col cols="12" md="8" lg="9">
         <RoutingMap class="elevation-4" />
+      </v-col>
+      <v-col>
+        <RoutingConfig class="elevation-4 fill-height" />
       </v-col>
     </v-row>
     <v-row dense>
@@ -15,11 +18,11 @@
         <RoutingControls class="elevation-4" />
       </v-col>
     </v-row>
-    <v-row dense>
+    <!-- <v-row dense>
       <v-col>
         <RoutingConfig class="elevation-4" />
       </v-col>
-    </v-row>
+    </v-row> -->
   </div>
 </template>
 

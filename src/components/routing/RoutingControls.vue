@@ -4,12 +4,12 @@
       <v-card-title>Actions</v-card-title>
       <v-card-text>
         <v-row>
-          <v-col>
+          <v-col cols="3">
             <v-btn @click="showDialog = true" style="color: red"
               >Reset Data</v-btn
             >
           </v-col>
-          <v-col>
+          <v-col cols="3">
             <v-switch
               @change="setShowAll"
               :value="showAll"

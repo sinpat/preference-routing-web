@@ -28,6 +28,8 @@
           cols="12"
           sm="6"
           md="4"
+          lg="3"
+          xl="2"
         >
           <v-text-field
             v-model.number="selectedPref[index]"

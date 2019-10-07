@@ -41,13 +41,13 @@
         :index="index"
       />
       <RoutingMapPath />
-      <div v-if="showAll">
+      <l-feature-group :visible="showAll">
         <RoutingDrivenPath
           v-for="(path, index) in drivenPaths[prefIndex]"
           :key="index"
           :path="path"
         />
-      </div>
+      </l-feature-group>
     </l-map>
   </div>
 </template>
@@ -58,7 +58,13 @@ import Component from 'vue-class-component';
 import { Watch } from 'vue-property-decorator';
 
 import L from 'leaflet';
-import { LMap, LControl, LControlLayers, LTileLayer } from 'vue2-leaflet';
+import {
+  LMap,
+  LControl,
+  LControlLayers,
+  LTileLayer,
+  LFeatureGroup,
+} from 'vue2-leaflet';
 
 import RoutingMapMarker from './RoutingMapMarker.vue';
 import RoutingMapPath from './RoutingMapPath.vue';
@@ -78,14 +84,10 @@ import apiService from '../../api-service';
     RoutingMapMarker,
     RoutingMapPath,
     RoutingDrivenPath,
+    LFeatureGroup,
   },
 })
 export default class RoutingMap extends Vue {
-  /* TODO
-   * Make marker draggable?
-   * Introduce own icon for markers
-   */
-
   // tslint:disable:max-line-length
   private tileProviders = [
     {
@@ -152,6 +154,6 @@ export default class RoutingMap extends Vue {
 
 <style lang="scss" scoped>
 .map-container {
-  height: 450px;
+  height: 600px;
 }
 </style>

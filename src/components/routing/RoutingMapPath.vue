@@ -1,5 +1,5 @@
 <template>
-  <l-polyline v-if="path" :lat-lngs="path.coordinates" color="green">
+  <l-polyline v-if="path" :lat-lngs="path.coordinates" color="red">
     <l-tooltip>
       <p>
         <strong>Total Cost: {{ path.total_cost | round }}</strong>
