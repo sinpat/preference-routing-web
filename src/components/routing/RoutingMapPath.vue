@@ -10,17 +10,6 @@
         ({{ path.alpha[index] }})
       </p>
     </l-tooltip>
-    <l-popup>
-      <v-btn @click="clearRoute" icon large light>
-        <v-icon>mdi-delete</v-icon>
-      </v-btn>
-      <!-- <v-btn @click="fetchRoute" icon large color="blue">
-        <v-icon>mdi-replay</v-icon>
-      </v-btn> -->
-      <v-btn @click="routeFinished" icon large color="green">
-        <v-icon>mdi-check</v-icon>
-      </v-btn>
-    </l-popup>
   </l-polyline>
 </template>
 
@@ -51,18 +40,6 @@ export default class RoutingMapPath extends Vue {
 
   get costTags(): string[] {
     return RoutingState.costTags;
-  }
-
-  private clearRoute() {
-    RoutingState.clear();
-  }
-
-  private fetchRoute() {
-    RoutingState.fetchShortestPath();
-  }
-
-  private routeFinished() {
-    RoutingState.findNewPreference();
   }
 }
 </script>

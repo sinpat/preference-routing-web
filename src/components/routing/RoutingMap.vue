@@ -18,6 +18,22 @@
         :url="provider.url"
         layer-type="base"
       />
+      <l-control position="bottomleft">
+        <v-card elevation="4">
+          <v-btn
+            @click="routeFinished"
+            :disabled="waypoints.length < 2"
+            icon
+            color="green"
+          >
+            <v-icon>mdi-check</v-icon>
+          </v-btn>
+          <br />
+          <v-btn @click="clearRoute" :disabled="waypoints.length < 1" icon>
+            <v-icon>mdi-delete</v-icon>
+          </v-btn>
+        </v-card>
+      </l-control>
       <RoutingMapMarker
         v-for="(point, index) in waypoints"
         :key="index"
@@ -42,7 +58,7 @@ import Component from 'vue-class-component';
 import { Watch } from 'vue-property-decorator';
 
 import L from 'leaflet';
-import { LMap, LControlLayers, LTileLayer } from 'vue2-leaflet';
+import { LMap, LControl, LControlLayers, LTileLayer } from 'vue2-leaflet';
 
 import RoutingMapMarker from './RoutingMapMarker.vue';
 import RoutingMapPath from './RoutingMapPath.vue';
@@ -56,6 +72,7 @@ import apiService from '../../api-service';
   name: 'MapComponent',
   components: {
     LMap,
+    LControl,
     LControlLayers,
     LTileLayer,
     RoutingMapMarker,
@@ -121,6 +138,14 @@ export default class RoutingMap extends Vue {
 
   private handleLeftClick({ latlng }: any) {
     RoutingState.addWaypoint(latlng);
+  }
+
+  private clearRoute() {
+    RoutingState.clear();
+  }
+
+  private routeFinished() {
+    RoutingState.findNewPreference();
   }
 }
 </script>
