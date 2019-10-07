@@ -101,6 +101,13 @@ class Routing extends VuexModule {
   }
 
   @Action({ rawError: true })
+  public async repositionWaypoint({ index, newLoc }: any) {
+    const point = await apiService.fetchClosest(newLoc);
+    this.waypoints.splice(index, 1, point);
+    this.fetchShortestPath();
+  }
+
+  @Action({ rawError: true })
   public swapWaypoints({ from, to }: any) {
     const temp = this.waypoints[from];
     this.waypoints.splice(from, 1, this.waypoints[to]);

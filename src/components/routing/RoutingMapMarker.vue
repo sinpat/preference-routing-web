@@ -1,5 +1,10 @@
 <template>
-  <l-marker @contextmenu="removeWaypoint(index)" :lat-lng="point">
+  <l-marker
+    @contextmenu="removeWaypoint(index)"
+    @update:latLng="repositionWaypoint"
+    :lat-lng="point"
+    draggable
+  >
     <l-tooltip>{{ index + 1 }}</l-tooltip>
     <l-popup>
       <h3 class="mb-2">Position</h3>
@@ -17,6 +22,7 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
 
+import { ICoordinate } from '@/types/types';
 import RoutingState from '@/store/modules/routing';
 
 import { LMarker, LTooltip, LPopup } from 'vue2-leaflet';
@@ -44,6 +50,13 @@ export default class RoutingMapMarker extends Vue {
     RoutingState.swapWaypoints({
       from: this.index,
       to: value,
+    });
+  }
+
+  private repositionWaypoint(newLoc: ICoordinate) {
+    RoutingState.repositionWaypoint({
+      index: this.index,
+      newLoc,
     });
   }
 
