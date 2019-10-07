@@ -18,6 +18,7 @@
           </v-btn-toggle>
         </v-col>
       </v-row>
+      <RoutingControls />
     </v-card-text>
   </v-card>
 </template>
@@ -27,9 +28,13 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 
 import ConfigState from '@/store/modules/config';
+import RoutingControls from './RoutingControls.vue';
 
 @Component({
   name: 'RoutingConfigurationComponent',
+  components: {
+    RoutingControls,
+  },
 })
 export default class RoutingConfiguration extends Vue {
   get insertionOrder() {

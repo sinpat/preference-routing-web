@@ -1,25 +1,18 @@
 <template>
   <div>
-    <v-card>
-      <v-card-title>Actions</v-card-title>
-      <v-card-text>
-        <v-row>
-          <v-col cols="3">
-            <v-btn @click="showDialog = true" style="color: red"
-              >Reset Data</v-btn
-            >
-          </v-col>
-          <v-col cols="3">
-            <v-switch
-              @change="setShowAll"
-              :value="showAll"
-              label="Show all driven routes"
-              class="ma-0"
-            ></v-switch>
-          </v-col>
-        </v-row>
-      </v-card-text>
-    </v-card>
+    <v-row>
+      <v-col cols="6" style="font-size: 1.1rem">
+        <span>Show all driven routes</span>
+      </v-col>
+      <v-col cols="6"
+        ><v-switch @change="setShowAll" :value="showAll" class="ma-0"></v-switch
+      ></v-col>
+    </v-row>
+    <v-row>
+      <v-col>
+        <v-btn @click="showDialog = true" style="color: red">Reset Data</v-btn>
+      </v-col>
+    </v-row>
 
     <v-dialog :value="showDialog" width="400" persistent>
       <v-card>
