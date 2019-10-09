@@ -2,6 +2,8 @@
   <l-marker
     @contextmenu="removeWaypoint(index)"
     @update:latLng="repositionWaypoint"
+    @dragstart="isDragged = true"
+    @dragend="isDragged = false"
     :lat-lng="point"
     draggable
   >
@@ -42,6 +44,8 @@ export default class RoutingMapMarker extends Vue {
   @Prop({ type: Object, required: true })
   private point: any;
 
+  private isDragged = false;
+
   get waypoints() {
     return RoutingState.waypoints;
   }
@@ -54,10 +58,12 @@ export default class RoutingMapMarker extends Vue {
   }
 
   private repositionWaypoint(newLoc: ICoordinate) {
-    RoutingState.repositionWaypoint({
-      index: this.index,
-      newLoc,
-    });
+    if (this.isDragged) {
+      RoutingState.repositionWaypoint({
+        index: this.index,
+        newLoc,
+      });
+    }
   }
 
   private removeWaypoint(index: number) {

@@ -51,60 +51,49 @@ class Routing extends VuexModule {
 
   @Action({ rawError: true })
   public async addWaypoint(latlng: ICoordinate) {
-    try {
-      const point: ICoordinate = await apiService.fetchClosest(latlng);
-      const insertionOrder = ConfigState.insertionOrder;
-      if (insertionOrder === 'in_order') {
+    const point: ICoordinate = await apiService.fetchClosest(latlng);
+    const insertionOrder = ConfigState.insertionOrder;
+    if (insertionOrder === 'in_order') {
+      this.waypoints.push(point);
+    } else if (insertionOrder === 'intermediate') {
+      // Find waypoint with smallest distance to input Coordinate
+      // let minDist = Number.MAX_VALUE;
+      // let spliceIndex = -1;
+      // this.waypoints.forEach((current, index) => {
+      //   const dist = Math.sqrt(
+      //     Math.pow(point.lat - current.lat, 2) +
+      //       Math.pow(point.lng - current.lng, 2)
+      //   );
+      //   if (dist < minDist) {
+      //     minDist = dist;
+      //     spliceIndex = index;
+      //   }
+      // });
+      // if (spliceIndex === 0) {
+      //   // We do not want to change our source
+      //   spliceIndex++;
+      // } else if (spliceIndex === -1) {
+      //   // We have no waypoints yet
+      //   spliceIndex = 0;
+      // }
+      // this.waypoints.splice(spliceIndex, 0, point);
+      if (this.waypoints.length < 2) {
         this.waypoints.push(point);
-      } else if (insertionOrder === 'intermediate') {
-        // Find waypoint with smallest distance to input Coordinate
-        // let minDist = Number.MAX_VALUE;
-        // let spliceIndex = -1;
-        // this.waypoints.forEach((current, index) => {
-        //   const dist = Math.sqrt(
-        //     Math.pow(point.lat - current.lat, 2) +
-        //       Math.pow(point.lng - current.lng, 2)
-        //   );
-        //   if (dist < minDist) {
-        //     minDist = dist;
-        //     spliceIndex = index;
-        //   }
-        // });
-        // if (spliceIndex === 0) {
-        //   // We do not want to change our source
-        //   spliceIndex++;
-        // } else if (spliceIndex === -1) {
-        //   // We have no waypoints yet
-        //   spliceIndex = 0;
-        // }
-        // this.waypoints.splice(spliceIndex, 0, point);
-        if (this.waypoints.length < 2) {
-          this.waypoints.push(point);
-        } else {
-          this.waypoints.splice(this.waypoints.length - 1, 0, point);
-        }
+      } else {
+        this.waypoints.splice(this.waypoints.length - 1, 0, point);
       }
-      this.fetchShortestPath();
-    } catch (error) {
-      ErrorState.set({
-        text: 'Nearest point could not be fetched',
-        error,
-        callback: () => this.addWaypoint(latlng),
-      });
     }
   }
 
   @Action({ rawError: true })
   public removeWaypoint(index: number) {
     this.waypoints.splice(index, 1);
-    this.fetchShortestPath();
   }
 
   @Action({ rawError: true })
   public async repositionWaypoint({ index, newLoc }: any) {
     const point = await apiService.fetchClosest(newLoc);
     this.waypoints.splice(index, 1, point);
-    this.fetchShortestPath();
   }
 
   @Action({ rawError: true })
@@ -112,7 +101,6 @@ class Routing extends VuexModule {
     const temp = this.waypoints[from];
     this.waypoints.splice(from, 1, this.waypoints[to]);
     this.waypoints.splice(to, 1, temp);
-    this.fetchShortestPath();
   }
 
   @Action({ rawError: true })

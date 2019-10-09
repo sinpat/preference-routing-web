@@ -130,6 +130,13 @@ export default class RoutingMap extends Vue {
     }
   }
 
+  private created() {
+    this.$store.watch(
+      () => RoutingState.waypoints,
+      RoutingState.fetchShortestPath
+    );
+  }
+
   private updateZoom(zoomValue: number) {
     this.zoom = zoomValue;
   }
