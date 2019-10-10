@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ICoordinate, IPath, ICredentials } from './types/types';
+import { ICoordinate, IPath, ICredentials } from './types';
 
 const endpoint = 'http://localhost:8000/';
 const prefEndpoint = endpoint + 'preference';

@@ -91,7 +91,7 @@ import RoutingConfig from './RoutingConfiguration.vue';
 import RoutingState from '@/store/modules/routing';
 
 import apiService from '@/api-service';
-import { IPath } from '@/types/types';
+import { IPath } from '@/types';
 
 @Component({
   name: 'RoutingComponent',

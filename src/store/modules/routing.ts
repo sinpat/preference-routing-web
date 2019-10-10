@@ -9,7 +9,7 @@ import {
 import apiService from '@/api-service';
 
 import store from '../store';
-import { ICoordinate, IPath } from '@/types/types';
+import { ICoordinate, IPath } from '@/types';
 
 import ErrorState from './error';
 import NotificationState from './notification';

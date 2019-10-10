@@ -62,7 +62,7 @@ import {
 import RoutingMapMarker from './RoutingMapMarker.vue';
 import RoutingMapPath from './RoutingMapPath.vue';
 
-import { ICoordinate, IPath } from '@/types/types';
+import { ICoordinate, IPath } from '@/types';
 import RoutingState from '@/store/modules/routing';
 import apiService from '../../api-service';
 

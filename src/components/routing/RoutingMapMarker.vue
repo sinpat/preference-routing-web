@@ -24,7 +24,7 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
 
-import { ICoordinate } from '@/types/types';
+import { ICoordinate } from '@/types';
 import RoutingState from '@/store/modules/routing';
 
 import { LMarker, LTooltip, LPopup } from 'vue2-leaflet';

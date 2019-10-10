@@ -15,7 +15,7 @@ import ErrorState from '@/store/modules/error';
 import UserState from '@/store/modules/user';
 import NotificationState from '@/store/modules/notification';
 import apiService from '@/api-service';
-import { ICredentials } from '../types/types';
+import { ICredentials } from '../types';
 
 @Component({
   name: 'RegisterView',

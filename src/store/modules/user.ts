@@ -9,7 +9,7 @@ import {
 import apiService from '@/api-service';
 import store from '../store';
 import RoutingState from './routing';
-import { ICredentials } from '@/types/types';
+import { ICredentials } from '@/types';
 
 @Module({
   dynamic: true,

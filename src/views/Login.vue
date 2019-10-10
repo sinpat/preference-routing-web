@@ -13,7 +13,7 @@ import AuthInput from '@/components/AuthInput.vue';
 
 import ErrorState from '@/store/modules/error';
 import UserState from '@/store/modules/user';
-import { ICredentials } from '../types/types';
+import { ICredentials } from '../types';
 
 @Component({
   name: 'LoginView',

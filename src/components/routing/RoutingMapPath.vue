@@ -20,7 +20,7 @@ import { Watch, Prop } from 'vue-property-decorator';
 
 import { LPolyline, LTooltip, LPopup } from 'vue2-leaflet';
 
-import { IPath } from '@/types/types';
+import { IPath } from '@/types';
 import RoutingState from '@/store/modules/routing';
 
 @Component({
