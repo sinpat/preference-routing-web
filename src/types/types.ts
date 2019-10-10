@@ -9,6 +9,7 @@ export interface ICoordinate {
 }
 
 export interface IPath {
+  name: string;
   coordinates: ICoordinate[];
   costs: number[];
   total_cost: number;

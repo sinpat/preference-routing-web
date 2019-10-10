@@ -40,14 +40,8 @@
         :point="point"
         :index="index"
       />
-      <RoutingMapPath />
-      <l-feature-group :visible="showAll">
-        <RoutingDrivenPath
-          v-for="(path, index) in drivenPaths[prefIndex]"
-          :key="index"
-          :path="path"
-        />
-      </l-feature-group>
+      <RoutingMapPath :route="selectedRoute" />
+      <RoutingMapPath :route="path" />
     </l-map>
   </div>
 </template>
@@ -55,7 +49,6 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import { Watch } from 'vue-property-decorator';
 
 import L from 'leaflet';
 import {
@@ -68,7 +61,6 @@ import {
 
 import RoutingMapMarker from './RoutingMapMarker.vue';
 import RoutingMapPath from './RoutingMapPath.vue';
-import RoutingDrivenPath from './RoutingDrivenPath.vue';
 
 import { ICoordinate, IPath } from '@/types/types';
 import RoutingState from '@/store/modules/routing';
@@ -83,7 +75,6 @@ import apiService from '../../api-service';
     LTileLayer,
     RoutingMapMarker,
     RoutingMapPath,
-    RoutingDrivenPath,
     LFeatureGroup,
   },
 })
@@ -114,20 +105,16 @@ export default class RoutingMap extends Vue {
     return RoutingState.waypoints;
   }
 
-  get showAll() {
-    return RoutingState.showAll;
-  }
-
   get prefIndex() {
     return RoutingState.prefIndex;
   }
 
-  @Watch('showAll')
-  private async fetchDrivenRoutes(value: boolean) {
-    if (value) {
-      const routes = await apiService.getDrivenRoutes();
-      this.drivenPaths = routes;
-    }
+  get selectedRoute() {
+    return RoutingState.selectedRoute;
+  }
+
+  get path() {
+    return RoutingState.path;
   }
 
   private created() {

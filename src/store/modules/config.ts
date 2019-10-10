@@ -9,11 +9,11 @@ import store from '../store';
 
 @Module({
   dynamic: true,
-  name: 'routingState',
+  name: 'configState',
   store,
 })
 class Config extends VuexModule {
-  public insertionOrder = 'in_order';
+  public insertionOrder = 'intermediate';
 
   @Mutation
   public setInsertionOrder(value: string) {

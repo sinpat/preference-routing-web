@@ -22,19 +22,27 @@ import ConfigState from './config';
 })
 class Routing extends VuexModule {
   public path: IPath | null = null;
-  public showAll = false;
+  public selectedRouteIdx = -1;
   public waypoints: ICoordinate[] = [];
   public preference: number[][] = [];
   public prefIndex: number = 0;
   public costTags: string[] = [];
+  public userRoutes: IPath[] = [];
 
   get currentPref() {
     return this.preference[this.prefIndex];
   }
 
+  get selectedRoute() {
+    if (this.selectedRouteIdx === -1) {
+      return null;
+    }
+    return this.userRoutes[this.selectedRouteIdx];
+  }
+
   @Mutation
-  public setShowAll(value: boolean) {
-    this.showAll = value;
+  public setSelectedRouteIdx(value: number) {
+    this.selectedRouteIdx = value;
   }
 
   @Mutation
@@ -47,6 +55,7 @@ class Routing extends VuexModule {
   public async init() {
     await this.fetchPreference();
     await this.fetchCostTags();
+    await this.fetchUserRoutes();
   }
 
   @Action({ rawError: true })
@@ -107,17 +116,14 @@ class Routing extends VuexModule {
   public async findNewPreference() {
     const prefIndex = this.prefIndex;
     try {
-      const preference: number[] = await apiService.findPreference(
+      const [preference, splits] = await apiService.findPreference(
         prefIndex,
         this.waypoints,
         this.currentPref
       );
-      if (preference) {
-        NotificationState.setMessage('Found Preference');
-        this.preference.splice(prefIndex, 1, preference);
-      } else {
-        alert('Could not find preference');
-      }
+      NotificationState.setMessage('Found Preference');
+      this.setPreference(preference);
+      this.fetchUserRoutes();
     } catch (error) {
       ErrorState.set({
         text: 'An error ocurred while calculating the new preference',
@@ -200,7 +206,7 @@ class Routing extends VuexModule {
   @Action({ rawError: true })
   public selectPref(index: number) {
     this.setPrefIndex(index);
-    this.fetchShortestPath();
+    // this.fetchShortestPath();
   }
 
   @Action({ rawError: true })
@@ -211,9 +217,20 @@ class Routing extends VuexModule {
   }
 
   @Action({ rawError: true })
+  public async fetchUserRoutes() {
+    const routes = await apiService.getDrivenRoutes();
+    this.setUserRoutes(routes);
+  }
+
+  @Action({ rawError: true })
   private async fetchCostTags() {
     const tags = await apiService.getCostTags();
     this.setCostTags(tags);
+  }
+
+  @Mutation
+  private setUserRoutes(routes: IPath[]) {
+    this.userRoutes = routes;
   }
 
   @Mutation

@@ -1,13 +1,13 @@
 <template>
-  <l-polyline v-if="path" :lat-lngs="path.coordinates" color="red">
+  <l-polyline v-if="route" :lat-lngs="route.coordinates" color="red">
     <l-tooltip>
       <p>
-        <strong>Total Cost: {{ path.total_cost | round }}</strong>
+        <strong>Total Cost: {{ route.total_cost | round }}</strong>
       </p>
       <p v-for="(tag, index) in costTags" :key="index">
         {{ tag }}:
-        {{ path.costs[index] | round }}
-        ({{ path.alpha[index] }})
+        {{ route.costs[index] | round }}
+        ({{ route.alpha[index] }})
       </p>
     </l-tooltip>
   </l-polyline>
@@ -16,6 +16,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
+import { Watch, Prop } from 'vue-property-decorator';
 
 import { LPolyline, LTooltip, LPopup } from 'vue2-leaflet';
 
@@ -34,8 +35,10 @@ import RoutingState from '@/store/modules/routing';
   },
 })
 export default class RoutingMapPath extends Vue {
-  get path() {
-    return RoutingState.path;
+  @Prop({ required: true }) private route!: any;
+
+  get selectedRoute() {
+    return RoutingState.selectedRoute;
   }
 
   get costTags(): string[] {
