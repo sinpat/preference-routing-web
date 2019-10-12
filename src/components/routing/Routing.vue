@@ -9,6 +9,9 @@
           <v-card-title
             >Driven Routes
             <v-spacer></v-spacer>
+            <v-btn @click="addRoute" color="green" text icon>
+              <v-icon>mdi-plus</v-icon>
+            </v-btn>
             <v-btn
               @click="showDialog = true"
               :disabled="selectedRoute === null || selectedRoute === undefined"
@@ -21,16 +24,18 @@
           </v-card-title>
           <v-card-text>
             <div v-if="userRoutes.length === 0" class="text-center">
-              No routes to show
+              <div style="font-weight: bold">No routes to show</div>
+              <br />
+              Create a new one by clicking on the map
             </div>
             <v-list
               v-else
               max-height="500"
               class="overflow-y-auto"
-              rounded
+              shaped
               two-line
             >
-              <v-list-item-group v-model="selectedRoute">
+              <v-list-item-group v-model="selectedRoute" mandatory>
                 <v-list-item
                   v-for="(path, index) in userRoutes"
                   :key="index"
@@ -38,7 +43,7 @@
                 >
                   <v-list-item-title>{{ path.name }}</v-list-item-title>
                   <v-list-item-subtitle>{{
-                    path.total_cost
+                    path.costs_by_alpha
                   }}</v-list-item-subtitle>
                 </v-list-item>
               </v-list-item-group>
@@ -91,7 +96,6 @@ import RoutingConfig from './RoutingConfiguration.vue';
 import RoutingState from '@/store/modules/routing';
 
 import apiService from '@/api-service';
-import { IPath } from '@/types';
 
 @Component({
   name: 'RoutingComponent',
@@ -120,6 +124,10 @@ export default class Routing extends Vue {
 
   private async created() {
     await RoutingState.init();
+  }
+
+  private addRoute() {
+    RoutingState.addRoute();
   }
 
   private reset() {

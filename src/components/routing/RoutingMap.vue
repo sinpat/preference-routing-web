@@ -34,14 +34,7 @@
           </v-btn>
         </v-card>
       </l-control>
-      <RoutingMapMarker
-        v-for="(point, index) in waypoints"
-        :key="index"
-        :point="point"
-        :index="index"
-      />
-      <RoutingMapPath :route="selectedRoute" />
-      <RoutingMapPath :route="path" />
+      <RoutingMapPath />
     </l-map>
   </div>
 </template>
@@ -62,7 +55,7 @@ import {
 import RoutingMapMarker from './RoutingMapMarker.vue';
 import RoutingMapPath from './RoutingMapPath.vue';
 
-import { ICoordinate, IPath } from '@/types';
+import { ICoordinate, Path } from '@/types';
 import RoutingState from '@/store/modules/routing';
 import apiService from '../../api-service';
 
@@ -99,7 +92,7 @@ export default class RoutingMap extends Vue {
   ];
   private zoom: number = 18;
   private center: ICoordinate = { lat: 48.9745, lng: 9.402 };
-  private drivenPaths: IPath[] = [];
+  private drivenPaths: Path[] = [];
 
   get waypoints() {
     return RoutingState.waypoints;
@@ -111,17 +104,6 @@ export default class RoutingMap extends Vue {
 
   get selectedRoute() {
     return RoutingState.selectedRoute;
-  }
-
-  get path() {
-    return RoutingState.path;
-  }
-
-  private created() {
-    this.$store.watch(
-      () => RoutingState.waypoints,
-      RoutingState.fetchShortestPath
-    );
   }
 
   private updateZoom(zoomValue: number) {

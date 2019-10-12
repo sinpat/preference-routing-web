@@ -1,16 +1,51 @@
 <template>
-  <l-polyline v-if="route" :lat-lngs="route.coordinates" color="red">
-    <l-tooltip>
-      <p>
-        <strong>Total Cost: {{ route.total_cost | round }}</strong>
-      </p>
-      <p v-for="(tag, index) in costTags" :key="index">
-        {{ tag }}:
-        {{ route.costs[index] | round }}
-        ({{ route.alpha[index] }})
-      </p>
-    </l-tooltip>
-  </l-polyline>
+  <div>
+    <RoutingMapMarker
+      v-for="(point, index) in waypoints"
+      :key="index"
+      :point="point"
+      :index="index"
+    />
+    <l-polyline
+      v-if="subPaths.length === 0"
+      :lat-lngs="selectedRoute.coordinates"
+      color="brown"
+    >
+      <l-tooltip>
+        <p>
+          <strong
+            >Total Cost: {{ selectedRoute.costs_by_alpha | round }}</strong
+          >
+        </p>
+        <p v-for="(cost, index) in selectedRoute.dim_costs" :key="index">
+          {{ costTags[index] }}:
+          {{ cost | round }}
+          ({{ selectedRoute.initial_pref[index] }})
+        </p>
+      </l-tooltip>
+    </l-polyline>
+    <div v-else>
+      <l-polyline
+        v-for="(path, index) in subPaths"
+        :key="index"
+        :lat-lngs="path"
+        :color="getColor(index)"
+      >
+        <l-tooltip>
+          <p>
+            <strong
+              >Total Cost: {{ selectedRoute.costs_by_alpha | round }}</strong
+            >
+          </p>
+          <p v-for="(tag, index) in costTags" :key="index">
+            {{ tag }}:
+            {{ selectedRoute.dim_costs[index] | round }}
+            ({{ selectedRoute.initial_pref[index] }})
+          </p>
+        </l-tooltip>
+      </l-polyline>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -20,8 +55,9 @@ import { Watch, Prop } from 'vue-property-decorator';
 
 import { LPolyline, LTooltip, LPopup } from 'vue2-leaflet';
 
-import { IPath } from '@/types';
+import { ICoordinate } from '@/types';
 import RoutingState from '@/store/modules/routing';
+import RoutingMapMarker from '@/components/routing/RoutingMapMarker.vue';
 
 @Component({
   name: 'PathComponent',
@@ -29,20 +65,40 @@ import RoutingState from '@/store/modules/routing';
     LPolyline,
     LTooltip,
     LPopup,
+    RoutingMapMarker,
   },
   filters: {
     round: (value: number) => value.toFixed(2),
   },
 })
 export default class RoutingMapPath extends Vue {
-  @Prop({ required: true }) private route!: any;
-
   get selectedRoute() {
     return RoutingState.selectedRoute;
   }
 
   get costTags(): string[] {
     return RoutingState.costTags;
+  }
+
+  get waypoints(): ICoordinate[] {
+    return RoutingState.waypoints;
+  }
+
+  get subPaths() {
+    return this.selectedRoute.subPaths;
+  }
+
+  private getColor(index: number): string {
+    const colors = [
+      'red',
+      'orange',
+      'yellow',
+      'green',
+      'blue',
+      'indigo',
+      'violet',
+    ];
+    return colors[index % colors.length];
   }
 }
 </script>

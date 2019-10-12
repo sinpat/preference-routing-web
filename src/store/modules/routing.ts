@@ -9,7 +9,7 @@ import {
 import apiService from '@/api-service';
 
 import store from '../store';
-import { ICoordinate, IPath } from '@/types';
+import { ICoordinate, Path } from '@/types';
 
 import ErrorState from './error';
 import NotificationState from './notification';
@@ -21,23 +21,25 @@ import ConfigState from './config';
   store,
 })
 class Routing extends VuexModule {
-  public path: IPath | null = null;
-  public selectedRouteIdx = -1;
-  public waypoints: ICoordinate[] = [];
   public preference: number[][] = [];
   public prefIndex: number = 0;
   public costTags: string[] = [];
-  public userRoutes: IPath[] = [];
+  public userRoutes: Path[] = [new Path()];
+  private selectedRouteIdx = 0;
 
   get currentPref() {
     return this.preference[this.prefIndex];
   }
 
-  get selectedRoute() {
-    if (this.selectedRouteIdx === -1) {
-      return null;
-    }
+  get selectedRoute(): Path {
     return this.userRoutes[this.selectedRouteIdx];
+  }
+
+  get waypoints(): ICoordinate[] {
+    if (!this.selectedRoute) {
+      return [];
+    }
+    return this.selectedRoute.initial_waypoints;
   }
 
   @Mutation
@@ -46,9 +48,9 @@ class Routing extends VuexModule {
   }
 
   @Mutation
-  public clear() {
-    this.path = null;
-    this.waypoints = [];
+  public addRoute() {
+    this.userRoutes.push(new Path());
+    this.selectedRouteIdx = this.userRoutes.length - 1;
   }
 
   @Action({ rawError: true })
@@ -59,50 +61,37 @@ class Routing extends VuexModule {
   }
 
   @Action({ rawError: true })
+  public clear() {
+    this.selectedRoute.clear();
+  }
+
+  @Action({ rawError: true })
   public async addWaypoint(latlng: ICoordinate) {
     const point: ICoordinate = await apiService.fetchClosest(latlng);
     const insertionOrder = ConfigState.insertionOrder;
     if (insertionOrder === 'in_order') {
       this.waypoints.push(point);
     } else if (insertionOrder === 'intermediate') {
-      // Find waypoint with smallest distance to input Coordinate
-      // let minDist = Number.MAX_VALUE;
-      // let spliceIndex = -1;
-      // this.waypoints.forEach((current, index) => {
-      //   const dist = Math.sqrt(
-      //     Math.pow(point.lat - current.lat, 2) +
-      //       Math.pow(point.lng - current.lng, 2)
-      //   );
-      //   if (dist < minDist) {
-      //     minDist = dist;
-      //     spliceIndex = index;
-      //   }
-      // });
-      // if (spliceIndex === 0) {
-      //   // We do not want to change our source
-      //   spliceIndex++;
-      // } else if (spliceIndex === -1) {
-      //   // We have no waypoints yet
-      //   spliceIndex = 0;
-      // }
-      // this.waypoints.splice(spliceIndex, 0, point);
       if (this.waypoints.length < 2) {
         this.waypoints.push(point);
       } else {
         this.waypoints.splice(this.waypoints.length - 1, 0, point);
       }
     }
+    this.fetchShortestPath();
   }
 
   @Action({ rawError: true })
   public removeWaypoint(index: number) {
-    this.waypoints.splice(index, 1);
+    this.selectedRoute.removeWaypoint(index);
+    this.fetchShortestPath();
   }
 
   @Action({ rawError: true })
   public async repositionWaypoint({ index, newLoc }: any) {
     const point = await apiService.fetchClosest(newLoc);
     this.waypoints.splice(index, 1, point);
+    this.fetchShortestPath();
   }
 
   @Action({ rawError: true })
@@ -110,20 +99,19 @@ class Routing extends VuexModule {
     const temp = this.waypoints[from];
     this.waypoints.splice(from, 1, this.waypoints[to]);
     this.waypoints.splice(to, 1, temp);
+    this.fetchShortestPath();
   }
 
   @Action({ rawError: true })
   public async findNewPreference() {
-    const prefIndex = this.prefIndex;
     try {
-      const [preference, splits] = await apiService.findPreference(
-        prefIndex,
+      const route = await apiService.findPreference(
         this.waypoints,
         this.currentPref
       );
       NotificationState.setMessage('Found Preference');
-      this.setPreference(preference);
-      this.fetchUserRoutes();
+      this.setRoute(route);
+      this.setPreference(route.preference);
     } catch (error) {
       ErrorState.set({
         text: 'An error ocurred while calculating the new preference',
@@ -181,22 +169,22 @@ class Routing extends VuexModule {
 
   @Action({ rawError: true })
   public async fetchShortestPath() {
-    this.clearPath();
+    this.selectedRoute.clearPath();
     if (this.waypoints.length < 2) {
       return;
     }
     try {
-      const path = await apiService.shortestPath(
+      const route = await apiService.shortestPath(
         this.waypoints,
         this.currentPref
       );
-      if (!path) {
-        NotificationState.setMessage('Could not find a path');
+      if (!route) {
+        NotificationState.setMessage('Could not find a route');
       }
-      this.setPath(path);
+      this.setRoute(route);
     } catch (error) {
       ErrorState.set({
-        text: 'There was an error fetching the shortest path',
+        text: 'There was an error fetching the shortest route',
         error,
         callback: this.fetchShortestPath,
       });
@@ -219,18 +207,13 @@ class Routing extends VuexModule {
   @Action({ rawError: true })
   public async fetchUserRoutes() {
     const routes = await apiService.getDrivenRoutes();
-    this.setUserRoutes(routes);
+    this.userRoutes.push(...routes);
   }
 
   @Action({ rawError: true })
   private async fetchCostTags() {
     const tags = await apiService.getCostTags();
     this.setCostTags(tags);
-  }
-
-  @Mutation
-  private setUserRoutes(routes: IPath[]) {
-    this.userRoutes = routes;
   }
 
   @Mutation
@@ -249,13 +232,9 @@ class Routing extends VuexModule {
   }
 
   @Mutation
-  private setPath(path: IPath) {
-    this.path = path;
-  }
-
-  @Mutation
-  private clearPath() {
-    this.path = null;
+  private setRoute(route: Path) {
+    route = Object.assign(new Path(), route);
+    this.userRoutes.splice(this.selectedRouteIdx, 1, route);
   }
 }
 

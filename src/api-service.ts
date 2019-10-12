@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ICoordinate, IPath, ICredentials } from './types';
+import { ICoordinate, Path, ICredentials } from './types';
 
 const endpoint = 'http://localhost:8000/';
 const prefEndpoint = endpoint + 'preference';
@@ -34,7 +34,7 @@ class ApiService {
   }
 
   public getDrivenRoutes() {
-    return this.get<IPath[]>(endpoint + 'routes');
+    return this.get<Path[]>(endpoint + 'routes');
   }
 
   public fetchClosest(latlng: ICoordinate) {
@@ -49,16 +49,12 @@ class ApiService {
     return this.post(prefEndpoint + '/new');
   }
 
-  public findPreference(
-    index: number,
-    waypoints: ICoordinate[],
-    alpha: number[]
-  ) {
-    return this.post(prefEndpoint + '/find/' + index, { waypoints, alpha });
+  public findPreference(waypoints: ICoordinate[], alpha: number[]) {
+    return this.post(prefEndpoint + '/find', { waypoints, alpha });
   }
 
   public shortestPath(waypoints: ICoordinate[], alpha: number[]) {
-    return this.post<IPath>(endpoint + 'fsp', {
+    return this.post<Path>(endpoint + 'fsp', {
       waypoints,
       alpha,
     });
