@@ -1,5 +1,7 @@
 /* tslint:disable */
 
+const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet'];
+
 export interface ICredentials {
   username: string;
   password: string;
@@ -31,13 +33,20 @@ export class Path {
     this.initial_pref = [];
   }
 
-  get subPaths(): ICoordinate[][] {
+  public static fromObject(obj: any) {
+    return Object.assign(new Path(), obj);
+  }
+
+  get subPaths(): [ICoordinate[], string][] {
     if (this.splits.length === 0) {
       return [];
     }
     return this.splits.map((_, index) => {
       const start = index === 0 ? 0 : this.splits[index - 1];
-      return this.coordinates.slice(start, this.splits[index] + 1);
+      return [
+        this.coordinates.slice(start, this.splits[index] + 1),
+        colors[index % colors.length],
+      ];
     });
   }
 

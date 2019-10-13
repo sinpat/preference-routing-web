@@ -13,7 +13,6 @@ import { ICoordinate, Path } from '@/types';
 
 import ErrorState from './error';
 import NotificationState from './notification';
-import ConfigState from './config';
 
 @Module({
   dynamic: true,
@@ -21,6 +20,7 @@ import ConfigState from './config';
   store,
 })
 class Routing extends VuexModule {
+  public loadingPref = false;
   public preference: number[][] = [];
   public prefIndex: number = 0;
   public costTags: string[] = [];
@@ -68,16 +68,7 @@ class Routing extends VuexModule {
   @Action({ rawError: true })
   public async addWaypoint(latlng: ICoordinate) {
     const point: ICoordinate = await apiService.fetchClosest(latlng);
-    const insertionOrder = ConfigState.insertionOrder;
-    if (insertionOrder === 'in_order') {
-      this.waypoints.push(point);
-    } else if (insertionOrder === 'intermediate') {
-      if (this.waypoints.length < 2) {
-        this.waypoints.push(point);
-      } else {
-        this.waypoints.splice(this.waypoints.length - 1, 0, point);
-      }
-    }
+    this.waypoints.push(point);
     this.fetchShortestPath();
   }
 
@@ -104,6 +95,7 @@ class Routing extends VuexModule {
 
   @Action({ rawError: true })
   public async findNewPreference() {
+    this.setLoadingPref(true);
     try {
       const route = await apiService.findPreference(
         this.waypoints,
@@ -118,6 +110,8 @@ class Routing extends VuexModule {
         error,
         callback: this.findNewPreference,
       });
+    } finally {
+      this.setLoadingPref(false);
     }
   }
 
@@ -206,7 +200,8 @@ class Routing extends VuexModule {
 
   @Action({ rawError: true })
   public async fetchUserRoutes() {
-    const routes = await apiService.getDrivenRoutes();
+    let routes = await apiService.getDrivenRoutes();
+    routes = routes.map(route => Path.fromObject(route));
     this.userRoutes.push(...routes);
   }
 
@@ -214,6 +209,11 @@ class Routing extends VuexModule {
   private async fetchCostTags() {
     const tags = await apiService.getCostTags();
     this.setCostTags(tags);
+  }
+
+  @Mutation
+  private setLoadingPref(value: boolean) {
+    this.loadingPref = value;
   }
 
   @Mutation
@@ -233,7 +233,7 @@ class Routing extends VuexModule {
 
   @Mutation
   private setRoute(route: Path) {
-    route = Object.assign(new Path(), route);
+    route = Path.fromObject(route);
     this.userRoutes.splice(this.selectedRouteIdx, 1, route);
   }
 }

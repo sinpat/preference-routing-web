@@ -14,7 +14,7 @@
             </v-btn>
             <v-btn
               @click="showDialog = true"
-              :disabled="selectedRoute === null || selectedRoute === undefined"
+              :disabled="selected === null || selected === undefined"
               style="color: red"
               text
               icon
@@ -28,24 +28,76 @@
               <br />
               Create a new one by clicking on the map
             </div>
-            <v-list
-              v-else
-              max-height="500"
-              class="overflow-y-auto"
-              shaped
-              two-line
-            >
-              <v-list-item-group v-model="selectedRoute" mandatory>
-                <v-list-item
+            <v-list v-else max-height="500" class="overflow-y-auto" shaped>
+              <v-list-item-group v-model="selected" mandatory>
+                <v-list-group
                   v-for="(path, index) in userRoutes"
                   :key="index"
-                  two-line
+                  :value="index === selected"
                 >
-                  <v-list-item-title>{{ path.name }}</v-list-item-title>
-                  <v-list-item-subtitle>{{
-                    path.costs_by_alpha
-                  }}</v-list-item-subtitle>
-                </v-list-item>
+                  <template v-slot:activator>
+                    <v-list-item-title>{{ path.name }}</v-list-item-title>
+                    <v-list-item-subtitle
+                      >Total Cost:
+                      {{ path.costs_by_alpha }}</v-list-item-subtitle
+                    >
+                    <v-list-item-subtitle>
+                      {{ new Date() }}
+                    </v-list-item-subtitle>
+                  </template>
+                  <div class="ml-4 mb-10" style="color:black">
+                    <v-simple-table>
+                      <template v-slot:default>
+                        <thead>
+                          <tr>
+                            <th></th>
+                            <th v-for="tag in costTags" :key="tag">
+                              {{ tag }}
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr
+                            v-for="([_, color],
+                            subPathIdx) in selectedRoute.subPaths"
+                            :key="subPathIdx"
+                          >
+                            <td>
+                              <v-card
+                                height="25px"
+                                width="25px"
+                                :color="color"
+                              ></v-card>
+                            </td>
+                            <td
+                              v-for="(value, index) in selectedRoute.preference[
+                                subPathIdx
+                              ]"
+                              :key="index"
+                            >
+                              {{ value }} <br />
+                              <span class="caption">{{
+                                selectedRoute.dim_costs[index]
+                              }}</span>
+                            </td>
+                          </tr>
+                          <tr
+                            v-if="selectedRoute.dim_costs.length !== 0"
+                            style="font-weight:bold"
+                          >
+                            <td>Total Costs:</td>
+                            <td
+                              v-for="(cost, index) in selectedRoute.dim_costs"
+                              :key="index"
+                            >
+                              {{ cost }}
+                            </td>
+                          </tr>
+                        </tbody>
+                      </template>
+                    </v-simple-table>
+                  </div>
+                </v-list-group>
               </v-list-item-group>
             </v-list>
           </v-card-text>
@@ -56,9 +108,6 @@
       <v-col>
         <RoutingPreferenceManager class="elevation-4" />
       </v-col>
-    </v-row>
-    <v-row dense>
-      <RoutingConfig class="elevation-4" />
     </v-row>
     <v-dialog :value="showDialog" width="400" persistent>
       <v-card>
@@ -91,7 +140,6 @@ import { Watch } from 'vue-property-decorator';
 
 import RoutingMap from './RoutingMap.vue';
 import RoutingPreferenceManager from './RoutingPreferenceManager.vue';
-import RoutingConfig from './RoutingConfiguration.vue';
 
 import RoutingState from '@/store/modules/routing';
 
@@ -102,24 +150,27 @@ import apiService from '@/api-service';
   components: {
     RoutingMap,
     RoutingPreferenceManager,
-    RoutingConfig,
   },
 })
 export default class Routing extends Vue {
   private showDialog = false;
-  private selectedRoute = null;
+  private selected = null;
 
   get userRoutes() {
     return RoutingState.userRoutes;
   }
 
-  @Watch('selectedRoute')
+  get costTags() {
+    return RoutingState.costTags;
+  }
+
+  get selectedRoute() {
+    return RoutingState.selectedRoute;
+  }
+
+  @Watch('selected')
   private updateSelectedRoute(value: any) {
-    if (value === undefined) {
-      RoutingState.setSelectedRouteIdx(-1);
-    } else {
-      RoutingState.setSelectedRouteIdx(value);
-    }
+    RoutingState.setSelectedRouteIdx(value);
   }
 
   private async created() {

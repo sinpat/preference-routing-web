@@ -11,7 +11,7 @@
       :lat-lngs="selectedRoute.coordinates"
       color="brown"
     >
-      <l-tooltip>
+      <!-- <l-tooltip>
         <p>
           <strong
             >Total Cost: {{ selectedRoute.costs_by_alpha | round }}</strong
@@ -22,16 +22,16 @@
           {{ cost | round }}
           ({{ selectedRoute.initial_pref[index] }})
         </p>
-      </l-tooltip>
+      </l-tooltip> -->
     </l-polyline>
     <div v-else>
       <l-polyline
-        v-for="(path, index) in subPaths"
+        v-for="([path, color], index) in subPaths"
         :key="index"
         :lat-lngs="path"
-        :color="getColor(index)"
+        :color="color"
       >
-        <l-tooltip>
+        <!-- <l-tooltip>
           <p>
             <strong
               >Total Cost: {{ selectedRoute.costs_by_alpha | round }}</strong
@@ -42,7 +42,7 @@
             {{ selectedRoute.dim_costs[index] | round }}
             ({{ selectedRoute.initial_pref[index] }})
           </p>
-        </l-tooltip>
+        </l-tooltip> -->
       </l-polyline>
     </div>
   </div>
@@ -86,19 +86,6 @@ export default class RoutingMapPath extends Vue {
 
   get subPaths() {
     return this.selectedRoute.subPaths;
-  }
-
-  private getColor(index: number): string {
-    const colors = [
-      'red',
-      'orange',
-      'yellow',
-      'green',
-      'blue',
-      'indigo',
-      'violet',
-    ];
-    return colors[index % colors.length];
   }
 }
 </script>

@@ -23,6 +23,7 @@
           <v-btn
             @click="routeFinished"
             :disabled="waypoints.length < 2"
+            :loading="loadingPref"
             icon
             color="green"
           >
@@ -82,12 +83,27 @@ export default class RoutingMap extends Vue {
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     },
     {
-      name: 'Thunderforest',
+      name: 'Thunderforest OpenCycleMap',
       visible: false,
       url:
         'https://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=bd08b205580548d18e6235e2da754318',
       attribution:
         '&copy; <a href="http://www.thunderforest.com/">Thunderforest</a>, &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    },
+    {
+      name: 'Thunderforest Landscape',
+      visible: false,
+      url:
+        'https://{s}.tile.thunderforest.com/landscape/{z}/{x}/{y}.png?apikey=bd08b205580548d18e6235e2da754318',
+      attribution:
+        '&copy; <a href="http://www.thunderforest.com/">Thunderforest</a>, &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    },
+    {
+      name: 'CyclOSM',
+      visible: false,
+      url: 'https://dev.{s}.tile.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png',
+      attribution:
+        '<a href="https://github.com/cyclosm/cyclosm-cartocss-style/releases" title="CyclOSM - Open Bicycle render">CyclOSM</a> | Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     },
   ];
   private zoom: number = 18;
@@ -104,6 +120,10 @@ export default class RoutingMap extends Vue {
 
   get selectedRoute() {
     return RoutingState.selectedRoute;
+  }
+
+  get loadingPref() {
+    return RoutingState.loadingPref;
   }
 
   private updateZoom(zoomValue: number) {
