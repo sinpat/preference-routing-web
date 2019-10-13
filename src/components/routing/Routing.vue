@@ -1,11 +1,66 @@
 <template>
   <div>
     <v-row dense>
-      <v-col cols="12" md="7" lg="8">
+      <v-col cols="12" md="7" lg="6">
         <RoutingMap class="elevation-4" />
       </v-col>
       <v-col>
         <v-card class="fill-height">
+          <v-card-title>Selected Route</v-card-title>
+          <v-card-text>
+            <v-simple-table>
+              <template v-slot:default>
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th v-for="tag in costTags" :key="tag">
+                      {{ tag }}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    v-for="([_, color], subPathIdx) in selectedRoute.subPaths"
+                    :key="subPathIdx"
+                  >
+                    <td>
+                      <v-card
+                        height="25px"
+                        width="25px"
+                        :color="color"
+                      ></v-card>
+                    </td>
+                    <td
+                      v-for="(value, index) in selectedRoute.preference[
+                        subPathIdx
+                      ]"
+                      :key="index"
+                    >
+                      {{ value }}
+                    </td>
+                  </tr>
+                  <tr
+                    v-if="selectedRoute.dim_costs.length !== 0"
+                    style="font-weight:bold"
+                  >
+                    <td>Total Costs:</td>
+                    <td
+                      v-for="(cost, index) in selectedRoute.dim_costs"
+                      :key="index"
+                    >
+                      {{ cost }}
+                    </td>
+                  </tr>
+                </tbody>
+              </template>
+            </v-simple-table>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col>
+        <v-card>
           <v-card-title
             >Driven Routes
             <v-spacer></v-spacer>
@@ -30,74 +85,15 @@
             </div>
             <v-list v-else max-height="500" class="overflow-y-auto" shaped>
               <v-list-item-group v-model="selected" mandatory>
-                <v-list-group
-                  v-for="(path, index) in userRoutes"
-                  :key="index"
-                  :value="index === selected"
-                >
-                  <template v-slot:activator>
-                    <v-list-item-title>{{ path.name }}</v-list-item-title>
-                    <v-list-item-subtitle
-                      >Total Cost:
-                      {{ path.costs_by_alpha }}</v-list-item-subtitle
-                    >
-                    <v-list-item-subtitle>
-                      {{ new Date() }}
-                    </v-list-item-subtitle>
-                  </template>
-                  <div class="ml-4 mb-10" style="color:black">
-                    <v-simple-table>
-                      <template v-slot:default>
-                        <thead>
-                          <tr>
-                            <th></th>
-                            <th v-for="tag in costTags" :key="tag">
-                              {{ tag }}
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr
-                            v-for="([_, color],
-                            subPathIdx) in selectedRoute.subPaths"
-                            :key="subPathIdx"
-                          >
-                            <td>
-                              <v-card
-                                height="25px"
-                                width="25px"
-                                :color="color"
-                              ></v-card>
-                            </td>
-                            <td
-                              v-for="(value, index) in selectedRoute.preference[
-                                subPathIdx
-                              ]"
-                              :key="index"
-                            >
-                              {{ value }} <br />
-                              <span class="caption">{{
-                                selectedRoute.dim_costs[index]
-                              }}</span>
-                            </td>
-                          </tr>
-                          <tr
-                            v-if="selectedRoute.dim_costs.length !== 0"
-                            style="font-weight:bold"
-                          >
-                            <td>Total Costs:</td>
-                            <td
-                              v-for="(cost, index) in selectedRoute.dim_costs"
-                              :key="index"
-                            >
-                              {{ cost }}
-                            </td>
-                          </tr>
-                        </tbody>
-                      </template>
-                    </v-simple-table>
-                  </div>
-                </v-list-group>
+                <v-list-item v-for="(path, index) in userRoutes" :key="index">
+                  <v-list-item-title>{{ path.name }}</v-list-item-title>
+                  <v-list-item-subtitle
+                    >Total Cost: {{ path.costs_by_alpha }}</v-list-item-subtitle
+                  >
+                  <v-list-item-subtitle>
+                    {{ new Date() }}
+                  </v-list-item-subtitle>
+                </v-list-item>
               </v-list-item-group>
             </v-list>
           </v-card-text>

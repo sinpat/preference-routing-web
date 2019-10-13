@@ -16,7 +16,7 @@ export class Path {
   public name: string;
   public coordinates: ICoordinate[];
   private splits: number[];
-  public preference: number[][] | null;
+  public preference: number[][];
   public dim_costs: number[];
   public costs_by_alpha: number;
   public initial_waypoints: ICoordinate[];

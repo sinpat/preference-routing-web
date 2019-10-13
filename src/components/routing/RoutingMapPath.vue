@@ -11,18 +11,6 @@
       :lat-lngs="selectedRoute.coordinates"
       color="brown"
     >
-      <!-- <l-tooltip>
-        <p>
-          <strong
-            >Total Cost: {{ selectedRoute.costs_by_alpha | round }}</strong
-          >
-        </p>
-        <p v-for="(cost, index) in selectedRoute.dim_costs" :key="index">
-          {{ costTags[index] }}:
-          {{ cost | round }}
-          ({{ selectedRoute.initial_pref[index] }})
-        </p>
-      </l-tooltip> -->
     </l-polyline>
     <div v-else>
       <l-polyline
@@ -31,18 +19,6 @@
         :lat-lngs="path"
         :color="color"
       >
-        <!-- <l-tooltip>
-          <p>
-            <strong
-              >Total Cost: {{ selectedRoute.costs_by_alpha | round }}</strong
-            >
-          </p>
-          <p v-for="(tag, index) in costTags" :key="index">
-            {{ tag }}:
-            {{ selectedRoute.dim_costs[index] | round }}
-            ({{ selectedRoute.initial_pref[index] }})
-          </p>
-        </l-tooltip> -->
       </l-polyline>
     </div>
   </div>
