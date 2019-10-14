@@ -8,16 +8,20 @@
     />
     <l-polyline
       v-if="subPaths.length === 0"
+      @click="addWaypoint"
       :lat-lngs="selectedRoute.coordinates"
+      :bubbling-mouse-events="false"
       color="brown"
     >
     </l-polyline>
     <div v-else>
       <l-polyline
         v-for="([path, color], index) in subPaths"
+        @click="addWaypoint"
         :key="index"
         :lat-lngs="path"
         :color="color"
+        :bubbling-mouse-events="false"
       >
       </l-polyline>
     </div>
@@ -62,6 +66,10 @@ export default class RoutingMapPath extends Vue {
 
   get subPaths() {
     return this.selectedRoute.subPaths;
+  }
+
+  private addWaypoint({ latlng }: any) {
+    RoutingState.addIntermediateWaypoint(latlng);
   }
 }
 </script>

@@ -13,6 +13,7 @@ export interface ICoordinate {
 }
 
 export class Path {
+  public id: number;
   public name: string;
   public coordinates: ICoordinate[];
   private splits: number[];
@@ -23,6 +24,7 @@ export class Path {
   public initial_pref: number[];
 
   constructor() {
+    this.id = 0;
     this.name = 'New Route';
     this.coordinates = [];
     this.splits = [];

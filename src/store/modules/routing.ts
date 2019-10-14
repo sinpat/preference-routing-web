@@ -73,6 +73,38 @@ class Routing extends VuexModule {
   }
 
   @Action({ rawError: true })
+  public async addIntermediateWaypoint(latlng: ICoordinate) {
+    let closest = {
+      dist: Number.MAX_VALUE,
+      index: Number.MAX_VALUE,
+    };
+    this.selectedRoute.coordinates.forEach((point, index) => {
+      const dist = Math.sqrt(
+        Math.pow(latlng.lat - point.lat, 2) +
+          Math.pow(latlng.lng - point.lng, 2)
+      );
+      if (dist < closest.dist) {
+        closest = {
+          dist,
+          index,
+        };
+      }
+    });
+    for (let currentPos = closest.index; currentPos >= 0; currentPos--) {
+      const currentCoordinate = this.selectedRoute.coordinates[currentPos];
+      const index = this.waypoints.findIndex(
+        point =>
+          currentCoordinate.lat === point.lat &&
+          currentCoordinate.lng === point.lng
+      );
+      if (index !== -1) {
+        this.waypoints.splice(index + 1, 0, latlng);
+        break;
+      }
+    }
+  }
+
+  @Action({ rawError: true })
   public removeWaypoint(index: number) {
     this.selectedRoute.removeWaypoint(index);
     this.fetchShortestPath();
@@ -80,8 +112,7 @@ class Routing extends VuexModule {
 
   @Action({ rawError: true })
   public async repositionWaypoint({ index, newLoc }: any) {
-    const point = await apiService.fetchClosest(newLoc);
-    this.waypoints.splice(index, 1, point);
+    this.waypoints.splice(index, 1, newLoc);
     this.fetchShortestPath();
   }
 

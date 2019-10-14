@@ -6,7 +6,7 @@
       </v-col>
       <v-col>
         <v-card class="fill-height">
-          <v-card-title>Selected Route</v-card-title>
+          <v-card-title>{{ selectedRoute.name }}</v-card-title>
           <v-card-text>
             <v-simple-table>
               <template v-slot:default>
