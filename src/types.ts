@@ -12,41 +12,53 @@ export interface ICoordinate {
   lng: number;
 }
 
-export class Path {
-  public id: number;
-  public name: string;
-  public coordinates: ICoordinate[];
-  private splits: number[];
-  public preference: number[][];
-  public dim_costs: number[];
-  public costs_by_alpha: number;
-  public initial_waypoints: ICoordinate[];
-  public initial_pref: number[];
+class PathSplit {
+  public cuts: number[] = [];
+  public alphas: number[][] = [];
+  public dimension_costs: number[][] = [];
 
-  constructor() {
-    this.id = 0;
-    this.name = 'New Route';
-    this.coordinates = [];
-    this.splits = [];
-    this.preference = [];
-    this.dim_costs = [];
-    this.costs_by_alpha = 0;
-    this.initial_waypoints = [];
-    this.initial_pref = [];
+  get total_dimension_costs(): number[] {
+    if (this.dimension_costs.length === 0) {
+      return [];
+    }
+    return this.dimension_costs.reduce((acc, val) => {
+      for (let i = 0; i < acc.length; ++i) {
+        acc[i] += val[i];
+      }
+      return acc;
+    });
   }
+}
+
+export class Path {
+  public id = 0;
+  public name = 'New Route';
+  public coordinates: ICoordinate[] = [];
+  public waypoints: ICoordinate[] = [];
+  public user_split: PathSplit = new PathSplit();
+  public algo_split: PathSplit | null = null;
 
   public static fromObject(obj: any) {
-    return Object.assign(new Path(), obj);
+    const path = Object.assign(new Path(), obj);
+    path.user_split = Object.assign(new PathSplit(), obj.user_split);
+    if (obj.algo_split) {
+      path.algo_split = Object.assign(new PathSplit(), obj.algo_split);
+    }
+    return path;
   }
 
   get subPaths(): [ICoordinate[], string][] {
-    if (this.splits.length === 0) {
+    if (!this.algo_split) {
       return [];
     }
-    return this.splits.map((_, index) => {
-      const start = index === 0 ? 0 : this.splits[index - 1];
+    const cuts = this.algo_split.cuts;
+    if (cuts.length === 0) {
+      return [];
+    }
+    return cuts.map((_, index) => {
+      const start = index === 0 ? 0 : cuts[index - 1];
       return [
-        this.coordinates.slice(start, this.splits[index] + 1),
+        this.coordinates.slice(start, cuts[index] + 1),
         colors[index % colors.length],
       ];
     });
@@ -54,7 +66,9 @@ export class Path {
 
   public clear() {
     this.coordinates = [];
-    this.initial_waypoints = [];
+    this.waypoints = [];
+    this.user_split = new PathSplit();
+    this.algo_split = null;
   }
 
   public clearPath() {
@@ -62,6 +76,6 @@ export class Path {
   }
 
   public removeWaypoint(index: number) {
-    this.initial_waypoints.splice(index, 1);
+    this.waypoints.splice(index, 1);
   }
 }

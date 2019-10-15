@@ -39,7 +39,7 @@ class Routing extends VuexModule {
     if (!this.selectedRoute) {
       return [];
     }
-    return this.selectedRoute.initial_waypoints;
+    return this.selectedRoute.waypoints;
   }
 
   @Mutation
@@ -134,7 +134,7 @@ class Routing extends VuexModule {
       );
       NotificationState.setMessage('Found Preference');
       this.setRoute(route);
-      this.setPreference(route.preference);
+      this.setPreference(route.algo_split.alphas);
     } catch (error) {
       ErrorState.set({
         text: 'An error ocurred while calculating the new preference',

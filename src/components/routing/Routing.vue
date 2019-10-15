@@ -5,7 +5,7 @@
         <RoutingMap class="elevation-4" />
       </v-col>
       <v-col>
-        <v-card class="fill-height">
+        <v-card height="600px" style="overflow-y:auto">
           <v-card-title>{{ selectedRoute.name }}</v-card-title>
           <v-card-text>
             <v-simple-table>
@@ -31,7 +31,7 @@
                       ></v-card>
                     </td>
                     <td
-                      v-for="(value, index) in selectedRoute.preference[
+                      v-for="(value, index) in selectedRoute.algo_split.alphas[
                         subPathIdx
                       ]"
                       :key="index"
@@ -39,13 +39,18 @@
                       {{ value }}
                     </td>
                   </tr>
+
                   <tr
-                    v-if="selectedRoute.dim_costs.length !== 0"
+                    v-if="
+                      selectedRoute.user_split.total_dimension_costs.length !==
+                        0
+                    "
                     style="font-weight:bold"
                   >
                     <td>Total Costs:</td>
                     <td
-                      v-for="(cost, index) in selectedRoute.dim_costs"
+                      v-for="(cost, index) in selectedRoute.user_split
+                        .total_dimension_costs"
                       :key="index"
                     >
                       {{ cost }}
@@ -83,13 +88,10 @@
               <br />
               Create a new one by clicking on the map
             </div>
-            <v-list v-else max-height="500" class="overflow-y-auto" shaped>
+            <v-list v-else max-height="500" class="overflow-y-auto" rounded>
               <v-list-item-group v-model="selected" mandatory>
                 <v-list-item v-for="(path, index) in userRoutes" :key="index">
                   <v-list-item-title>{{ path.name }}</v-list-item-title>
-                  <v-list-item-subtitle
-                    >Total Cost: {{ path.costs_by_alpha }}</v-list-item-subtitle
-                  >
                   <v-list-item-subtitle>
                     {{ new Date() }}
                   </v-list-item-subtitle>
