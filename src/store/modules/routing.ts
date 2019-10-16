@@ -25,6 +25,8 @@ class Routing extends VuexModule {
   public prefIndex: number = 0;
   public costTags: string[] = [];
   public userRoutes: Path[] = [new Path()];
+  public tempPath: ICoordinate[] = []; // used when dragging a marker
+  public markerIsDragged = false;
   private selectedRouteIdx = 0;
 
   get currentPref() {
@@ -53,6 +55,17 @@ class Routing extends VuexModule {
     this.selectedRouteIdx = this.userRoutes.length - 1;
   }
 
+  @Mutation
+  public startWaypointDragging() {
+    this.markerIsDragged = true;
+  }
+
+  @Mutation
+  public stopWaypointDragging() {
+    this.markerIsDragged = false;
+    this.tempPath = [];
+  }
+
   @Action({ rawError: true })
   public async init() {
     await this.fetchPreference();
@@ -73,7 +86,7 @@ class Routing extends VuexModule {
   }
 
   @Action({ rawError: true })
-  public async addIntermediateWaypoint(latlng: ICoordinate) {
+  public addIntermediateWaypoint(latlng: ICoordinate) {
     let closest = {
       dist: Number.MAX_VALUE,
       index: Number.MAX_VALUE,
@@ -105,14 +118,14 @@ class Routing extends VuexModule {
   }
 
   @Action({ rawError: true })
-  public removeWaypoint(index: number) {
-    this.selectedRoute.removeWaypoint(index);
+  public async repositionWaypoint({ index, newLoc }: any) {
+    this.waypoints.splice(index, 1, newLoc);
     this.fetchShortestPath();
   }
 
   @Action({ rawError: true })
-  public async repositionWaypoint({ index, newLoc }: any) {
-    this.waypoints.splice(index, 1, newLoc);
+  public removeWaypoint(index: number) {
+    this.selectedRoute.removeWaypoint(index);
     this.fetchShortestPath();
   }
 
@@ -205,8 +218,11 @@ class Routing extends VuexModule {
       );
       if (!route) {
         NotificationState.setMessage('Could not find a route');
+      } else if (this.markerIsDragged) {
+        this.setTempPath(route.coordinates);
+      } else {
+        this.setRoute(route);
       }
-      this.setRoute(route);
     } catch (error) {
       ErrorState.set({
         text: 'There was an error fetching the shortest route',
@@ -266,6 +282,11 @@ class Routing extends VuexModule {
   private setRoute(route: Path) {
     route = Path.fromObject(route);
     this.userRoutes.splice(this.selectedRouteIdx, 1, route);
+  }
+
+  @Mutation
+  private setTempPath(coordinates: ICoordinate[]) {
+    this.tempPath = coordinates;
   }
 }
 

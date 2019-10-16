@@ -1,7 +1,7 @@
 <template>
   <l-marker
     @contextmenu="removeWaypoint(index)"
-    @update:latLng="repositionWaypoint"
+    @update:latLng="updateWaypoint"
     @dragstart="dragStart"
     @dragend="dragEnd"
     :lat-lng="point"
@@ -44,10 +44,12 @@ export default class RoutingMapMarker extends Vue {
   @Prop({ type: Object, required: true })
   private point: any;
 
-  private isDragged = false;
-
   get waypoints() {
     return RoutingState.waypoints;
+  }
+
+  get isDragged() {
+    return RoutingState.markerIsDragged;
   }
 
   private changeOrder(value: number) {
@@ -58,23 +60,17 @@ export default class RoutingMapMarker extends Vue {
   }
 
   private dragStart() {
-    this.isDragged = true;
+    RoutingState.startWaypointDragging();
   }
 
-  private dragEnd(event: any) {
-    this.isDragged = false;
-    RoutingState.repositionWaypoint({
-      index: this.index,
-      newLoc: event.target._latlng,
-    });
+  private dragEnd() {
+    RoutingState.stopWaypointDragging();
+    RoutingState.fetchShortestPath();
   }
 
-  private repositionWaypoint(newLoc: ICoordinate) {
+  private updateWaypoint(newLoc: ICoordinate) {
     if (this.isDragged) {
-      // RoutingState.repositionWaypoint({
-      //   index: this.index,
-      //   newLoc,
-      // });
+      RoutingState.repositionWaypoint({ index: this.index, newLoc });
     }
   }
 

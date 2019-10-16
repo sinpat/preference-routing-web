@@ -106,8 +106,10 @@ export default class RoutingMap extends Vue {
         '<a href="https://github.com/cyclosm/cyclosm-cartocss-style/releases" title="CyclOSM - Open Bicycle render">CyclOSM</a> | Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     },
   ];
-  private zoom: number = 18;
-  private center: ICoordinate = { lat: 48.9745, lng: 9.402 };
+  // private zoom: number = 18;
+  // private center: ICoordinate = { lat: 48.9745, lng: 9.402 };
+  private zoom: number = 16;
+  private center: ICoordinate = { lat: 48.74703, lng: 9.1046 };
   private drivenPaths: Path[] = [];
 
   get waypoints() {

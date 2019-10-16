@@ -1,6 +1,6 @@
 /* tslint:disable */
 
-const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet'];
+const colors = ['red', 'orange', 'green', 'blue', 'indigo'];
 
 export interface ICredentials {
   username: string;

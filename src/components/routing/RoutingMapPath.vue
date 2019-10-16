@@ -7,7 +7,12 @@
       :index="index"
     />
     <l-polyline
-      v-if="subPaths.length === 0"
+      v-if="markerIsDragged"
+      :lat-lngs="tempPath"
+      color="brown"
+    ></l-polyline>
+    <l-polyline
+      v-else-if="subPaths.length === 0"
       @click="addWaypoint"
       :lat-lngs="selectedRoute.coordinates"
       :bubbling-mouse-events="false"
@@ -66,6 +71,14 @@ export default class RoutingMapPath extends Vue {
 
   get subPaths() {
     return this.selectedRoute.subPaths;
+  }
+
+  get tempPath() {
+    return RoutingState.tempPath;
+  }
+
+  get markerIsDragged() {
+    return RoutingState.markerIsDragged;
   }
 
   private addWaypoint({ latlng }: any) {
