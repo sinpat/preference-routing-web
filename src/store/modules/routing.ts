@@ -88,8 +88,8 @@ class Routing extends VuexModule {
   @Action({ rawError: true })
   public addIntermediateWaypoint(latlng: ICoordinate) {
     let closest = {
-      dist: Number.MAX_VALUE,
-      index: Number.MAX_VALUE,
+      dist: Infinity,
+      index: Infinity,
     };
     this.selectedRoute.coordinates.forEach((point, index) => {
       const dist = Math.sqrt(
@@ -193,6 +193,7 @@ class Routing extends VuexModule {
     try {
       await apiService.resetData();
       await this.fetchPreference();
+      await this.fetchUserRoutes();
       this.clear();
       this.setPrefIndex(0);
       NotificationState.setMessage('Reset data successfully');
@@ -249,13 +250,20 @@ class Routing extends VuexModule {
   public async fetchUserRoutes() {
     let routes = await apiService.getDrivenRoutes();
     routes = routes.map(route => Path.fromObject(route));
-    this.userRoutes.push(...routes);
+    this.setUserRoutes(routes);
   }
 
   @Action({ rawError: true })
   private async fetchCostTags() {
     const tags = await apiService.getCostTags();
     this.setCostTags(tags);
+  }
+
+  @Mutation
+  private setUserRoutes(routes: Path[]) {
+    if (routes.length !== 0) {
+      this.userRoutes = routes;
+    }
   }
 
   @Mutation

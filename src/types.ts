@@ -16,18 +16,6 @@ class PathSplit {
   public cuts: number[] = [];
   public alphas: number[][] = [];
   public dimension_costs: number[][] = [];
-
-  get total_dimension_costs(): number[] {
-    if (this.dimension_costs.length === 0) {
-      return [];
-    }
-    return this.dimension_costs.reduce((acc, val) => {
-      for (let i = 0; i < acc.length; ++i) {
-        acc[i] += val[i];
-      }
-      return acc;
-    });
-  }
 }
 
 export class Path {
@@ -37,6 +25,7 @@ export class Path {
   public waypoints: ICoordinate[] = [];
   public user_split: PathSplit = new PathSplit();
   public algo_split: PathSplit | null = null;
+  public total_dimension_costs: number[] = [];
 
   public static fromObject(obj: any) {
     const path = Object.assign(new Path(), obj);
@@ -67,6 +56,7 @@ export class Path {
   public clear() {
     this.coordinates = [];
     this.waypoints = [];
+    this.total_dimension_costs = [];
     this.user_split = new PathSplit();
     this.algo_split = null;
   }
@@ -77,5 +67,9 @@ export class Path {
 
   public removeWaypoint(index: number) {
     this.waypoints.splice(index, 1);
+    if (this.waypoints.length < 2) {
+      this.total_dimension_costs = [];
+      this.algo_split = null;
+    }
   }
 }

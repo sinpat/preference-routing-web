@@ -8,14 +8,14 @@
     draggable
   >
     <l-tooltip>{{ index + 1 }}</l-tooltip>
-    <l-popup>
+    <!-- <l-popup>
       <h3 class="mb-2">Position</h3>
       <v-btn-toggle @change="changeOrder" :value="index" mandatory rounded>
         <v-btn v-for="(point, index) in waypoints" :key="index">{{
           index + 1
         }}</v-btn>
       </v-btn-toggle>
-    </l-popup>
+    </l-popup> -->
   </l-marker>
 </template>
 

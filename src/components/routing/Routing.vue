@@ -41,16 +41,13 @@
                   </tr>
 
                   <tr
-                    v-if="
-                      selectedRoute.user_split.total_dimension_costs.length !==
-                        0
-                    "
+                    v-if="selectedRoute.total_dimension_costs.length !== 0"
                     style="font-weight:bold"
                   >
                     <td>Total Costs:</td>
                     <td
-                      v-for="(cost, index) in selectedRoute.user_split
-                        .total_dimension_costs"
+                      v-for="(cost,
+                      index) in selectedRoute.total_dimension_costs"
                       :key="index"
                     >
                       {{ cost }}
@@ -113,7 +110,7 @@
           <v-icon class="mr-2">mdi-alert</v-icon>Warning
         </v-card-title>
         <v-card-text class="mt-6 mb-2">
-          <h2 class="mb-2">Delete Route?</h2>
+          <h2 class="mb-2">Reset routes and preferences?</h2>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -152,7 +149,7 @@ import apiService from '@/api-service';
 })
 export default class Routing extends Vue {
   private showDialog = false;
-  private selected = null;
+  private selected = 0;
 
   get userRoutes() {
     return RoutingState.userRoutes;
@@ -177,11 +174,12 @@ export default class Routing extends Vue {
 
   private addRoute() {
     RoutingState.addRoute();
+    this.selected = this.userRoutes.length - 1;
   }
 
   private reset() {
     this.showDialog = false;
-    // RoutingState.resetData();
+    RoutingState.resetData();
   }
 }
 </script>
