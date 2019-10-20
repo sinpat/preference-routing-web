@@ -116,10 +116,6 @@ export default class RoutingMap extends Vue {
     return RoutingState.waypoints;
   }
 
-  get prefIndex() {
-    return RoutingState.prefIndex;
-  }
-
   get selectedRoute() {
     return RoutingState.selectedRoute;
   }

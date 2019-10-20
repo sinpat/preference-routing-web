@@ -1,7 +1,7 @@
 <template>
   <v-card v-if="costTags.length">
     <v-card-title>
-      My Preference
+      My Preferences
       <v-spacer></v-spacer>
       <div v-if="!isEditing">
         <v-btn text icon small>
@@ -13,6 +13,14 @@
       </div>
       <v-btn v-else @click="savePreference" :disabled="!prefValid" icon small>
         <v-icon>mdi-content-save</v-icon>
+      </v-btn>
+      <v-btn
+        @click="deletePreference"
+        :disabled="preferences.length <= 1"
+        icon
+        small
+      >
+        <v-icon>mdi-delete</v-icon>
       </v-btn>
     </v-card-title>
     <v-card-text class="pb-0">
@@ -50,6 +58,7 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 
 import RoutingState from '@/store/modules/routing';
+import PreferenceState from '@/store/modules/preference';
 
 @Component({
   name: 'PreferenceManagerComponent',
@@ -58,15 +67,15 @@ export default class RoutingPreferenceManager extends Vue {
   private isEditing = false;
 
   get preferences(): number[][] {
-    return RoutingState.preference;
+    return PreferenceState.preference;
   }
 
   get prefIndex(): number {
-    return RoutingState.prefIndex;
+    return PreferenceState.prefIndex;
   }
 
   get selectedPref(): number[] {
-    return RoutingState.currentPref;
+    return PreferenceState.currentPref;
   }
 
   get costTags(): string[] {
@@ -80,7 +89,7 @@ export default class RoutingPreferenceManager extends Vue {
   }
 
   private created() {
-    RoutingState.fetchPreference();
+    PreferenceState.fetchPreference();
   }
 
   private prefValueValid(value: number) {
@@ -91,18 +100,23 @@ export default class RoutingPreferenceManager extends Vue {
     return 0 <= value && value <= 1;
   }
 
+  private switchPref(index: number) {
+    PreferenceState.selectPref(index);
+  }
+
   private async savePreference() {
-    await RoutingState.savePreference(this.preferences);
+    await PreferenceState.savePreference(this.preferences);
     this.isEditing = false;
   }
 
-  private switchPref(index: number) {
-    RoutingState.selectPref(index);
+  private async addPreference() {
+    await PreferenceState.addPreference();
+    this.isEditing = true;
   }
 
-  private async addPreference() {
-    await RoutingState.addPreference();
-    this.isEditing = true;
+  private async deletePreference() {
+    await PreferenceState.deletePreference();
+    this.isEditing = false;
   }
 }
 </script>

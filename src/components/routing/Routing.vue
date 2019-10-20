@@ -1,11 +1,11 @@
 <template>
   <div>
     <v-row dense>
-      <v-col cols="12" md="8" lg="7">
+      <v-col cols="12" xl="6">
         <RoutingMap class="elevation-4" />
       </v-col>
       <v-col>
-        <v-card height="600px" style="overflow-y:auto">
+        <v-card height="100%" max-height="600" class="overflow-y-auto">
           <v-card-title>{{ selectedRoute.name }}</v-card-title>
           <v-card-text>
             <v-simple-table>

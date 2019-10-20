@@ -13,6 +13,7 @@ import { ICoordinate, Path } from '@/types';
 
 import ErrorState from './error';
 import NotificationState from './notification';
+import PreferenceState from './preference';
 
 @Module({
   dynamic: true,
@@ -21,18 +22,12 @@ import NotificationState from './notification';
 })
 class Routing extends VuexModule {
   public loadingPref = false;
-  public preference: number[][] = [];
-  public prefIndex: number = 0;
   public costTags: string[] = [];
   public userRoutes: Path[] = [];
   public newRoute: Path = new Path();
   public tempPath: ICoordinate[] = []; // used when dragging a marker
   public markerIsDragged = false;
   public selectedRouteIdx = 0;
-
-  get currentPref() {
-    return this.preference[this.prefIndex];
-  }
 
   get selectedRoute(): Path {
     if (this.selectedRouteIdx === 0) {
@@ -48,8 +43,6 @@ class Routing extends VuexModule {
   @Mutation
   public clearState() {
     this.loadingPref = false;
-    this.preference = [];
-    this.prefIndex = 0;
     this.costTags = [];
     this.userRoutes = [];
     this.newRoute = new Path();
@@ -74,7 +67,7 @@ class Routing extends VuexModule {
 
   @Action({ rawError: true })
   public async init() {
-    await this.fetchPreference();
+    await PreferenceState.fetchPreference();
     await this.fetchCostTags();
     await this.fetchUserRoutes();
   }
@@ -151,7 +144,7 @@ class Routing extends VuexModule {
       const userRoutes = await apiService.findPreference(
         routeId,
         this.waypoints,
-        this.currentPref
+        PreferenceState.currentPref
       );
       NotificationState.setMessage('Found Preference');
       this.setUserRoutes(userRoutes);
@@ -171,42 +164,13 @@ class Routing extends VuexModule {
   }
 
   @Action({ rawError: true })
-  public async savePreference(preference: number[][]) {
-    try {
-      await apiService.postPreference(preference);
-      this.setPreference(preference);
-      this.fetchShortestPath();
-    } catch (error) {
-      ErrorState.set({
-        text: 'Could not save preference',
-        error,
-        callback: () => this.savePreference(preference),
-      });
-    }
-  }
-
-  @Action({ rawError: true })
-  public async fetchPreference() {
-    try {
-      const preference = await apiService.getPreference();
-      this.setPreference(preference);
-    } catch (error) {
-      ErrorState.set({
-        text: 'Could not fetch preference',
-        error,
-        callback: this.fetchPreference,
-      });
-    }
-  }
-
-  @Action({ rawError: true })
   public async resetData() {
     try {
       await apiService.resetData();
-      await this.fetchPreference();
+      await PreferenceState.fetchPreference();
       await this.fetchUserRoutes();
       this.clear();
-      this.setPrefIndex(0);
+      PreferenceState.selectPref(0);
       NotificationState.setMessage('Reset data successfully');
     } catch (error) {
       ErrorState.set({
@@ -227,7 +191,7 @@ class Routing extends VuexModule {
       const route = await apiService.shortestPath(
         this.selectedRoute.id,
         this.waypoints,
-        this.currentPref
+        PreferenceState.currentPref
       );
       if (!route) {
         NotificationState.setMessage('Could not find a route');
@@ -243,18 +207,6 @@ class Routing extends VuexModule {
         callback: this.fetchShortestPath,
       });
     }
-  }
-
-  @Action({ rawError: true })
-  public selectPref(index: number) {
-    this.setPrefIndex(index);
-  }
-
-  @Action({ rawError: true })
-  public async addPreference() {
-    const preference = await apiService.newPreference();
-    this.setPreference(preference);
-    this.setPrefIndex(this.preference.length - 1);
   }
 
   @Action({ rawError: true })
@@ -283,16 +235,6 @@ class Routing extends VuexModule {
   @Mutation
   private setCostTags(tags: string[]) {
     this.costTags = tags;
-  }
-
-  @Mutation
-  private setPreference(pref: number[][]) {
-    this.preference = pref;
-  }
-
-  @Mutation
-  private setPrefIndex(index: number) {
-    this.prefIndex = index;
   }
 
   @Mutation
