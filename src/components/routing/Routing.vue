@@ -6,7 +6,20 @@
       </v-col>
       <v-col>
         <v-card height="100%" max-height="600" class="overflow-y-auto">
-          <v-card-title>{{ selectedRoute.name }}</v-card-title>
+          <v-card-title
+            >{{ selectedRoute.name }}
+            <v-spacer></v-spacer>
+            <v-btn
+              v-if="selectedRouteIdx !== 0"
+              @click="copyRoute"
+              title="Copy waypoints to new route"
+              text
+              icon
+              small
+            >
+              <v-icon>mdi-content-copy</v-icon>
+            </v-btn>
+          </v-card-title>
           <v-card-text>
             <v-simple-table>
               <template v-slot:default>
@@ -69,6 +82,7 @@
             <v-btn
               @click="showDialog = true"
               :disabled="selectedRouteIdx === 0"
+              title="Delete Route"
               text
               icon
             >
@@ -174,6 +188,10 @@ export default class Routing extends Vue {
 
   private selectionChange(value: number) {
     RoutingState.setSelectedRouteIdx(value);
+  }
+
+  private copyRoute() {
+    RoutingState.copyRoute();
   }
 
   private deleteRoute() {

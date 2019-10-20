@@ -78,6 +78,26 @@ class Routing extends VuexModule {
   }
 
   @Action({ rawError: true })
+  public copyRoute() {
+    const {
+      coordinates,
+      total_dimension_costs,
+      user_split,
+      waypoints,
+    } = Path.fromObject(this.selectedRoute);
+
+    this.setNewRoute(
+      Path.fromObject({
+        coordinates,
+        total_dimension_costs,
+        user_split,
+        waypoints,
+      } as Path)
+    );
+    this.setSelectedRouteIdx(0);
+  }
+
+  @Action({ rawError: true })
   public async deleteRoute() {
     const routes = await apiService.deleteRoute(this.selectedRoute.id);
     this.setSelectedRouteIdx(0);
@@ -257,6 +277,11 @@ class Routing extends VuexModule {
   @Mutation
   private setTempPath(coordinates: ICoordinate[]) {
     this.tempPath = coordinates;
+  }
+
+  @Mutation
+  private setNewRoute(route: Path) {
+    this.newRoute = route;
   }
 
   @Mutation

@@ -24,13 +24,19 @@
             @click="routeFinished"
             :disabled="waypoints.length < 2"
             :loading="loadingPref"
+            title="Find preference for current route"
             icon
             color="green"
           >
             <v-icon>mdi-check</v-icon>
           </v-btn>
           <br />
-          <v-btn @click="clearRoute" :disabled="waypoints.length < 1" icon>
+          <v-btn
+            @click="clearRoute"
+            :disabled="waypoints.length < 1"
+            title="Remove waypoints"
+            icon
+          >
             <v-icon>mdi-delete</v-icon>
           </v-btn>
         </v-card>

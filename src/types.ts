@@ -26,7 +26,8 @@ export class Path {
   public algo_split: PathSplit | null = null;
   public total_dimension_costs: number[] = [];
 
-  public static fromObject(obj: any) {
+  public static fromObject(obj: Path) {
+    console.log(obj);
     const path = Object.assign(new Path(), obj);
     path.user_split = Object.assign(new PathSplit(), obj.user_split);
     if (obj.algo_split) {

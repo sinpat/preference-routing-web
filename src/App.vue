@@ -7,7 +7,14 @@
           <span>Preference Routing</span>
         </v-toolbar-title>
         <v-spacer></v-spacer>
-        <v-btn v-if="$route.name === 'home'" @click="logout" rounded text icon>
+        <v-btn
+          v-if="$route.name === 'home'"
+          @click="logout"
+          title="Logout"
+          rounded
+          text
+          icon
+        >
           <v-icon>mdi-logout</v-icon>
         </v-btn>
         <v-btn

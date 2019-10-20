@@ -5,18 +5,28 @@
       <v-spacer></v-spacer>
       <div v-if="!isEditing">
         <v-btn text icon small>
-          <v-icon @click="addPreference">mdi-plus</v-icon>
+          <v-icon @click="addPreference" title="Add Preference"
+            >mdi-plus</v-icon
+          >
         </v-btn>
-        <v-btn @click="isEditing = true" icon small>
+        <v-btn @click="isEditing = true" title="Edit Preferences" icon small>
           <v-icon>mdi-pencil</v-icon>
         </v-btn>
       </div>
-      <v-btn v-else @click="savePreference" :disabled="!prefValid" icon small>
+      <v-btn
+        v-else
+        @click="savePreference"
+        :disabled="!prefValid"
+        title="Save Preferences"
+        icon
+        small
+      >
         <v-icon>mdi-content-save</v-icon>
       </v-btn>
       <v-btn
         @click="deletePreference"
         :disabled="preferences.length <= 1"
+        title="Delete selected Preference"
         icon
         small
       >
