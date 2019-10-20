@@ -53,12 +53,11 @@ import {
   LFeatureGroup,
 } from 'vue2-leaflet';
 
-import RoutingMapMarker from './RoutingMapMarker.vue';
 import RoutingMapPath from './RoutingMapPath.vue';
 
 import { ICoordinate, Path } from '@/types';
 import RoutingState from '@/store/modules/routing';
-import apiService from '../../api-service';
+import apiService from '@/api-service';
 
 @Component({
   name: 'MapComponent',
@@ -67,7 +66,6 @@ import apiService from '../../api-service';
     LControl,
     LControlLayers,
     LTileLayer,
-    RoutingMapMarker,
     RoutingMapPath,
     LFeatureGroup,
   },

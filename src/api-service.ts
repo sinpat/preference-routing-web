@@ -37,6 +37,10 @@ class ApiService {
     return this.get<Path[]>(endpoint + 'routes');
   }
 
+  public deleteRoute(id: number) {
+    return this.post<Path[]>(endpoint + 'delete' + `/${id}`);
+  }
+
   public fetchClosest(latlng: ICoordinate) {
     return this.get<ICoordinate>(endpoint + 'closest', latlng);
   }

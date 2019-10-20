@@ -78,6 +78,13 @@ class Routing extends VuexModule {
   }
 
   @Action({ rawError: true })
+  public async deleteRoute() {
+    const routes = await apiService.deleteRoute(this.selectedRoute.id);
+    this.setSelectedRouteIdx(0);
+    this.setUserRoutes(routes);
+  }
+
+  @Action({ rawError: true })
   public async addWaypoint(latlng: ICoordinate) {
     const point: ICoordinate = await apiService.fetchClosest(latlng);
     this.waypoints.push(point);

@@ -66,7 +66,12 @@
           <v-card-title
             >Driven Routes
             <v-spacer></v-spacer>
-            <v-btn @click="showDialog = true" style="color: red" text icon>
+            <v-btn
+              @click="showDialog = true"
+              :disabled="selectedRouteIdx === 0"
+              text
+              icon
+            >
               <v-icon>mdi-delete</v-icon>
             </v-btn>
           </v-card-title>
@@ -103,11 +108,11 @@
           <v-icon class="mr-2">mdi-alert</v-icon>Warning
         </v-card-title>
         <v-card-text class="mt-6 mb-2">
-          <h2 class="mb-2">Reset routes and preferences?</h2>
+          <h2 class="mb-2">Delete Route?</h2>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn @click="reset" class="warning">
+          <v-btn @click="deleteRoute" class="warning">
             <v-icon left>mdi-delete</v-icon>
             Delete</v-btn
           >
@@ -126,7 +131,7 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Watch } from 'vue-property-decorator';
 
-import RoutingMap from './RoutingMap.vue';
+import RoutingMap from './map/RoutingMap.vue';
 import RoutingPreferenceManager from './RoutingPreferenceManager.vue';
 
 import RoutingState from '@/store/modules/routing';
@@ -171,9 +176,14 @@ export default class Routing extends Vue {
     RoutingState.setSelectedRouteIdx(value);
   }
 
-  private reset() {
+  private deleteRoute() {
     this.showDialog = false;
-    RoutingState.resetData();
+    RoutingState.deleteRoute();
   }
+
+  // private reset() {
+  //   this.showDialog = false;
+  //   RoutingState.resetData();
+  // }
 }
 </script>

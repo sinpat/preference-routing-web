@@ -42,7 +42,7 @@ import { LPolyline, LTooltip, LPopup } from 'vue2-leaflet';
 
 import { ICoordinate } from '@/types';
 import RoutingState from '@/store/modules/routing';
-import RoutingMapMarker from '@/components/routing/RoutingMapMarker.vue';
+import RoutingMapMarker from './RoutingMapMarker.vue';
 
 @Component({
   name: 'PathComponent',
