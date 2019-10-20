@@ -58,6 +58,7 @@ import UserState from '@/store/modules/user';
 })
 export default class App extends Vue {
   private logout() {
+    RoutingState.clearState();
     UserState.logout();
     this.$router.push({ name: 'login' });
   }

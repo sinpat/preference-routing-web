@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-row dense>
-      <v-col cols="12" md="7" lg="6">
+      <v-col cols="12" md="8" lg="7">
         <RoutingMap class="elevation-4" />
       </v-col>
       <v-col>

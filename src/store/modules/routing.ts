@@ -45,6 +45,16 @@ class Routing extends VuexModule {
   }
 
   @Mutation
+  public clearState() {
+    this.loadingPref = false;
+    this.preference = [];
+    this.prefIndex = 0;
+    this.costTags = [];
+    this.userRoutes = [new Path()];
+    this.selectedRouteIdx = 0;
+  }
+
+  @Mutation
   public setSelectedRouteIdx(value: number) {
     this.selectedRouteIdx = value;
   }
