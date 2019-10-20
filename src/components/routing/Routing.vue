@@ -25,31 +25,39 @@
               <template v-slot:default>
                 <thead>
                   <tr>
-                    <th></th>
+                    <th>Color</th>
                     <th v-for="tag in costTags" :key="tag">
                       {{ tag }}
                     </th>
+                    <th></th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr
-                    v-for="([_, color], subPathIdx) in selectedRoute.subPaths"
+                    v-for="([_, alpha, color],
+                    subPathIdx) in selectedRoute.subPaths"
                     :key="subPathIdx"
                   >
                     <td>
                       <v-card
+                        :color="color"
                         height="25px"
                         width="25px"
-                        :color="color"
                       ></v-card>
                     </td>
-                    <td
-                      v-for="(value, index) in selectedRoute.algo_split.alphas[
-                        subPathIdx
-                      ]"
-                      :key="index"
-                    >
+                    <td v-for="(value, index) in alpha" :key="index">
                       {{ value }}
+                    </td>
+                    <td>
+                      <v-btn
+                        @click="addPref(alpha)"
+                        title="Add to Preferences"
+                        text
+                        icon
+                        small
+                      >
+                        <v-icon>mdi-plus</v-icon>
+                      </v-btn>
                     </td>
                   </tr>
 
@@ -149,6 +157,7 @@ import RoutingMap from './map/RoutingMap.vue';
 import RoutingPreferenceManager from './RoutingPreferenceManager.vue';
 
 import RoutingState from '@/store/modules/routing';
+import PreferenceState from '@/store/modules/preference';
 
 import apiService from '@/api-service';
 
@@ -197,6 +206,10 @@ export default class Routing extends Vue {
   private deleteRoute() {
     this.showDialog = false;
     RoutingState.deleteRoute();
+  }
+
+  private addPref(value: number[]) {
+    PreferenceState.addPreference(value);
   }
 
   // private reset() {

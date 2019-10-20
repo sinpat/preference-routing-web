@@ -120,7 +120,7 @@ export default class RoutingPreferenceManager extends Vue {
   }
 
   private async addPreference() {
-    await PreferenceState.addPreference();
+    await PreferenceState.newPreference();
     this.isEditing = true;
   }
 

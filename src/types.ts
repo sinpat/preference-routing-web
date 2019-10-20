@@ -27,7 +27,6 @@ export class Path {
   public total_dimension_costs: number[] = [];
 
   public static fromObject(obj: Path) {
-    console.log(obj);
     const path = Object.assign(new Path(), obj);
     path.user_split = Object.assign(new PathSplit(), obj.user_split);
     if (obj.algo_split) {
@@ -43,18 +42,20 @@ export class Path {
     return `Route ${this.id}`;
   }
 
-  get subPaths(): [ICoordinate[], string][] {
-    if (!this.algo_split) {
+  get subPaths(): [ICoordinate[], number[], string][] {
+    const algo_split = this.algo_split;
+    if (!algo_split) {
       return [];
     }
-    const cuts = this.algo_split.cuts;
+    const cuts = algo_split.cuts;
     if (cuts.length === 0) {
       return [];
     }
-    return cuts.map((_, index) => {
+    return algo_split.alphas.map((alpha, index) => {
       const start = index === 0 ? 0 : cuts[index - 1];
       return [
         this.coordinates.slice(start, cuts[index] + 1),
+        alpha,
         colors[index % colors.length],
       ];
     });

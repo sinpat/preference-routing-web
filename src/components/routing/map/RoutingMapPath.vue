@@ -21,7 +21,7 @@
     </l-polyline>
     <div v-else>
       <l-polyline
-        v-for="([path, color], index) in subPaths"
+        v-for="([path, _, color], index) in subPaths"
         @click="addWaypoint"
         :key="index"
         :lat-lngs="path"
