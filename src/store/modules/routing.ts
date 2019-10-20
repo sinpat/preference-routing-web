@@ -24,23 +24,24 @@ class Routing extends VuexModule {
   public preference: number[][] = [];
   public prefIndex: number = 0;
   public costTags: string[] = [];
-  public userRoutes: Path[] = [new Path()];
+  public userRoutes: Path[] = [];
+  public newRoute: Path = new Path();
   public tempPath: ICoordinate[] = []; // used when dragging a marker
   public markerIsDragged = false;
-  private selectedRouteIdx = 0;
+  public selectedRouteIdx = 0;
 
   get currentPref() {
     return this.preference[this.prefIndex];
   }
 
   get selectedRoute(): Path {
-    return this.userRoutes[this.selectedRouteIdx];
+    if (this.selectedRouteIdx === 0) {
+      return this.newRoute;
+    }
+    return this.userRoutes[this.selectedRouteIdx - 1];
   }
 
   get waypoints(): ICoordinate[] {
-    if (!this.selectedRoute) {
-      return [];
-    }
     return this.selectedRoute.waypoints;
   }
 
@@ -50,19 +51,14 @@ class Routing extends VuexModule {
     this.preference = [];
     this.prefIndex = 0;
     this.costTags = [];
-    this.userRoutes = [new Path()];
+    this.userRoutes = [];
+    this.newRoute = new Path();
     this.selectedRouteIdx = 0;
   }
 
   @Mutation
   public setSelectedRouteIdx(value: number) {
     this.selectedRouteIdx = value;
-  }
-
-  @Mutation
-  public addRoute() {
-    this.userRoutes.push(new Path());
-    this.selectedRouteIdx = this.userRoutes.length - 1;
   }
 
   @Mutation
@@ -150,14 +146,19 @@ class Routing extends VuexModule {
   @Action({ rawError: true })
   public async findNewPreference() {
     this.setLoadingPref(true);
+    const routeId = this.selectedRoute.id;
     try {
-      const route = await apiService.findPreference(
+      const userRoutes = await apiService.findPreference(
+        routeId,
         this.waypoints,
         this.currentPref
       );
       NotificationState.setMessage('Found Preference');
-      this.setRoute(route);
-      this.setPreference(route.algo_split.alphas);
+      this.setUserRoutes(userRoutes);
+      if (routeId === 0) {
+        this.setSelectedRouteIdx(this.userRoutes.length);
+      }
+      this.clearNewRoute();
     } catch (error) {
       ErrorState.set({
         text: 'An error ocurred while calculating the new preference',
@@ -224,6 +225,7 @@ class Routing extends VuexModule {
     }
     try {
       const route = await apiService.shortestPath(
+        this.selectedRoute.id,
         this.waypoints,
         this.currentPref
       );
@@ -246,7 +248,6 @@ class Routing extends VuexModule {
   @Action({ rawError: true })
   public selectPref(index: number) {
     this.setPrefIndex(index);
-    // this.fetchShortestPath();
   }
 
   @Action({ rawError: true })
@@ -258,8 +259,7 @@ class Routing extends VuexModule {
 
   @Action({ rawError: true })
   public async fetchUserRoutes() {
-    let routes = await apiService.getDrivenRoutes();
-    routes = routes.map(route => Path.fromObject(route));
+    const routes = await apiService.getDrivenRoutes();
     this.setUserRoutes(routes);
   }
 
@@ -271,9 +271,8 @@ class Routing extends VuexModule {
 
   @Mutation
   private setUserRoutes(routes: Path[]) {
-    if (routes.length !== 0) {
-      this.userRoutes = routes;
-    }
+    routes = routes.map(route => Path.fromObject(route));
+    this.userRoutes = routes;
   }
 
   @Mutation
@@ -299,12 +298,21 @@ class Routing extends VuexModule {
   @Mutation
   private setRoute(route: Path) {
     route = Path.fromObject(route);
-    this.userRoutes.splice(this.selectedRouteIdx, 1, route);
+    if (this.selectedRouteIdx === 0) {
+      this.newRoute = route;
+    } else {
+      this.userRoutes.splice(this.selectedRouteIdx - 1, 1, route);
+    }
   }
 
   @Mutation
   private setTempPath(coordinates: ICoordinate[]) {
     this.tempPath = coordinates;
+  }
+
+  @Mutation
+  private clearNewRoute() {
+    this.newRoute = new Path();
   }
 }
 

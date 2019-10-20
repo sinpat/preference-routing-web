@@ -20,7 +20,6 @@ class PathSplit {
 
 export class Path {
   public id = 0;
-  public name = 'New Route';
   public coordinates: ICoordinate[] = [];
   public waypoints: ICoordinate[] = [];
   public user_split: PathSplit = new PathSplit();
@@ -34,6 +33,13 @@ export class Path {
       path.algo_split = Object.assign(new PathSplit(), obj.algo_split);
     }
     return path;
+  }
+
+  get name(): string {
+    if (this.id === 0) {
+      return 'New Route';
+    }
+    return `Route ${this.id}`;
   }
 
   get subPaths(): [ICoordinate[], string][] {

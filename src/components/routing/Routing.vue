@@ -66,27 +66,20 @@
           <v-card-title
             >Driven Routes
             <v-spacer></v-spacer>
-            <v-btn @click="addRoute" color="green" text icon>
-              <v-icon>mdi-plus</v-icon>
-            </v-btn>
-            <v-btn
-              @click="showDialog = true"
-              :disabled="selected === null || selected === undefined"
-              style="color: red"
-              text
-              icon
-            >
+            <v-btn @click="showDialog = true" style="color: red" text icon>
               <v-icon>mdi-delete</v-icon>
             </v-btn>
           </v-card-title>
           <v-card-text>
-            <div v-if="userRoutes.length === 0" class="text-center">
-              <div style="font-weight: bold">No routes to show</div>
-              <br />
-              Create a new one by clicking on the map
-            </div>
-            <v-list v-else max-height="500" class="overflow-y-auto" rounded>
-              <v-list-item-group v-model="selected" mandatory>
+            <v-list max-height="500" class="overflow-y-auto" rounded>
+              <v-list-item-group
+                :value="selectedRouteIdx"
+                @change="selectionChange"
+                mandatory
+              >
+                <v-list-item>
+                  <v-list-item-title>{{ newRoute.name }}</v-list-item-title>
+                </v-list-item>
                 <v-list-item v-for="(path, index) in userRoutes" :key="index">
                   <v-list-item-title>{{ path.name }}</v-list-item-title>
                   <v-list-item-subtitle>
@@ -149,10 +142,13 @@ import apiService from '@/api-service';
 })
 export default class Routing extends Vue {
   private showDialog = false;
-  private selected = 0;
 
   get userRoutes() {
     return RoutingState.userRoutes;
+  }
+
+  get newRoute() {
+    return RoutingState.newRoute;
   }
 
   get costTags() {
@@ -163,18 +159,16 @@ export default class Routing extends Vue {
     return RoutingState.selectedRoute;
   }
 
-  @Watch('selected')
-  private updateSelectedRoute(value: any) {
-    RoutingState.setSelectedRouteIdx(value);
+  get selectedRouteIdx() {
+    return RoutingState.selectedRouteIdx;
   }
 
   private async created() {
     await RoutingState.init();
   }
 
-  private addRoute() {
-    RoutingState.addRoute();
-    this.selected = this.userRoutes.length - 1;
+  private selectionChange(value: number) {
+    RoutingState.setSelectedRouteIdx(value);
   }
 
   private reset() {
