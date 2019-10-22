@@ -37,7 +37,9 @@
 
       <!-- Main content -->
       <v-content>
-        <router-view />
+        <v-container>
+          <router-view />
+        </v-container>
       </v-content>
 
       <!-- Footer -->

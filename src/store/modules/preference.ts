@@ -10,6 +10,7 @@ import apiService from '@/api-service';
 
 import store from '../store';
 
+import NotificationState from './notification';
 import ErrorState from './error';
 
 @Module({
@@ -62,6 +63,7 @@ class Preference extends VuexModule {
   public async savePreference(preference: number[][]) {
     try {
       await apiService.postPreference(preference);
+      NotificationState.setMessage('Preference saved');
       this.setPreference(preference);
     } catch (error) {
       ErrorState.set({
@@ -80,6 +82,7 @@ class Preference extends VuexModule {
     }
     this.preference.splice(prefIndex, 1);
     await apiService.postPreference(this.preference);
+    NotificationState.setMessage('Preference deleted');
   }
 
   @Mutation
