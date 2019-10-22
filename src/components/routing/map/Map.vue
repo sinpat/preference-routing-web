@@ -59,7 +59,7 @@ import {
   LFeatureGroup,
 } from 'vue2-leaflet';
 
-import RoutingMapPath from './RoutingMapPath.vue';
+import RoutingMapPath from './MapPath.vue';
 
 import { ICoordinate, Path } from '@/types';
 import RoutingState from '@/store/modules/routing';
