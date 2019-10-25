@@ -100,7 +100,9 @@ class Routing extends VuexModule {
   @Action({ rawError: true })
   public async deleteRoute() {
     const routes = await apiService.deleteRoute(this.selectedRoute.id);
-    this.setSelectedRouteIdx(0);
+    if (this.selectedRouteIdx === this.userRoutes.length) {
+      this.setSelectedRouteIdx(routes.length);
+    }
     this.setUserRoutes(routes);
   }
 
@@ -152,14 +154,6 @@ class Routing extends VuexModule {
   @Action({ rawError: true })
   public removeWaypoint(index: number) {
     this.selectedRoute.removeWaypoint(index);
-    this.fetchShortestPath();
-  }
-
-  @Action({ rawError: true })
-  public swapWaypoints({ from, to }: any) {
-    const temp = this.waypoints[from];
-    this.waypoints.splice(from, 1, this.waypoints[to]);
-    this.waypoints.splice(to, 1, temp);
     this.fetchShortestPath();
   }
 

@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-row dense>
-      <v-col cols="12" xl="6">
+      <v-col>
         <RoutingMap class="elevation-4" />
       </v-col>
       <v-col>
@@ -36,9 +36,6 @@
                 </v-list-item>
                 <v-list-item v-for="(path, index) in userRoutes" :key="index">
                   <v-list-item-title>{{ path.name }}</v-list-item-title>
-                  <!-- <v-list-item-subtitle>
-                    {{ new Date() }}
-                  </v-list-item-subtitle> -->
                 </v-list-item>
               </v-list-item-group>
             </v-list>

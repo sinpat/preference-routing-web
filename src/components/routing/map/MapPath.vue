@@ -52,9 +52,6 @@ import RoutingMapMarker from './MapMarker.vue';
     LPopup,
     RoutingMapMarker,
   },
-  filters: {
-    round: (value: number) => value.toFixed(2),
-  },
 })
 export default class RoutingMapPath extends Vue {
   get selectedRoute() {
