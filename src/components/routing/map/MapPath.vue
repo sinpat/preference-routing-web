@@ -36,7 +36,6 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import { Watch, Prop } from 'vue-property-decorator';
 
 import { LPolyline, LTooltip, LPopup } from 'vue2-leaflet';
 

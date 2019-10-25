@@ -4,7 +4,7 @@
       My Preferences
       <v-spacer></v-spacer>
       <div v-if="!isEditing">
-        <v-btn text icon small>
+        <v-btn icon small>
           <v-icon @click="addPreference" title="Add Preference"
             >mdi-plus</v-icon
           >
@@ -34,7 +34,7 @@
       </v-btn>
     </v-card-title>
     <v-card-text class="pb-0">
-      <v-btn-toggle @change="switchPref" :value="prefIndex" rounded>
+      <v-btn-toggle @change="switchPref" :value="prefIndex">
         <v-btn v-for="(alpha, index) in preferences" :key="index">
           {{ index + 1 }}
         </v-btn>
@@ -54,7 +54,6 @@
             :readonly="!isEditing"
             :rules="[prefValueValid]"
             :label="tag"
-            rounded
             outlined
           ></v-text-field>
         </v-col>

@@ -7,6 +7,7 @@
       @update:zoom="updateZoom"
       @update:center="updateCenter"
       style="z-index: 1"
+      ref="map"
     >
       <l-control-layers position="topright"></l-control-layers>
       <l-tile-layer
@@ -41,7 +42,7 @@
           </v-btn>
         </v-card>
       </l-control>
-      <RoutingMapPath />
+      <RoutingMapPath @setMapBounds="setBounds" />
     </l-map>
   </div>
 </template>
@@ -49,6 +50,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
+import { Watch } from 'vue-property-decorator';
 
 import L from 'leaflet';
 import {
@@ -126,6 +128,21 @@ export default class RoutingMap extends Vue {
 
   get loadingPref() {
     return RoutingState.loadingPref;
+  }
+
+  get selectedRouteIdx() {
+    return RoutingState.selectedRouteIdx;
+  }
+
+  @Watch('selectedRoute')
+  private setBounds(route: Path) {
+    const lats = route.coordinates.map(coord => coord.lat);
+    const lngs = route.coordinates.map(coord => coord.lng);
+    const top = Math.max(...lats);
+    const bottom = Math.min(...lats);
+    const left = Math.min(...lngs);
+    const right = Math.max(...lngs);
+    (this.$refs.map as any).fitBounds([[top, left], [bottom, right]]);
   }
 
   private updateZoom(zoomValue: number) {
