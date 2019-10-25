@@ -134,15 +134,18 @@ export default class RoutingMap extends Vue {
     return RoutingState.selectedRouteIdx;
   }
 
-  @Watch('selectedRoute')
-  private setBounds(route: Path) {
-    const lats = route.coordinates.map(coord => coord.lat);
-    const lngs = route.coordinates.map(coord => coord.lng);
-    const top = Math.max(...lats);
-    const bottom = Math.min(...lats);
-    const left = Math.min(...lngs);
-    const right = Math.max(...lngs);
-    (this.$refs.map as any).fitBounds([[top, left], [bottom, right]]);
+  @Watch('selectedRouteIdx')
+  private setBounds() {
+    const coordinates = this.selectedRoute.coordinates;
+    if (coordinates.length > 0) {
+      const lats = coordinates.map(coord => coord.lat);
+      const lngs = coordinates.map(coord => coord.lng);
+      const top = Math.max(...lats);
+      const bottom = Math.min(...lats);
+      const left = Math.min(...lngs);
+      const right = Math.max(...lngs);
+      (this.$refs.map as any).fitBounds([[top, left], [bottom, right]]);
+    }
   }
 
   private updateZoom(zoomValue: number) {

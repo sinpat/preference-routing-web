@@ -49,7 +49,8 @@ class Preference extends VuexModule {
   public async addPreference(pref: number[]) {
     this.preference.push(pref);
     this.selectPref(this.preference.length - 1);
-    apiService.postPreference(this.preference);
+    await apiService.postPreference(this.preference);
+    NotificationState.setMessage('Preference added');
   }
 
   @Action({ rawError: true })

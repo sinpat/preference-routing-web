@@ -36,7 +36,7 @@
       </v-app-bar>
 
       <!-- Main content -->
-      <v-content>
+      <v-content class="mx-2">
         <!-- <v-container> -->
         <router-view />
         <!-- </v-container> -->
