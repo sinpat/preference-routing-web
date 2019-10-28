@@ -97,10 +97,6 @@ export default class RoutingPreferenceManager extends Vue {
     return allValid && sum === 1;
   }
 
-  private created() {
-    PreferenceState.fetchPreference();
-  }
-
   private prefValueValid(value: number) {
     return this.valueInRange(value) || 'Input must be between 0 and 1';
   }

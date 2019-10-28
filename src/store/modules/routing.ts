@@ -67,9 +67,17 @@ class Routing extends VuexModule {
 
   @Action({ rawError: true })
   public async init() {
-    await PreferenceState.fetchPreference();
-    await this.fetchCostTags();
-    await this.fetchUserRoutes();
+    try {
+      await PreferenceState.fetchPreference();
+      await this.fetchCostTags();
+      await this.fetchUserRoutes();
+    } catch (error) {
+      ErrorState.set({
+        text: 'Could not fetch user data',
+        error,
+        callback: this.init,
+      });
+    }
   }
 
   @Action({ rawError: true })

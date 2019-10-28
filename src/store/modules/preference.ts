@@ -33,16 +33,8 @@ class Preference extends VuexModule {
 
   @Action({ rawError: true })
   public async fetchPreference() {
-    try {
-      const preference = await apiService.getPreference();
-      this.setPreference(preference);
-    } catch (error) {
-      ErrorState.set({
-        text: 'Could not fetch preference',
-        error,
-        callback: this.fetchPreference,
-      });
-    }
+    const preference = await apiService.getPreference();
+    this.setPreference(preference);
   }
 
   @Action({ rawError: true })
