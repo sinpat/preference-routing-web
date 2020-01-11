@@ -1,5 +1,5 @@
 <template>
-  <div class="register">
+  <div class="mt-2">
     <h1>Create new account</h1>
     <AuthInput @submit="register" btnName="Register" class="mt-4" />
   </div>

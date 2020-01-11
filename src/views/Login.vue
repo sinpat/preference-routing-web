@@ -1,5 +1,5 @@
 <template>
-  <div class="login">
+  <div class="mt-2">
     <h1>Login</h1>
     <AuthInput @submit="login" btnName="Log In" class="mt-4" />
   </div>
@@ -31,9 +31,3 @@ export default class Login extends Vue {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-.login-form input {
-  margin-top: 0.5rem;
-}
-</style>
