@@ -7,6 +7,6 @@ addons:
     organization: 'sinpat-github'
 
 script:
-  - npm run test
-  - npm run build
+  - 'npm run test:e2e'
+  - 'npm run build:unit'
   - sonar-scanner
