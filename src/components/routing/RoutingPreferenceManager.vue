@@ -34,7 +34,7 @@
       </v-btn>
     </v-card-title>
     <v-card-text class="pb-0">
-      <v-btn-toggle @change="switchPref" :value="prefIndex">
+      <v-btn-toggle @change="switchPref" :value="prefIndex" mandatory>
         <v-btn v-for="(alpha, index) in preferences" :key="index">
           {{ index + 1 }}
         </v-btn>
@@ -107,11 +107,13 @@ export default class RoutingPreferenceManager extends Vue {
 
   private switchPref(index: number) {
     PreferenceState.selectPref(index);
+    RoutingState.fetchShortestPath();
   }
 
   private async savePreference() {
     await PreferenceState.savePreference(this.preferences);
     this.isEditing = false;
+    RoutingState.fetchShortestPath();
   }
 
   private async addPreference() {
@@ -122,6 +124,7 @@ export default class RoutingPreferenceManager extends Vue {
   private async deletePreference() {
     await PreferenceState.deletePreference();
     this.isEditing = false;
+    RoutingState.fetchShortestPath();
   }
 }
 </script>
