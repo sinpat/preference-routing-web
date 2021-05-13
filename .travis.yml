@@ -7,4 +7,5 @@ addons:
     organization: 'sinpat-github'
 
 script:
+  - npm run build
   - sonar-scanner
